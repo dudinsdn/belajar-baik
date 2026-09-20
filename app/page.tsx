@@ -205,6 +205,20 @@ export default function Home() {
     .filter(book=>`${book.title} ${book.author}`.toLowerCase().includes(query.toLowerCase()));
   const navigation = profileData?.role === 'teacher' ? ['Penilaian','Profil'] : studentNav;
 
+  if (apiStatus !== 'ready') {
+    return (
+      <main className="access-state" id="konten">
+        <section className="access-card" aria-live="polite">
+          <span className="brand-mark" aria-hidden="true">R</span>
+          <p className="eyebrow">RUANGTUMBUH</p>
+          <h1>{apiStatus === 'loading' ? 'Menyiapkan ruang belajarmu…' : 'Akun belum dapat dibuka'}</h1>
+          <p>{apiStatus === 'loading' ? 'Kami sedang memuat profil dan progres belajar yang tersimpan.' : apiMessage}</p>
+          {apiStatus === 'error' && <button className="primary" onClick={() => window.location.reload()}>Coba lagi</button>}
+        </section>
+      </main>
+    );
+  }
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#konten">Lewati ke konten utama</a>
@@ -245,7 +259,6 @@ export default function Home() {
 
       <p className="sr-only" role="status" aria-live="polite">{notice}</p>
       <main className="page" id="konten" tabIndex={-1} ref={contentRef}>
-        {apiStatus !== 'ready' && <p className={`api-banner ${apiStatus}`} role="status">{apiStatus === 'loading' ? 'Memuat data belajar…' : apiMessage}</p>}
         {active === 'Beranda' && <>
         <section className="welcome">
           <div>

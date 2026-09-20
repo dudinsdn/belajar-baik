@@ -8,6 +8,13 @@
       "when": 1789913431811,
       "tag": "0000_foamy_daredevil",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789951000000,
+      "tag": "0001_seed_production",
+      "breakpoints": true
     }
   ]
 }
