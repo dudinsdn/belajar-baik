@@ -18,7 +18,8 @@
     "test:auth": "node --experimental-strip-types --test tests/server-auth.test.ts",
     "test:assignments": "node --experimental-strip-types --test tests/assignment-validation.test.ts",
     "test:grading": "node --experimental-strip-types --test tests/grading-validation.test.ts",
-    "test:progress": "node --experimental-strip-types --test tests/progress-validation.test.ts"
+    "test:progress": "node --experimental-strip-types --test tests/progress-validation.test.ts",
+    "test:stage3:e2e": "node scripts/stage-3-e2e.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
