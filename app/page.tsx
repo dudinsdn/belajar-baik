@@ -8,7 +8,7 @@ const courses = [
   { code: 'ING', title: 'Bahasa Inggris', teacher: 'Mr. Farhan', progress: 81, tone: 'green', next: 'Lanjut: Narrative text' },
 ];
 
-const nav = ['Beranda', 'Materi', 'Latihan', 'Tugas', 'Perpustakaan'];
+const studentNav = ['Beranda', 'Materi', 'Latihan', 'Tugas', 'Perpustakaan'];
 const assignments = [
   {id:1,subject:'Matematika',title:'Latihan Persamaan Kuadrat',due:'Hari ini · 20.00'},
   {id:2,subject:'Bahasa Inggris',title:'Ringkasan Narrative Text',due:'Besok · 18.00'},
@@ -38,6 +38,7 @@ type AssignmentData = { id:string; title:string; instructions:string; due_at:str
 type QuizData = { id:string; title:string; passing_score:number; subject:string; questions:Array<{ id:string; prompt:string; order_index:number; options:Array<{ id:string; question_id:string; label:string; order_index:number }> }> };
 type QuizAttempt = { id:string; quiz_id:string; status:'active'|'completed'; score:number | null };
 type QuizServerResult = { attempt:QuizAttempt; passingScore:number; passed:boolean; answers:Array<{ question_id:string; explanation:string; is_correct:number; correct_option_label:string }> };
+type TeacherSubmission = { id:string; assignment_id:string; assignment_title:string; subject:string; student_id:string; student_name:string; answer_text:string; status:'submitted'|'graded'; submitted_at:string; score:number | null; feedback:string | null; graded_at:string | null };
 type ApiEnvelope<T> = { data:T; error?:never } | { data?:never; error:{ message:string } };
 
 export default function Home() {
@@ -68,6 +69,9 @@ export default function Home() {
   const [assignmentAnswers, setAssignmentAnswers] = useState<Record<string,string>>({});
   const [savingAssignment, setSavingAssignment] = useState<string | null>(null);
   const [savingProgress, setSavingProgress] = useState<string | null>(null);
+  const [teacherSubmissions, setTeacherSubmissions] = useState<TeacherSubmission[]>([]);
+  const [teacherGrades, setTeacherGrades] = useState<Record<string,{ score:string; feedback:string }>>({});
+  const [savingGrade, setSavingGrade] = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<'loading'|'ready'|'error'>('loading');
   const [apiMessage, setApiMessage] = useState('');
   const contentRef = useRef<HTMLElement>(null);
@@ -94,15 +98,22 @@ export default function Home() {
       if (!response.ok || body.error) throw new Error(body.error?.message ?? 'Data tidak dapat dimuat.');
       return body.data as T;
     };
-    Promise.all([
-      read<ProfileData>('/api/v1/me'), read<DashboardData>('/api/v1/dashboard'),
-      read<MaterialData[]>('/api/v1/materials'), read<LibraryData[]>('/api/v1/library'), read<AssignmentData[]>('/api/v1/assignments'),
-    ]).then(([profile,dashboard,materials,books,studentAssignments]) => {
-      setProfileData(profile); setDashboardData(dashboard); setMaterialData(materials); setLibraryData(books);
+    read<ProfileData>('/api/v1/me').then(async profile => {
+      setProfileData(profile);
+      if (profile.role === 'teacher') {
+        const submissions = await read<TeacherSubmission[]>('/api/v1/teacher/submissions');
+        setTeacherSubmissions(submissions);
+        setTeacherGrades(Object.fromEntries(submissions.map(item=>[item.id,{ score:item.score?.toString() ?? '', feedback:item.feedback ?? '' }])));
+        setActive('Penilaian'); setApiStatus('ready'); return;
+      }
+      const [dashboard,materials,books,studentAssignments,quizPayload] = await Promise.all([
+        read<DashboardData>('/api/v1/dashboard'), read<MaterialData[]>('/api/v1/materials'), read<LibraryData[]>('/api/v1/library'),
+        read<AssignmentData[]>('/api/v1/assignments'), read<QuizData>('/api/v1/quizzes/quiz_surabaya'),
+      ]);
+      setDashboardData(dashboard); setMaterialData(materials); setLibraryData(books); setQuizData(quizPayload);
       setAssignmentData(studentAssignments); setAssignmentAnswers(Object.fromEntries(studentAssignments.map(task=>[task.id,task.answer_text ?? ''])));
       setSavedBooks(books.filter(book=>Boolean(book.bookmarked)).map((_,index)=>index+1)); setApiStatus('ready');
     }).catch(error => { if (error instanceof Error && error.name !== 'AbortError') { setApiMessage(error.message); setApiStatus('error'); } });
-    read<QuizData>('/api/v1/quizzes/quiz_surabaya').then(setQuizData).catch(()=>undefined);
     return () => controller.abort();
   }, []);
 
@@ -178,11 +189,21 @@ export default function Home() {
     finally { setQuizSaving(false); }
   };
   const restartServerQuiz = () => { setQuizStep(0); setQuizSelections({}); setQuizServerResult(null); setQuizAttemptId(null); };
+  const saveGrade = async (submissionId:string) => {
+    const grade=teacherGrades[submissionId]; if (!grade) return; setSavingGrade(submissionId);
+    try {
+      const response=await fetch(`/api/v1/submissions/${submissionId}/grade`,{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({score:Number(grade.score),feedback:grade.feedback})});
+      const payload=await response.json() as ApiEnvelope<TeacherSubmission>; if(!response.ok||payload.error) throw new Error(payload.error?.message??'Penilaian gagal disimpan.');
+      const updated=payload.data as TeacherSubmission; setTeacherSubmissions(current=>current.map(item=>item.id===submissionId?updated:item)); setNotice('Nilai dan umpan balik berhasil disimpan.');
+    } catch(error) { setNotice(error instanceof Error?error.message:'Penilaian gagal disimpan.'); }
+    finally { setSavingGrade(null); }
+  };
   const displayName = profileData?.displayName ?? 'Dudin Sahidin';
   const initials = displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase();
   const continueMaterial = dashboardData?.continueMaterial;
   const shownLibrary = (libraryData.length ? libraryData.map(book=>({id:book.id,code:book.subject_code??'BUK',title:book.title,author:book.author,progress:book.percent,bookmarked:Boolean(book.bookmarked)})) : library.map(book=>({...book,bookmarked:savedBooks.includes(book.id)})))
     .filter(book=>`${book.title} ${book.author}`.toLowerCase().includes(query.toLowerCase()));
+  const navigation = profileData?.role === 'teacher' ? ['Penilaian','Profil'] : studentNav;
 
   return (
     <div className="app-shell">
@@ -206,9 +227,9 @@ export default function Home() {
       <aside id="navigasi-utama" className={`sidebar ${menuOpen ? 'open' : ''}`} aria-label="Navigasi utama">
         <nav>
           <p className="nav-label">MENU BELAJAR</p>
-          {nav.map((item, index) => (
+          {navigation.map((item, index) => (
             <button key={item} className={active === item ? 'active' : ''} aria-current={active === item ? 'page' : undefined} onClick={() => goTo(item)}>
-              <span className="nav-icon" aria-hidden="true">{['⌂','▤','✓','□','▥'][index]}</span>{item}
+              <span className="nav-icon" aria-hidden="true">{profileData?.role === 'teacher' ? ['✓','◎'][index] : ['⌂','▤','✓','□','▥'][index]}</span>{item}
               {item === 'Tugas' && <span className="badge">2</span>}
             </button>
           ))}
@@ -295,13 +316,15 @@ export default function Home() {
           return <article className="assignment-card" key={task.id}><span>{task.subject}</span><h2>{task.title}</h2><p>{serverTask ? longDateTime.format(new Date(task.due_at)) : task.due}</p>{status === 'graded' ? <div className="teacher-note"><b>Nilai {serverTask ? task.score : ''}</b><p>{serverTask ? task.feedback : 'Sudut pandangmu bagus. Tambahkan contoh tindakan nyata.'}</p></div> : status === 'submitted' ? <div className="teacher-note"><b>Tugas sudah terkirim</b><p>Jawaban menunggu penilaian guru.</p></div> : <><textarea aria-label={`Jawaban ${task.title}`} placeholder="Tuliskan jawaban atau catatan untuk guru…" value={serverTask ? assignmentAnswers[task.id] ?? '' : undefined} onChange={serverTask ? event=>setAssignmentAnswers(current=>({...current,[task.id]:event.target.value})) : undefined}/><button className="primary" disabled={savingAssignment === String(task.id)} onClick={()=>submitTask(task.id)}>{savingAssignment === String(task.id) ? 'Mengirim…' : 'Kirim tugas'}</button></>}</article>;
         })}</div></section>}
 
+        {active === 'Penilaian' && <section><header className="inner-header"><div><p className="eyebrow">RUANG GURU</p><h1>Penilaian tugas siswa</h1><p>Periksa jawaban, berikan nilai, dan kirim umpan balik yang jelas.</p></div><span className="queue-count">{teacherSubmissions.filter(item=>item.status==='submitted').length} menunggu</span></header>{teacherSubmissions.length ? <div className="grading-list">{teacherSubmissions.map(item=>{const grade=teacherGrades[item.id]??{score:'',feedback:''};return <article className="grading-card" key={item.id}><div className="grading-meta"><span>{item.subject}</span><b className={item.status==='graded'?'graded':'waiting'}>{item.status==='graded'?'Sudah dinilai':'Menunggu penilaian'}</b></div><h2>{item.assignment_title}</h2><p className="student-name">{item.student_name} · dikirim {longDateTime.format(new Date(item.submitted_at))}</p><blockquote>{item.answer_text}</blockquote><div className="grade-fields"><label>Nilai<input aria-label={`Nilai ${item.student_name}`} type="number" min="0" max="100" step="1" value={grade.score} onChange={event=>setTeacherGrades(current=>({...current,[item.id]:{...grade,score:event.target.value}}))}/></label><label>Umpan balik<textarea aria-label={`Umpan balik ${item.student_name}`} value={grade.feedback} onChange={event=>setTeacherGrades(current=>({...current,[item.id]:{...grade,feedback:event.target.value}}))} placeholder="Tuliskan kekuatan jawaban dan saran perbaikan…"/></label></div><button className="primary" disabled={savingGrade===item.id||!grade.score||!grade.feedback.trim()} onClick={()=>saveGrade(item.id)}>{savingGrade===item.id?'Menyimpan…':item.status==='graded'?'Perbarui penilaian':'Simpan penilaian'}</button></article>})}</div>:<div className="empty-state"><span aria-hidden="true">✓</span><h1>Belum ada tugas untuk dinilai</h1><p>Pengumpulan siswa yang sudah dikirim akan muncul di sini.</p></div>}</section>}
+
         {active === 'Perpustakaan' && <section><header className="inner-header"><div><p className="eyebrow">EPERPUSTAKAAN</p><h1>Temukan bahan belajar</h1><p>Cari, simpan, dan lanjutkan bacaanmu.</p></div></header><input className="library-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari judul atau penulis…" aria-label="Cari buku"/><div className="library-grid">{shownLibrary.map(book=><article className="library-card" key={book.id}><div className="book-cover"><b>{book.code}</b><small>{book.progress?`${book.progress}% selesai`:'Belum dibaca'}</small></div><div><p>{book.author}</p><h2>{book.title}</h2><div className="progress"><span style={{width:`${book.progress}%`}}/></div><div className="book-actions"><button className="text-button" disabled={savingProgress===String(book.id)} onClick={()=>typeof book.id==='string' ? advanceLibrary(book.id) : goTo('Materi')}>{typeof book.id==='string' ? 'Catat +10%' : book.progress?'Lanjutkan':'Mulai baca'}</button><button className="save-book" disabled={savingProgress===String(book.id)} onClick={()=>toggleBook(book.id)} aria-pressed={book.bookmarked}>{book.bookmarked?'★ Tersimpan':'☆ Simpan'}</button></div></div></article>)}</div>{shownLibrary.length === 0 && <div className="empty-state"><span aria-hidden="true">⌕</span><h1>Buku tidak ditemukan</h1><p>Coba gunakan kata kunci judul atau penulis yang berbeda.</p></div>}</section>}
 
         {active === 'Profil' && <section><header className="inner-header"><div><p className="eyebrow">PROFIL & PENGATURAN</p><h1>Ruang belajar milikmu</h1><p>Identitas dan progres berasal dari akun belajar. Preferensi tetap disimpan di perangkat ini.</p></div></header><div className="profile-settings-grid"><article className="student-profile-card"><span className="profile-avatar-large">{initials}</span><div><h2>{displayName}</h2><p>{profileData?.enrollment ? `${profileData.enrollment.program} · Kelas ${profileData.enrollment.grade_level}` : profileData?.role ?? 'Siswa'}</p><small>{profileData?.email ?? 'Memuat identitas…'}</small></div><dl><div><dt>Rangkaian</dt><dd>4 hari</dd></div><div><dt>Materi dimulai</dt><dd>{dashboardData?.progress?.started ?? 0}</dd></div><div><dt>Nilai rata-rata</dt><dd>{Math.round(dashboardData?.progress?.average_percent ?? 0)}</dd></div></dl></article><article className="preferences-card"><div><h2>Target belajar harian</h2><p>Pilih durasi yang realistis agar belajar tetap konsisten.</p><div className="setting-options">{[15,30,45,60].map(goal=><button key={goal} className={dailyGoal===goal?'active':''} onClick={()=>{setDailyGoal(goal);localStorage.setItem('rt-daily-goal',String(goal));setNotice(`Target belajar diubah menjadi ${goal} menit.`)}}>{goal} menit</button>)}</div></div><div className="setting-divider"/><label className="setting-toggle"><span><b>Pengingat belajar</b><small>Pengingat target harian dan tenggat tugas.</small></span><input type="checkbox" checked={reminders} onChange={e=>{setReminders(e.target.checked);localStorage.setItem('rt-reminders',String(e.target.checked))}}/></label><div className="setting-divider"/><div><h2>Ukuran tampilan</h2><p>Pilih kerapatan teks yang paling nyaman dibaca.</p><div className="setting-options">{['Ringkas','Nyaman','Besar'].map(mode=><button key={mode} className={readingMode===mode?'active':''} onClick={()=>{setReadingMode(mode);localStorage.setItem('rt-reading-mode',mode);setFontSize(mode==='Besar'?22:mode==='Ringkas'?16:18)}}>{mode}</button>)}</div></div><div className="setting-divider"/><button className="reset-button" onClick={()=>{localStorage.removeItem('rt-submitted');localStorage.removeItem('rt-books');localStorage.removeItem('rt-daily-goal');localStorage.removeItem('rt-reminders');localStorage.removeItem('rt-reading-mode');setSubmitted([]);setSavedBooks([]);setDailyGoal(30);setReminders(true);setReadingMode('Nyaman');setNotice('Progres dan preferensi lokal telah diatur ulang.')}}>Atur ulang progres lokal</button></article></div></section>}
       </main>
 
       <nav className="bottom-nav" aria-label="Navigasi seluler">
-        {nav.slice(0,4).map((item, index) => <button key={item} className={active === item ? 'active' : ''} aria-current={active === item ? 'page' : undefined} onClick={() => goTo(item)}><span aria-hidden="true">{['⌂','▤','✓','□'][index]}</span>{item}</button>)}
+        {navigation.slice(0,4).map((item, index) => <button key={item} className={active === item ? 'active' : ''} aria-current={active === item ? 'page' : undefined} onClick={() => goTo(item)}><span aria-hidden="true">{profileData?.role === 'teacher' ? ['✓','◎'][index] : ['⌂','▤','✓','□'][index]}</span>{item}</button>)}
       </nav>
     </div>
   );

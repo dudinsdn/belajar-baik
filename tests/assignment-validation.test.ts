@@ -7,6 +7,7 @@ test('assignment answer parser trims valid text', () => {
   assert.equal(parseAnswerText({ answerText:'  Jawaban siswa  ' }), 'Jawaban siswa');
 });
 
+
 test('assignment answer parser rejects missing and oversized text', () => {
   assert.throws(() => parseAnswerText({}), ApiError);
   assert.throws(() => parseAnswerText({ answerText:'x'.repeat(5001) }), ApiError);

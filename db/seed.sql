@@ -27,6 +27,9 @@ INSERT OR IGNORE INTO material_progress (material_id, student_id, percent, last_
 INSERT OR IGNORE INTO assignments (id, class_subject_id, title, instructions, submission_type, due_at, allow_late, status, author_id, created_at, updated_at) VALUES
   ('asg_refleksi', 'cs_sej_10', 'Refleksi Pertempuran Surabaya', 'Tuliskan makna perjuangan bagi generasi muda.', 'text', '2026-09-22T13:00:00Z', 0, 'published', 'usr_teacher_adi', datetime('now'), datetime('now'));
 
+INSERT OR IGNORE INTO submissions (id, assignment_id, student_id, answer_text, status, submitted_at, score, feedback, graded_by, graded_at, created_at, updated_at) VALUES
+  ('sub_refleksi_dudin', 'asg_refleksi', 'usr_student_dudin', 'Semangat perjuangan dapat diterapkan dengan belajar sungguh-sungguh, bekerja sama, dan menjaga persatuan.', 'submitted', datetime('now'), NULL, NULL, NULL, NULL, datetime('now'), datetime('now'));
+
 INSERT OR IGNORE INTO quizzes (id, class_subject_id, material_id, title, status, passing_score, author_id, created_at, updated_at) VALUES
   ('quiz_surabaya', 'cs_sej_10', 'mat_surabaya', 'Latihan Pertempuran Surabaya', 'published', 70, 'usr_teacher_adi', datetime('now'), datetime('now'));
 

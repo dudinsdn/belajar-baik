@@ -17,6 +17,7 @@
     "db:local:inspect": "wrangler d1 execute site-creator-d1 --local --config wrangler.local.jsonc --command 'SELECT name FROM sqlite_schema WHERE type=\"table\" ORDER BY name; SELECT \"users\" AS entity, count(*) AS count FROM users UNION ALL SELECT \"materials\", count(*) FROM materials UNION ALL SELECT \"assignments\", count(*) FROM assignments UNION ALL SELECT \"library_items\", count(*) FROM library_items;'",
     "test:auth": "node --experimental-strip-types --test tests/server-auth.test.ts",
     "test:assignments": "node --experimental-strip-types --test tests/assignment-validation.test.ts",
+    "test:grading": "node --experimental-strip-types --test tests/grading-validation.test.ts",
     "test:progress": "node --experimental-strip-types --test tests/progress-validation.test.ts"
   },
   "dependencies": {

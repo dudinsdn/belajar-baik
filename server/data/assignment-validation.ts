@@ -9,3 +9,21 @@ export function parseAnswerText(input: unknown, required = false) {
   if (answerText.length > 5000) throw new ApiError('VALIDATION_ERROR', 422, 'Jawaban terlalu panjang.', { answerText:'Maksimal 5.000 karakter.' });
   return answerText;
 }
+
+export function parseGrade(input: unknown) {
+  if (!input || typeof input !== 'object') {
+    throw new ApiError('VALIDATION_ERROR', 422, 'Data penilaian belum lengkap.');
+  }
+  const { score, feedback } = input as { score?:unknown; feedback?:unknown };
+  if (!Number.isInteger(score) || (score as number) < 0 || (score as number) > 100) {
+    throw new ApiError('VALIDATION_ERROR', 422, 'Nilai harus berupa bilangan bulat 0–100.', { score:'Gunakan bilangan bulat dari 0 sampai 100.' });
+  }
+  if (typeof feedback !== 'string' || !feedback.trim()) {
+    throw new ApiError('VALIDATION_ERROR', 422, 'Umpan balik wajib diisi.', { feedback:'Tuliskan umpan balik untuk siswa.' });
+  }
+  const normalizedFeedback = feedback.trim();
+  if (normalizedFeedback.length > 2000) {
+    throw new ApiError('VALIDATION_ERROR', 422, 'Umpan balik terlalu panjang.', { feedback:'Maksimal 2.000 karakter.' });
+  }
+  return { score:score as number, feedback:normalizedFeedback };
+}
