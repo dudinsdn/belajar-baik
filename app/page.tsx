@@ -31,6 +31,7 @@ type ProfileData = { id:string; email:string; displayName:string; role:string; e
 type DashboardData = { continueMaterial?:{ id:string; title:string; subject:string; percent:number; last_position:string | null } | null; assignments:Array<{ id:string; title:string; due_at:string; subject:string; submission_status:string }>; progress?:{ started:number; average_percent:number } | null };
 type MaterialData = { id:string; title:string; summary:string; order_index:number; subject_code:string; subject:string; percent:number; last_position:string | null; completed_at:string | null };
 type LibraryData = { id:string; title:string; author:string; description:string; page_count:number; subject_code:string | null; subject:string | null; percent:number; bookmarked:number; last_position:string | null };
+type AssignmentData = { id:string; title:string; instructions:string; due_at:string; subject:string; answer_text:string | null; submission_status:string; score:number | null; feedback:string | null };
 type ApiEnvelope<T> = { data:T; error?:never } | { data?:never; error:{ message:string } };
 
 export default function Home() {
@@ -52,6 +53,9 @@ export default function Home() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [materialData, setMaterialData] = useState<MaterialData[]>([]);
   const [libraryData, setLibraryData] = useState<LibraryData[]>([]);
+  const [assignmentData, setAssignmentData] = useState<AssignmentData[]>([]);
+  const [assignmentAnswers, setAssignmentAnswers] = useState<Record<string,string>>({});
+  const [savingAssignment, setSavingAssignment] = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<'loading'|'ready'|'error'>('loading');
   const [apiMessage, setApiMessage] = useState('');
   const contentRef = useRef<HTMLElement>(null);
@@ -80,16 +84,32 @@ export default function Home() {
     };
     Promise.all([
       read<ProfileData>('/api/v1/me'), read<DashboardData>('/api/v1/dashboard'),
-      read<MaterialData[]>('/api/v1/materials'), read<LibraryData[]>('/api/v1/library'),
-    ]).then(([profile,dashboard,materials,books]) => {
+      read<MaterialData[]>('/api/v1/materials'), read<LibraryData[]>('/api/v1/library'), read<AssignmentData[]>('/api/v1/assignments'),
+    ]).then(([profile,dashboard,materials,books,studentAssignments]) => {
       setProfileData(profile); setDashboardData(dashboard); setMaterialData(materials); setLibraryData(books);
+      setAssignmentData(studentAssignments); setAssignmentAnswers(Object.fromEntries(studentAssignments.map(task=>[task.id,task.answer_text ?? ''])));
       setSavedBooks(books.filter(book=>Boolean(book.bookmarked)).map((_,index)=>index+1)); setApiStatus('ready');
     }).catch(error => { if (error instanceof Error && error.name !== 'AbortError') { setApiMessage(error.message); setApiStatus('error'); } });
     return () => controller.abort();
   }, []);
 
   const toggleBook = (id:number) => { const next=savedBooks.includes(id)?savedBooks.filter(x=>x!==id):[...savedBooks,id]; setSavedBooks(next); localStorage.setItem('rt-books',JSON.stringify(next)); };
-  const submitTask = (id:number) => { const next=[...new Set([...submitted,id])]; setSubmitted(next); localStorage.setItem('rt-submitted',JSON.stringify(next)); setNotice('Tugas tersimpan sebagai terkirim di perangkat ini.'); };
+  const submitTask = async (id:number|string) => {
+    if (typeof id === 'number') { const next=[...new Set([...submitted,id])]; setSubmitted(next); localStorage.setItem('rt-submitted',JSON.stringify(next)); setNotice('Tugas tersimpan sebagai terkirim di perangkat ini.'); return; }
+    setSavingAssignment(id);
+    try {
+      const write = async <T,>(url:string, method:string, body?:unknown) => {
+        const response = await fetch(url, { method, headers:body ? {'content-type':'application/json'} : undefined, body:body ? JSON.stringify(body) : undefined });
+        const payload = await response.json() as ApiEnvelope<T>;
+        if (!response.ok || payload.error) throw new Error(payload.error?.message ?? 'Tugas gagal dikirim.');
+        return payload.data as T;
+      };
+      await write<AssignmentData>(`/api/v1/assignments/${id}/submission`, 'PUT', { answerText:assignmentAnswers[id] ?? '' });
+      const updated = await write<AssignmentData>(`/api/v1/assignments/${id}/submission/submit`, 'POST');
+      setAssignmentData(current=>current.map(task=>task.id===id ? updated : task)); setNotice('Tugas berhasil dikirim ke server lokal.');
+    } catch (error) { setNotice(error instanceof Error ? error.message : 'Tugas gagal dikirim.'); }
+    finally { setSavingAssignment(null); }
+  };
   const displayName = profileData?.displayName ?? 'Dudin Sahidin';
   const initials = displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase();
   const continueMaterial = dashboardData?.continueMaterial;
@@ -208,7 +228,10 @@ export default function Home() {
           </div>
         </section>}
 
-        {active === 'Tugas' && <section><header className="inner-header"><div><p className="eyebrow">RUANG TUGAS</p><h1>Tugas yang terarah</h1><p>Status pengumpulan disimpan di perangkat ini.</p></div></header><div className="assignment-grid">{assignments.map(task=><article className="assignment-card" key={task.id}><span>{task.subject}</span><h2>{task.title}</h2><p>{task.due}</p>{task.id===3?<div className="teacher-note"><b>Umpan balik guru</b><p>Sudut pandangmu bagus. Tambahkan contoh tindakan nyata.</p></div>:<><textarea aria-label={`Jawaban ${task.title}`} placeholder="Tuliskan jawaban atau catatan untuk guru…"/><button className="primary" onClick={()=>submitTask(task.id)}>{submitted.includes(task.id)?'Terkirim ✓':'Kirim tugas'}</button></>}</article>)}</div></section>}
+        {active === 'Tugas' && <section><header className="inner-header"><div><p className="eyebrow">RUANG TUGAS</p><h1>Tugas yang terarah</h1><p>{assignmentData.length ? 'Jawaban dan status pengumpulan tersimpan di server belajar.' : 'Status pengumpulan disimpan di perangkat ini.'}</p></div></header><div className="assignment-grid">{(assignmentData.length ? assignmentData : assignments).map(task=>{
+          const serverTask = 'due_at' in task; const status = serverTask ? task.submission_status : (submitted.includes(task.id) ? 'submitted' : 'not_started');
+          return <article className="assignment-card" key={task.id}><span>{task.subject}</span><h2>{task.title}</h2><p>{serverTask ? new Intl.DateTimeFormat('id-ID',{dateStyle:'long',timeStyle:'short'}).format(new Date(task.due_at)) : task.due}</p>{status === 'graded' ? <div className="teacher-note"><b>Nilai {serverTask ? task.score : ''}</b><p>{serverTask ? task.feedback : 'Sudut pandangmu bagus. Tambahkan contoh tindakan nyata.'}</p></div> : status === 'submitted' ? <div className="teacher-note"><b>Tugas sudah terkirim</b><p>Jawaban menunggu penilaian guru.</p></div> : <><textarea aria-label={`Jawaban ${task.title}`} placeholder="Tuliskan jawaban atau catatan untuk guru…" value={serverTask ? assignmentAnswers[task.id] ?? '' : undefined} onChange={serverTask ? event=>setAssignmentAnswers(current=>({...current,[task.id]:event.target.value})) : undefined}/><button className="primary" disabled={savingAssignment === String(task.id)} onClick={()=>submitTask(task.id)}>{savingAssignment === String(task.id) ? 'Mengirim…' : 'Kirim tugas'}</button></>}</article>;
+        })}</div></section>}
 
         {active === 'Perpustakaan' && <section><header className="inner-header"><div><p className="eyebrow">EPERPUSTAKAAN</p><h1>Temukan bahan belajar</h1><p>Cari, simpan, dan lanjutkan bacaanmu.</p></div></header><input className="library-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari judul atau penulis…" aria-label="Cari buku"/><div className="library-grid">{shownLibrary.map(book=><article className="library-card" key={book.id}><div className="book-cover"><b>{book.code}</b><small>{book.progress?`${book.progress}% selesai`:'Belum dibaca'}</small></div><div><p>{book.author}</p><h2>{book.title}</h2><div className="progress"><span style={{width:`${book.progress}%`}}/></div><div className="book-actions"><button className="text-button" onClick={()=>goTo('Materi')}>{book.progress?'Lanjutkan':'Mulai baca'}</button><button className="save-book" onClick={()=>toggleBook(book.id)} aria-pressed={savedBooks.includes(book.id)}>{savedBooks.includes(book.id)?'★ Tersimpan':'☆ Simpan'}</button></div></div></article>)}</div>{shownLibrary.length === 0 && <div className="empty-state"><span aria-hidden="true">⌕</span><h1>Buku tidak ditemukan</h1><p>Coba gunakan kata kunci judul atau penulis yang berbeda.</p></div>}</section>}
 
