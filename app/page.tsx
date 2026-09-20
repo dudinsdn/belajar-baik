@@ -59,6 +59,7 @@ export default function Home() {
   const [assignmentData, setAssignmentData] = useState<AssignmentData[]>([]);
   const [assignmentAnswers, setAssignmentAnswers] = useState<Record<string,string>>({});
   const [savingAssignment, setSavingAssignment] = useState<string | null>(null);
+  const [savingProgress, setSavingProgress] = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<'loading'|'ready'|'error'>('loading');
   const [apiMessage, setApiMessage] = useState('');
   const contentRef = useRef<HTMLElement>(null);
@@ -96,7 +97,36 @@ export default function Home() {
     return () => controller.abort();
   }, []);
 
-  const toggleBook = (id:number) => { const next=savedBooks.includes(id)?savedBooks.filter(x=>x!==id):[...savedBooks,id]; setSavedBooks(next); localStorage.setItem('rt-books',JSON.stringify(next)); };
+  const toggleBook = async (id:number|string) => {
+    if (typeof id === 'number') { const next=savedBooks.includes(id)?savedBooks.filter(x=>x!==id):[...savedBooks,id]; setSavedBooks(next); localStorage.setItem('rt-books',JSON.stringify(next)); return; }
+    const book = libraryData.find(item=>item.id===id); if (!book) return;
+    setSavingProgress(id);
+    try {
+      const response = await fetch(`/api/v1/library/${id}/progress`, { method:'PUT', headers:{'content-type':'application/json'}, body:JSON.stringify({ percent:book.percent, lastPosition:book.last_position, bookmarked:!Boolean(book.bookmarked) }) });
+      const payload = await response.json() as ApiEnvelope<unknown>; if (!response.ok || payload.error) throw new Error(payload.error?.message ?? 'Buku gagal disimpan.');
+      setLibraryData(current=>current.map(item=>item.id===id ? {...item,bookmarked:item.bookmarked ? 0 : 1} : item)); setNotice(book.bookmarked ? 'Buku dihapus dari daftar tersimpan.' : 'Buku disimpan ke akun belajar.');
+    } catch (error) { setNotice(error instanceof Error ? error.message : 'Buku gagal disimpan.'); }
+    finally { setSavingProgress(null); }
+  };
+  const advanceLibrary = async (id:string) => {
+    const book = libraryData.find(item=>item.id===id); if (!book) return; const percent=Math.min(100,book.percent+10);
+    setSavingProgress(id);
+    try {
+      const response = await fetch(`/api/v1/library/${id}/progress`, { method:'PUT', headers:{'content-type':'application/json'}, body:JSON.stringify({ percent, lastPosition:`progres-${percent}`, bookmarked:Boolean(book.bookmarked) }) });
+      const payload = await response.json() as ApiEnvelope<unknown>; if (!response.ok || payload.error) throw new Error(payload.error?.message ?? 'Progres gagal disimpan.');
+      setLibraryData(current=>current.map(item=>item.id===id ? {...item,percent,last_position:`progres-${percent}`} : item)); setNotice(`Progres buku diperbarui menjadi ${percent}%.`);
+    } catch (error) { setNotice(error instanceof Error ? error.message : 'Progres gagal disimpan.'); }
+    finally { setSavingProgress(null); }
+  };
+  const saveMaterialProgress = async () => {
+    const material=materialData[0]; if (!material) { setBookmarked(!bookmarked); return; } setSavingProgress(material.id);
+    try {
+      const response = await fetch(`/api/v1/materials/${material.id}/progress`, { method:'PUT', headers:{'content-type':'application/json'}, body:JSON.stringify({ percent:material.percent, lastPosition:material.last_position ?? 'halaman-12' }) });
+      const payload = await response.json() as ApiEnvelope<unknown>; if (!response.ok || payload.error) throw new Error(payload.error?.message ?? 'Progres materi gagal disimpan.');
+      setBookmarked(true); setNotice('Posisi dan progres materi disimpan ke akun belajar.');
+    } catch (error) { setNotice(error instanceof Error ? error.message : 'Progres materi gagal disimpan.'); }
+    finally { setSavingProgress(null); }
+  };
   const submitTask = async (id:number|string) => {
     if (typeof id === 'number') { const next=[...new Set([...submitted,id])]; setSubmitted(next); localStorage.setItem('rt-submitted',JSON.stringify(next)); setNotice('Tugas tersimpan sebagai terkirim di perangkat ini.'); return; }
     setSavingAssignment(id);
@@ -116,7 +146,7 @@ export default function Home() {
   const displayName = profileData?.displayName ?? 'Dudin Sahidin';
   const initials = displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase();
   const continueMaterial = dashboardData?.continueMaterial;
-  const shownLibrary = (libraryData.length ? libraryData.map((book,index)=>({id:index+1,code:book.subject_code??'BUK',title:book.title,author:book.author,progress:book.percent})) : library)
+  const shownLibrary = (libraryData.length ? libraryData.map(book=>({id:book.id,code:book.subject_code??'BUK',title:book.title,author:book.author,progress:book.percent,bookmarked:Boolean(book.bookmarked)})) : library.map(book=>({...book,bookmarked:savedBooks.includes(book.id)})))
     .filter(book=>`${book.title} ${book.author}`.toLowerCase().includes(query.toLowerCase()));
 
   return (
@@ -205,7 +235,7 @@ export default function Home() {
         </>}
 
         {active === 'Materi' && <section className="reader-page">
-          <header className="inner-header"><div><p className="eyebrow">{materialData[0] ? `${materialData[0].subject.toUpperCase()} · MATERI ${materialData[0].order_index}` : 'SEJARAH INDONESIA · BAB 3'}</p><h1>{materialData[0]?.title ?? 'Mempertahankan Kemerdekaan'}</h1><p>{materialData[0]?.last_position ? `Terakhir dibaca: ${materialData[0].last_position}` : materialData[0]?.summary ?? 'Terakhir dibaca: halaman 12 dari 28'}</p></div><button className={bookmarked ? 'bookmark saved' : 'bookmark'} onClick={() => setBookmarked(!bookmarked)} aria-pressed={bookmarked}><span aria-hidden="true">{bookmarked ? '★' : '☆'}</span>{bookmarked ? 'Tersimpan' : 'Simpan halaman'}</button></header>
+          <header className="inner-header"><div><p className="eyebrow">{materialData[0] ? `${materialData[0].subject.toUpperCase()} · MATERI ${materialData[0].order_index}` : 'SEJARAH INDONESIA · BAB 3'}</p><h1>{materialData[0]?.title ?? 'Mempertahankan Kemerdekaan'}</h1><p>{materialData[0]?.last_position ? `Terakhir dibaca: ${materialData[0].last_position}` : materialData[0]?.summary ?? 'Terakhir dibaca: halaman 12 dari 28'}</p></div><button className={bookmarked ? 'bookmark saved' : 'bookmark'} disabled={savingProgress===materialData[0]?.id} onClick={saveMaterialProgress} aria-pressed={bookmarked}><span aria-hidden="true">{bookmarked ? '★' : '☆'}</span>{savingProgress===materialData[0]?.id ? 'Menyimpan…' : bookmarked ? 'Progres tersimpan' : 'Simpan progres'}</button></header>
           <div className="reader-layout">
             <aside className="toc"><p className="eyebrow">DAFTAR ISI</p><button className="done">✓ Proklamasi</button><button className="done">✓ Kedatangan Sekutu</button><button className="current">3. Pertempuran Surabaya</button><button>4. Diplomasi Indonesia</button><button>5. Pengakuan Kedaulatan</button></aside>
             <article className="reader" style={{fontSize}}>
@@ -236,7 +266,7 @@ export default function Home() {
           return <article className="assignment-card" key={task.id}><span>{task.subject}</span><h2>{task.title}</h2><p>{serverTask ? longDateTime.format(new Date(task.due_at)) : task.due}</p>{status === 'graded' ? <div className="teacher-note"><b>Nilai {serverTask ? task.score : ''}</b><p>{serverTask ? task.feedback : 'Sudut pandangmu bagus. Tambahkan contoh tindakan nyata.'}</p></div> : status === 'submitted' ? <div className="teacher-note"><b>Tugas sudah terkirim</b><p>Jawaban menunggu penilaian guru.</p></div> : <><textarea aria-label={`Jawaban ${task.title}`} placeholder="Tuliskan jawaban atau catatan untuk guru…" value={serverTask ? assignmentAnswers[task.id] ?? '' : undefined} onChange={serverTask ? event=>setAssignmentAnswers(current=>({...current,[task.id]:event.target.value})) : undefined}/><button className="primary" disabled={savingAssignment === String(task.id)} onClick={()=>submitTask(task.id)}>{savingAssignment === String(task.id) ? 'Mengirim…' : 'Kirim tugas'}</button></>}</article>;
         })}</div></section>}
 
-        {active === 'Perpustakaan' && <section><header className="inner-header"><div><p className="eyebrow">EPERPUSTAKAAN</p><h1>Temukan bahan belajar</h1><p>Cari, simpan, dan lanjutkan bacaanmu.</p></div></header><input className="library-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari judul atau penulis…" aria-label="Cari buku"/><div className="library-grid">{shownLibrary.map(book=><article className="library-card" key={book.id}><div className="book-cover"><b>{book.code}</b><small>{book.progress?`${book.progress}% selesai`:'Belum dibaca'}</small></div><div><p>{book.author}</p><h2>{book.title}</h2><div className="progress"><span style={{width:`${book.progress}%`}}/></div><div className="book-actions"><button className="text-button" onClick={()=>goTo('Materi')}>{book.progress?'Lanjutkan':'Mulai baca'}</button><button className="save-book" onClick={()=>toggleBook(book.id)} aria-pressed={savedBooks.includes(book.id)}>{savedBooks.includes(book.id)?'★ Tersimpan':'☆ Simpan'}</button></div></div></article>)}</div>{shownLibrary.length === 0 && <div className="empty-state"><span aria-hidden="true">⌕</span><h1>Buku tidak ditemukan</h1><p>Coba gunakan kata kunci judul atau penulis yang berbeda.</p></div>}</section>}
+        {active === 'Perpustakaan' && <section><header className="inner-header"><div><p className="eyebrow">EPERPUSTAKAAN</p><h1>Temukan bahan belajar</h1><p>Cari, simpan, dan lanjutkan bacaanmu.</p></div></header><input className="library-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari judul atau penulis…" aria-label="Cari buku"/><div className="library-grid">{shownLibrary.map(book=><article className="library-card" key={book.id}><div className="book-cover"><b>{book.code}</b><small>{book.progress?`${book.progress}% selesai`:'Belum dibaca'}</small></div><div><p>{book.author}</p><h2>{book.title}</h2><div className="progress"><span style={{width:`${book.progress}%`}}/></div><div className="book-actions"><button className="text-button" disabled={savingProgress===String(book.id)} onClick={()=>typeof book.id==='string' ? advanceLibrary(book.id) : goTo('Materi')}>{typeof book.id==='string' ? 'Catat +10%' : book.progress?'Lanjutkan':'Mulai baca'}</button><button className="save-book" disabled={savingProgress===String(book.id)} onClick={()=>toggleBook(book.id)} aria-pressed={book.bookmarked}>{book.bookmarked?'★ Tersimpan':'☆ Simpan'}</button></div></div></article>)}</div>{shownLibrary.length === 0 && <div className="empty-state"><span aria-hidden="true">⌕</span><h1>Buku tidak ditemukan</h1><p>Coba gunakan kata kunci judul atau penulis yang berbeda.</p></div>}</section>}
 
         {active === 'Profil' && <section><header className="inner-header"><div><p className="eyebrow">PROFIL & PENGATURAN</p><h1>Ruang belajar milikmu</h1><p>Identitas dan progres berasal dari akun belajar. Preferensi tetap disimpan di perangkat ini.</p></div></header><div className="profile-settings-grid"><article className="student-profile-card"><span className="profile-avatar-large">{initials}</span><div><h2>{displayName}</h2><p>{profileData?.enrollment ? `${profileData.enrollment.program} · Kelas ${profileData.enrollment.grade_level}` : profileData?.role ?? 'Siswa'}</p><small>{profileData?.email ?? 'Memuat identitas…'}</small></div><dl><div><dt>Rangkaian</dt><dd>4 hari</dd></div><div><dt>Materi dimulai</dt><dd>{dashboardData?.progress?.started ?? 0}</dd></div><div><dt>Nilai rata-rata</dt><dd>{Math.round(dashboardData?.progress?.average_percent ?? 0)}</dd></div></dl></article><article className="preferences-card"><div><h2>Target belajar harian</h2><p>Pilih durasi yang realistis agar belajar tetap konsisten.</p><div className="setting-options">{[15,30,45,60].map(goal=><button key={goal} className={dailyGoal===goal?'active':''} onClick={()=>{setDailyGoal(goal);localStorage.setItem('rt-daily-goal',String(goal));setNotice(`Target belajar diubah menjadi ${goal} menit.`)}}>{goal} menit</button>)}</div></div><div className="setting-divider"/><label className="setting-toggle"><span><b>Pengingat belajar</b><small>Pengingat target harian dan tenggat tugas.</small></span><input type="checkbox" checked={reminders} onChange={e=>{setReminders(e.target.checked);localStorage.setItem('rt-reminders',String(e.target.checked))}}/></label><div className="setting-divider"/><div><h2>Ukuran tampilan</h2><p>Pilih kerapatan teks yang paling nyaman dibaca.</p><div className="setting-options">{['Ringkas','Nyaman','Besar'].map(mode=><button key={mode} className={readingMode===mode?'active':''} onClick={()=>{setReadingMode(mode);localStorage.setItem('rt-reading-mode',mode);setFontSize(mode==='Besar'?22:mode==='Ringkas'?16:18)}}>{mode}</button>)}</div></div><div className="setting-divider"/><button className="reset-button" onClick={()=>{localStorage.removeItem('rt-submitted');localStorage.removeItem('rt-books');localStorage.removeItem('rt-daily-goal');localStorage.removeItem('rt-reminders');localStorage.removeItem('rt-reading-mode');setSubmitted([]);setSavedBooks([]);setDailyGoal(30);setReminders(true);setReadingMode('Nyaman');setNotice('Progres dan preferensi lokal telah diatur ulang.')}}>Atur ulang progres lokal</button></article></div></section>}
       </main>
