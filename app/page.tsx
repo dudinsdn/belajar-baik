@@ -9,15 +9,37 @@ const courses = [
 ];
 
 const nav = ['Beranda', 'Materi', 'Latihan', 'Tugas', 'Perpustakaan'];
+const assignments = [
+  {id:1,subject:'Matematika',title:'Latihan Persamaan Kuadrat',due:'Hari ini · 20.00'},
+  {id:2,subject:'Bahasa Inggris',title:'Ringkasan Narrative Text',due:'Besok · 18.00'},
+  {id:3,subject:'Sejarah',title:'Refleksi Pertempuran Surabaya',due:'Dinilai · 88'},
+];
+const library = [
+  {id:1,code:'SEJ',title:'Indonesia Mempertahankan Kemerdekaan',author:'Tim Sejarah Nasional',progress:43},
+  {id:2,code:'MAT',title:'Aljabar dalam Kehidupan Sehari-hari',author:'Ratna Sari',progress:18},
+  {id:3,code:'ING',title:'Everyday English Stories',author:'Farhan Akbar',progress:0},
+];
+const quiz = [
+  ['Apa dampak strategis Pertempuran Surabaya?', ['Pengakuan langsung Belanda','Sekutu pergi keesokan hari','Menarik perhatian dunia dan memperkuat legitimasi perjuangan','Pusat pemerintahan pindah'], 2],
+  ['Mengapa 10 November diperingati sebagai Hari Pahlawan?', ['Hari Proklamasi','Puncak perlawanan rakyat Surabaya','Hari pengakuan kedaulatan','Hari pembentukan pemerintahan'], 1],
+  ['Siapa tokoh yang membakar semangat arek-arek Surabaya?', ['Bung Tomo','Mohammad Hatta','Jenderal Sudirman','Sutan Sjahrir'], 0],
+  ['Apa cara diplomasi Indonesia mempertahankan kemerdekaan?', ['Menutup hubungan luar negeri','Menyerahkan pemerintahan','Mencari pengakuan internasional','Menghentikan pemerintahan'], 2],
+  ['Nilai utama dari Pertempuran Surabaya adalah…', ['Kepentingan pribadi','Keberanian, persatuan, dan rela berkorban','Menghindari perubahan','Menyerahkan keputusan'], 1],
+] as const;
 
 export default function Home() {
   const [active, setActive] = useState('Beranda');
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [fontSize, setFontSize] = useState(18);
-  const [answer, setAnswer] = useState('');
-  const [checked, setChecked] = useState(false);
   const [notice, setNotice] = useState('');
+  const [submitted, setSubmitted] = useState<number[]>(() => { try { return typeof window === 'undefined' ? [] : JSON.parse(localStorage.getItem('rt-submitted') || '[]'); } catch { return []; } });
+  const [savedBooks, setSavedBooks] = useState<number[]>(() => { try { return typeof window === 'undefined' ? [] : JSON.parse(localStorage.getItem('rt-books') || '[]'); } catch { return []; } });
+  const [query, setQuery] = useState('');
+  const [quizStep, setQuizStep] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
+  const [quizResult, setQuizResult] = useState(false);
+  const [dailyGoal] = useState(30);
   const contentRef = useRef<HTMLElement>(null);
 
   const goTo = (destination: string) => {
@@ -34,6 +56,9 @@ export default function Home() {
     return () => window.removeEventListener('keydown', closeMenu);
   }, []);
 
+  const toggleBook = (id:number) => { const next=savedBooks.includes(id)?savedBooks.filter(x=>x!==id):[...savedBooks,id]; setSavedBooks(next); localStorage.setItem('rt-books',JSON.stringify(next)); };
+  const submitTask = (id:number) => { const next=[...new Set([...submitted,id])]; setSubmitted(next); localStorage.setItem('rt-submitted',JSON.stringify(next)); setNotice('Tugas tersimpan sebagai terkirim di perangkat ini.'); };
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#konten">Lewati ke konten utama</a>
@@ -47,7 +72,7 @@ export default function Home() {
         </button>
         <div className="top-actions">
           <button className="icon-button" aria-label="Buka notifikasi, ada satu pemberitahuan" onClick={() => setNotice('Belum ada pengumuman baru hari ini.')}><span className="notification-dot"/>◎</button>
-          <button className="profile-button" aria-label="Buka profil Dudin Sahidin" onClick={() => setNotice('Profil siswa akan tersedia pada tahap berikutnya.')}>
+          <button className="profile-button" aria-label="Buka profil Dudin Sahidin" onClick={() => setNotice(`Target belajar hari ini ${dailyGoal} menit.`)}>
             <span className="avatar">DS</span><span className="profile-copy"><b>Dudin Sahidin</b><small>Paket C · Kelas 10</small></span>
           </button>
         </div>
@@ -133,23 +158,19 @@ export default function Home() {
         </section>}
 
         {active === 'Latihan' && <section className="quiz-page">
-          <header className="inner-header"><div><p className="eyebrow">LATIHAN PEMAHAMAN</p><h1>Pertempuran Surabaya</h1><p>Soal 1 dari 5 · Pilih satu jawaban yang paling tepat.</p></div><span className="quiz-count">1 / 5</span></header>
+          <header className="inner-header"><div><p className="eyebrow">LATIHAN PEMAHAMAN</p><h1>Pertempuran Surabaya</h1><p>{quizResult ? 'Hasil latihan' : `Soal ${quizStep + 1} dari 5 · Pilih satu jawaban.`}</p></div><span className="quiz-count">{quizResult ? `${quizAnswers.filter((a,i)=>a===quiz[i][2]).length * 20}` : `${quizStep + 1} / 5`}</span></header>
           <div className="quiz-card">
-            <div className="quiz-progress"><span style={{width:'20%'}}/></div>
-            <fieldset><legend>Apa dampak strategis Pertempuran Surabaya bagi perjuangan kemerdekaan Indonesia?</legend>
-              {[
-                ['a','Indonesia langsung memperoleh pengakuan kedaulatan dari Belanda.'],
-                ['b','Sekutu meninggalkan seluruh wilayah Indonesia pada hari berikutnya.'],
-                ['c','Perlawanan rakyat menarik perhatian dunia dan memperkuat legitimasi perjuangan.'],
-                ['d','Pemerintah Indonesia memindahkan pusat pemerintahan ke Surabaya.']
-              ].map(([value,label]) => <label className={`option ${answer===value?'selected':''}`} key={value}><input type="radio" name="answer" value={value} checked={answer===value} onChange={() => {setAnswer(value);setChecked(false)}}/><span className="radio-letter">{value.toUpperCase()}</span><span>{label}</span></label>)}
+            {quizResult ? <><h2>Nilai kamu: {quizAnswers.filter((a,i)=>a===quiz[i][2]).length * 20}</h2><p>Latihan tersimpan di sesi lokal ini. Ulangi untuk mencoba lagi.</p><div className="quiz-actions"><button className="secondary" onClick={()=>goTo('Materi')}>Buka materi</button><button className="primary" onClick={()=>{setQuizStep(0);setQuizAnswers([]);setQuizResult(false)}}>Ulangi latihan</button></div></> : <><div className="quiz-progress"><span style={{width:`${(quizStep+1)*20}%`}}/></div>
+            <fieldset><legend>{quiz[quizStep][0]}</legend>
+              {quiz[quizStep][1].map((label,index) => <label className={`option ${quizAnswers[quizStep]===index?'selected':''}`} key={label}><input type="radio" name="answer" checked={quizAnswers[quizStep]===index} onChange={() => setQuizAnswers([...quizAnswers.slice(0,quizStep),index])}/><span className="radio-letter">{String.fromCharCode(65+index)}</span><span>{label}</span></label>)}
             </fieldset>
-            {checked && <div className={answer==='c'?'feedback correct':'feedback wrong'} role="status"><b>{answer==='c'?'Jawabanmu tepat!':'Belum tepat, coba lagi.'}</b><p>{answer==='c'?'Perlawanan di Surabaya menunjukkan kepada dunia bahwa Republik Indonesia memiliki dukungan rakyat dan bersungguh-sungguh mempertahankan kemerdekaan.':'Baca kembali bagian “Mengapa peristiwa ini penting?” pada materi.'}</p></div>}
-            <div className="quiz-actions"><button className="secondary" onClick={() => goTo('Materi')}>← Buka materi</button><button className="primary" disabled={!answer} onClick={() => setChecked(true)}>Periksa jawaban</button></div>
+            <div className="quiz-actions"><button className="secondary" onClick={() => goTo('Materi')}>← Buka materi</button><button className="primary" disabled={quizAnswers[quizStep] === undefined} onClick={() => quizStep < 4 ? setQuizStep(quizStep+1) : setQuizResult(true)}>{quizStep < 4 ? 'Soal berikutnya →' : 'Lihat hasil'}</button></div></>}
           </div>
         </section>}
 
-        {(active === 'Tugas' || active === 'Perpustakaan') && <section className="empty-state"><span aria-hidden="true">{active === 'Tugas' ? '□' : '▥'}</span><p className="eyebrow">{active.toUpperCase()}</p><h1>{active === 'Tugas' ? 'Tugas yang terarah' : 'Perpustakaan digital'}</h1><p>{active === 'Tugas' ? 'Lihat tenggat, petunjuk, status pengumpulan, dan umpan balik guru dalam satu tempat.' : 'Cari buku dan materi, simpan bookmark, lalu lanjutkan membaca dari halaman terakhir.'}</p><button className="primary" onClick={() => setActive(active === 'Tugas' ? 'Beranda' : 'Materi')}>{active === 'Tugas' ? 'Kembali ke beranda' : 'Buka materi contoh'}</button></section>}
+        {active === 'Tugas' && <section><header className="inner-header"><div><p className="eyebrow">RUANG TUGAS</p><h1>Tugas yang terarah</h1><p>Status pengumpulan disimpan di perangkat ini.</p></div></header><div className="assignment-grid">{assignments.map(task=><article className="assignment-card" key={task.id}><span>{task.subject}</span><h2>{task.title}</h2><p>{task.due}</p>{task.id===3?<div className="teacher-note"><b>Umpan balik guru</b><p>Sudut pandangmu bagus. Tambahkan contoh tindakan nyata.</p></div>:<><textarea aria-label={`Jawaban ${task.title}`} placeholder="Tuliskan jawaban atau catatan untuk guru…"/><button className="primary" onClick={()=>submitTask(task.id)}>{submitted.includes(task.id)?'Terkirim ✓':'Kirim tugas'}</button></>}</article>)}</div></section>}
+
+        {active === 'Perpustakaan' && <section><header className="inner-header"><div><p className="eyebrow">EPERPUSTAKAAN</p><h1>Temukan bahan belajar</h1><p>Cari, simpan, dan lanjutkan bacaanmu.</p></div></header><input className="library-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari judul atau penulis…" aria-label="Cari buku"/><div className="library-grid">{library.filter(book=>`${book.title} ${book.author}`.toLowerCase().includes(query.toLowerCase())).map(book=><article className="library-card" key={book.id}><div className="book-cover"><b>{book.code}</b><small>{book.progress?`${book.progress}% selesai`:'Belum dibaca'}</small></div><div><p>{book.author}</p><h2>{book.title}</h2><div className="progress"><span style={{width:`${book.progress}%`}}/></div><div className="book-actions"><button className="text-button" onClick={()=>goTo('Materi')}>{book.progress?'Lanjutkan':'Mulai baca'}</button><button className="save-book" onClick={()=>toggleBook(book.id)} aria-pressed={savedBooks.includes(book.id)}>{savedBooks.includes(book.id)?'★ Tersimpan':'☆ Simpan'}</button></div></div></article>)}</div></section>}
       </main>
 
       <nav className="bottom-nav" aria-label="Navigasi seluler">
