@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const courses = [
   { code: 'SEJ', title: 'Sejarah Indonesia', teacher: 'Pak Adi Rama', progress: 68, tone: 'coral', next: 'Lanjut: Perjuangan mempertahankan kemerdekaan' },
@@ -17,31 +17,47 @@ export default function Home() {
   const [fontSize, setFontSize] = useState(18);
   const [answer, setAnswer] = useState('');
   const [checked, setChecked] = useState(false);
+  const [notice, setNotice] = useState('');
+  const contentRef = useRef<HTMLElement>(null);
+
+  const goTo = (destination: string) => {
+    setActive(destination);
+    setMenuOpen(false);
+    window.requestAnimationFrame(() => contentRef.current?.focus());
+  };
+
+  useEffect(() => {
+    const closeMenu = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', closeMenu);
+    return () => window.removeEventListener('keydown', closeMenu);
+  }, []);
 
   return (
-    <main>
+    <div className="app-shell">
       <a className="skip-link" href="#konten">Lewati ke konten utama</a>
       <header className="topbar">
-        <button className="menu-button" aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+        <button className="menu-button" aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'} aria-controls="navigasi-utama" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
           <span/><span/><span/>
         </button>
-        <a className="brand" href="#" aria-label="Ruang Tumbuh, beranda">
+        <button className="brand" onClick={() => goTo('Beranda')} aria-label="Ruang Tumbuh, kembali ke beranda">
           <span className="brand-mark">R</span>
           <span>Ruang<span>Tumbuh</span></span>
-        </a>
+        </button>
         <div className="top-actions">
-          <button className="icon-button" aria-label="Buka notifikasi"><span className="notification-dot"/>◎</button>
-          <button className="profile-button" aria-label="Buka profil Dudin Sahidin">
+          <button className="icon-button" aria-label="Buka notifikasi, ada satu pemberitahuan" onClick={() => setNotice('Belum ada pengumuman baru hari ini.')}><span className="notification-dot"/>◎</button>
+          <button className="profile-button" aria-label="Buka profil Dudin Sahidin" onClick={() => setNotice('Profil siswa akan tersedia pada tahap berikutnya.')}>
             <span className="avatar">DS</span><span className="profile-copy"><b>Dudin Sahidin</b><small>Paket C · Kelas 10</small></span>
           </button>
         </div>
       </header>
 
-      <aside className={`sidebar ${menuOpen ? 'open' : ''}`} aria-label="Navigasi utama">
+      <aside id="navigasi-utama" className={`sidebar ${menuOpen ? 'open' : ''}`} aria-label="Navigasi utama">
         <nav>
           <p className="nav-label">MENU BELAJAR</p>
           {nav.map((item, index) => (
-            <button key={item} className={active === item ? 'active' : ''} onClick={() => { setActive(item); setMenuOpen(false); }}>
+            <button key={item} className={active === item ? 'active' : ''} aria-current={active === item ? 'page' : undefined} onClick={() => goTo(item)}>
               <span className="nav-icon" aria-hidden="true">{['⌂','▤','✓','□','▥'][index]}</span>{item}
               {item === 'Tugas' && <span className="badge">2</span>}
             </button>
@@ -51,12 +67,13 @@ export default function Home() {
           <span aria-hidden="true">?</span>
           <h2 id="help-title">Butuh bantuan?</h2>
           <p>Panduan belajar tersedia kapan saja.</p>
-          <button>Lihat panduan</button>
+          <button onClick={() => setNotice('Panduan belajar akan tersedia pada tahap berikutnya.')}>Lihat panduan</button>
         </section>
       </aside>
       {menuOpen && <button className="backdrop" aria-label="Tutup menu" onClick={() => setMenuOpen(false)}/>} 
 
-      <div className="page" id="konten">
+      <p className="sr-only" role="status" aria-live="polite">{notice}</p>
+      <main className="page" id="konten" tabIndex={-1} ref={contentRef}>
         {active === 'Beranda' && <>
         <section className="welcome">
           <div>
@@ -77,23 +94,23 @@ export default function Home() {
             <p>Sejarah Indonesia · Bab 3</p>
             <div className="progress-row"><div className="progress"><span style={{width:'68%'}}/></div><b>68%</b></div>
           </div>
-          <button className="primary">Lanjutkan materi <span aria-hidden="true">→</span></button>
+          <button className="primary" onClick={() => goTo('Materi')}>Lanjutkan materi <span aria-hidden="true">→</span></button>
         </section>
 
         <section className="section-block" aria-labelledby="today-title">
-          <div className="section-heading"><div><p className="eyebrow">RENCANA HARI INI</p><h2 id="today-title">Yang perlu diselesaikan</h2></div><button className="text-button">Lihat semua</button></div>
+          <div className="section-heading"><div><p className="eyebrow">RENCANA HARI INI</p><h2 id="today-title">Yang perlu diselesaikan</h2></div><button className="text-button" onClick={() => goTo('Tugas')}>Lihat semua</button></div>
           <div className="task-grid">
-            <article className="task-card"><span className="task-icon blue">✓</span><div><span className="pill urgent">Hari ini · 20.00</span><h3>Latihan Persamaan Kuadrat</h3><p>Matematika · 10 soal</p></div><button aria-label="Buka latihan Persamaan Kuadrat">Mulai</button></article>
-            <article className="task-card"><span className="task-icon coral">□</span><div><span className="pill">Besok · 18.00</span><h3>Ringkasan Narrative Text</h3><p>Bahasa Inggris · Tugas</p></div><button aria-label="Buka tugas Ringkasan Narrative Text">Buka</button></article>
+            <article className="task-card"><span className="task-icon blue" aria-hidden="true">✓</span><div><span className="pill urgent">Hari ini · 20.00</span><h3>Latihan Persamaan Kuadrat</h3><p>Matematika · 10 soal</p></div><button aria-label="Buka latihan Persamaan Kuadrat" onClick={() => goTo('Latihan')}>Mulai</button></article>
+            <article className="task-card"><span className="task-icon coral" aria-hidden="true">□</span><div><span className="pill">Besok · 18.00</span><h3>Ringkasan Narrative Text</h3><p>Bahasa Inggris · Tugas</p></div><button aria-label="Buka tugas Ringkasan Narrative Text" onClick={() => goTo('Tugas')}>Buka</button></article>
           </div>
         </section>
 
         <section className="section-block" aria-labelledby="courses-title">
-          <div className="section-heading"><div><p className="eyebrow">MATA PELAJARAN</p><h2 id="courses-title">Perjalanan belajarmu</h2></div><button className="text-button">Semua pelajaran</button></div>
+          <div className="section-heading"><div><p className="eyebrow">MATA PELAJARAN</p><h2 id="courses-title">Perjalanan belajarmu</h2></div><button className="text-button" onClick={() => goTo('Materi')}>Semua pelajaran</button></div>
           <div className="course-grid">
             {courses.map(course => <article className="course-card" key={course.code}>
               <div className={`course-cover ${course.tone}`}><span>{course.code}</span><b>{course.progress}%</b></div>
-              <div className="course-body"><p>{course.teacher}</p><h3>{course.title}</h3><div className="progress"><span style={{width:`${course.progress}%`}}/></div><small>{course.next}</small><button aria-label={`Lanjutkan ${course.title}`}>Lanjut belajar <span aria-hidden="true">→</span></button></div>
+              <div className="course-body"><p>{course.teacher}</p><h3>{course.title}</h3><div className="progress" role="progressbar" aria-label={`Progres ${course.title}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={course.progress}><span style={{width:`${course.progress}%`}}/></div><small>{course.next}</small><button aria-label={`Lanjutkan ${course.title}`} onClick={() => goTo('Materi')}>Lanjut belajar <span aria-hidden="true">→</span></button></div>
             </article>)}
           </div>
         </section>
@@ -110,7 +127,7 @@ export default function Home() {
               <aside className="key-note"><b>Gagasan utama</b><p>Perjuangan terjadi melalui perlawanan fisik sekaligus diplomasi untuk memperoleh pengakuan dunia.</p></aside>
               <h3>Mengapa peristiwa ini penting?</h3><p>Semangat perlawanan menarik perhatian internasional dan memperkuat legitimasi Republik Indonesia. Tanggal 10 November kemudian diperingati sebagai Hari Pahlawan.</p>
               <div className="reader-progress"><span>Progres bab</span><div className="progress"><i style={{width:'43%'}}/></div><b>43%</b></div>
-              <button className="primary reader-next" onClick={() => setActive('Latihan')}>Cek pemahaman <span aria-hidden="true">→</span></button>
+              <button className="primary reader-next" onClick={() => goTo('Latihan')}>Cek pemahaman <span aria-hidden="true">→</span></button>
             </article>
           </div>
         </section>}
@@ -128,16 +145,16 @@ export default function Home() {
               ].map(([value,label]) => <label className={`option ${answer===value?'selected':''}`} key={value}><input type="radio" name="answer" value={value} checked={answer===value} onChange={() => {setAnswer(value);setChecked(false)}}/><span className="radio-letter">{value.toUpperCase()}</span><span>{label}</span></label>)}
             </fieldset>
             {checked && <div className={answer==='c'?'feedback correct':'feedback wrong'} role="status"><b>{answer==='c'?'Jawabanmu tepat!':'Belum tepat, coba lagi.'}</b><p>{answer==='c'?'Perlawanan di Surabaya menunjukkan kepada dunia bahwa Republik Indonesia memiliki dukungan rakyat dan bersungguh-sungguh mempertahankan kemerdekaan.':'Baca kembali bagian “Mengapa peristiwa ini penting?” pada materi.'}</p></div>}
-            <div className="quiz-actions"><button className="secondary" onClick={() => setActive('Materi')}>← Buka materi</button><button className="primary" disabled={!answer} onClick={() => setChecked(true)}>Periksa jawaban</button></div>
+            <div className="quiz-actions"><button className="secondary" onClick={() => goTo('Materi')}>← Buka materi</button><button className="primary" disabled={!answer} onClick={() => setChecked(true)}>Periksa jawaban</button></div>
           </div>
         </section>}
 
         {(active === 'Tugas' || active === 'Perpustakaan') && <section className="empty-state"><span aria-hidden="true">{active === 'Tugas' ? '□' : '▥'}</span><p className="eyebrow">{active.toUpperCase()}</p><h1>{active === 'Tugas' ? 'Tugas yang terarah' : 'Perpustakaan digital'}</h1><p>{active === 'Tugas' ? 'Lihat tenggat, petunjuk, status pengumpulan, dan umpan balik guru dalam satu tempat.' : 'Cari buku dan materi, simpan bookmark, lalu lanjutkan membaca dari halaman terakhir.'}</p><button className="primary" onClick={() => setActive(active === 'Tugas' ? 'Beranda' : 'Materi')}>{active === 'Tugas' ? 'Kembali ke beranda' : 'Buka materi contoh'}</button></section>}
-      </div>
+      </main>
 
       <nav className="bottom-nav" aria-label="Navigasi seluler">
-        {nav.slice(0,4).map((item, index) => <button key={item} className={active === item ? 'active' : ''} onClick={() => setActive(item)}><span aria-hidden="true">{['⌂','▤','✓','□'][index]}</span>{item}</button>)}
+        {nav.slice(0,4).map((item, index) => <button key={item} className={active === item ? 'active' : ''} aria-current={active === item ? 'page' : undefined} onClick={() => goTo(item)}><span aria-hidden="true">{['⌂','▤','✓','□'][index]}</span>{item}</button>)}
       </nav>
-    </main>
+    </div>
   );
 }
