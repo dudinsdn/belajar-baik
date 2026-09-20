@@ -15,6 +15,13 @@
       "when": 1789951000000,
       "tag": "0001_seed_production",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789953000000,
+      "tag": "0002_provision_teacher",
+      "breakpoints": true
     }
   ]
 }
