@@ -22,3 +22,4 @@ export type AuthEnvironment = {
 };
 
 export type UserLookup = (externalIdentityId: string) => Promise<StoredUser | null>;
+export type UserLookupByEmail = (email: string) => Promise<StoredUser | null>;

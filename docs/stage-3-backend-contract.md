@@ -15,7 +15,18 @@ Tahap 3.1 hanya menetapkan arsitektur dan kontrak. Belum mengaktifkan database p
 - Data terstruktur: Cloudflare D1/SQLite dengan logical binding `DB` saat implementasi database dimulai.
 - Berkas: belum memakai R2. Pengumpulan Tahap 3 awal berupa teks; R2 baru ditambahkan saat unggahan dokumen benar-benar dikerjakan.
 - Otorisasi: seluruh keputusan akses dilakukan di server, tidak berdasarkan tombol atau role dari browser.
-- Identitas: route memakai abstraksi `CurrentUser`. Adapter produksi belum dipilih sampai jalur autentikasi publik untuk siswa/guru dikonfirmasi. Selama pengembangan lokal, identitas fixture hanya boleh aktif pada mode development.
+- Identitas: route memakai abstraksi `CurrentUser`. Pada produksi Sites, autentikasi berasal dari identitas ChatGPT yang diteruskan platform; akun aplikasi dipetakan berdasarkan ID eksternal bila tersedia atau email terautentikasi. Role dan status selalu dibaca dari D1. Selama pengembangan lokal, identitas fixture hanya boleh aktif pada mode development.
+
+### Keputusan autentikasi produksi Tahap 3.8
+
+- Aplikasi tidak menyimpan password, token login, atau sesi autentikasi sendiri.
+- Sites menangani autentikasi pengunjung. Server hanya mempercayai header identitas yang disuntikkan platform pada runtime hosted.
+- `oai-authenticated-user-email` dipakai untuk mencocokkan akun yang sudah diundang/didaftarkan di tabel `users`; pencocokan tidak membedakan huruf besar-kecil.
+- `oai-authenticated-user-id` diprioritaskan bila tersedia. Jika ID tersebut menunjuk akun dengan email berbeda, autentikasi ditolak agar identitas tidak dapat tertukar.
+- Nama profil platform hanya untuk tampilan dan selalu memiliki fallback ke email. Nama tidak pernah menentukan role atau izin.
+- Email yang tidak ada, akun tak dikenal, atau akun berstatus nonaktif menghasilkan `401 UNAUTHENTICATED`.
+- Role `student`, `teacher`, dan `admin` tetap berasal dari D1 dan diperiksa ulang pada setiap endpoint.
+- Kebijakan siapa yang dapat membuka Site diatur terpisah melalui akses Sites. Tahap lokal ini tidak mengubah audience atau deployment.
 
 ## 3. Peran dan hak akses
 

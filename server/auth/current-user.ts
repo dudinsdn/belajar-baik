@@ -1,5 +1,5 @@
 import { AuthError } from './errors.ts';
-import type { AuthEnvironment, CurrentUser, UserLookup, UserRole } from './types.ts';
+import type { AuthEnvironment, CurrentUser, UserLookup, UserLookupByEmail, UserRole } from './types.ts';
 
 const roles = new Set<UserRole>(['student', 'teacher', 'admin']);
 
@@ -26,15 +26,18 @@ function developmentUser(env: AuthEnvironment): CurrentUser | null {
   };
 }
 
-export async function getCurrentUser(request: Request, env: AuthEnvironment, lookup: UserLookup): Promise<CurrentUser | null> {
+export async function getCurrentUser(request: Request, env: AuthEnvironment, lookup: UserLookup, lookupByEmail?: UserLookupByEmail): Promise<CurrentUser | null> {
   const externalIdentityId = request.headers.get('oai-authenticated-user-id');
-  const email = request.headers.get('oai-authenticated-user-email');
-  if (externalIdentityId && email) {
-    const stored = await lookup(externalIdentityId);
+  const emailHeader = request.headers.get('oai-authenticated-user-email');
+  const email = emailHeader?.trim().toLowerCase();
+  if (email) {
+    const byExternalIdentity = externalIdentityId ? await lookup(externalIdentityId) : null;
+    if (byExternalIdentity && byExternalIdentity.email.toLowerCase() !== email) return null;
+    const stored = byExternalIdentity ?? await lookupByEmail?.(email) ?? null;
     if (!stored || stored.status !== 'active') return null;
     return {
       id: stored.id,
-      externalIdentityId: stored.externalIdentityId,
+      externalIdentityId: externalIdentityId ?? stored.externalIdentityId,
       email,
       displayName: decodeDisplayName(request.headers, email),
       role: stored.role,
@@ -44,8 +47,8 @@ export async function getCurrentUser(request: Request, env: AuthEnvironment, loo
   return developmentUser(env);
 }
 
-export async function requireCurrentUser(request: Request, env: AuthEnvironment, lookup: UserLookup) {
-  const user = await getCurrentUser(request, env, lookup);
+export async function requireCurrentUser(request: Request, env: AuthEnvironment, lookup: UserLookup, lookupByEmail?: UserLookupByEmail) {
+  const user = await getCurrentUser(request, env, lookup, lookupByEmail);
   if (!user) throw new AuthError('UNAUTHENTICATED', 401, 'Sign in is required.');
   return user;
 }
