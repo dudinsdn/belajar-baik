@@ -35,6 +35,9 @@ type DashboardData = { continueMaterial?:{ id:string; title:string; subject:stri
 type MaterialData = { id:string; title:string; summary:string; order_index:number; subject_code:string; subject:string; percent:number; last_position:string | null; completed_at:string | null };
 type LibraryData = { id:string; title:string; author:string; description:string; page_count:number; subject_code:string | null; subject:string | null; percent:number; bookmarked:number; last_position:string | null };
 type AssignmentData = { id:string; title:string; instructions:string; due_at:string; subject:string; answer_text:string | null; submission_status:string; score:number | null; feedback:string | null };
+type QuizData = { id:string; title:string; passing_score:number; subject:string; questions:Array<{ id:string; prompt:string; order_index:number; options:Array<{ id:string; question_id:string; label:string; order_index:number }> }> };
+type QuizAttempt = { id:string; quiz_id:string; status:'active'|'completed'; score:number | null };
+type QuizServerResult = { attempt:QuizAttempt; passingScore:number; passed:boolean; answers:Array<{ question_id:string; explanation:string; is_correct:number; correct_option_label:string }> };
 type ApiEnvelope<T> = { data:T; error?:never } | { data?:never; error:{ message:string } };
 
 export default function Home() {
@@ -49,6 +52,11 @@ export default function Home() {
   const [quizStep, setQuizStep] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
   const [quizResult, setQuizResult] = useState(false);
+  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [quizAttemptId, setQuizAttemptId] = useState<string | null>(null);
+  const [quizSelections, setQuizSelections] = useState<Record<string,string>>({});
+  const [quizServerResult, setQuizServerResult] = useState<QuizServerResult | null>(null);
+  const [quizSaving, setQuizSaving] = useState(false);
   const [dailyGoal, setDailyGoal] = useState(() => { try { return typeof window === 'undefined' ? 30 : Number(localStorage.getItem('rt-daily-goal') || 30); } catch { return 30; } });
   const [reminders, setReminders] = useState(() => { try { return typeof window === 'undefined' ? true : localStorage.getItem('rt-reminders') !== 'false'; } catch { return true; } });
   const [readingMode, setReadingMode] = useState(() => { try { return typeof window === 'undefined' ? 'Nyaman' : localStorage.getItem('rt-reading-mode') || 'Nyaman'; } catch { return 'Nyaman'; } });
@@ -94,8 +102,16 @@ export default function Home() {
       setAssignmentData(studentAssignments); setAssignmentAnswers(Object.fromEntries(studentAssignments.map(task=>[task.id,task.answer_text ?? ''])));
       setSavedBooks(books.filter(book=>Boolean(book.bookmarked)).map((_,index)=>index+1)); setApiStatus('ready');
     }).catch(error => { if (error instanceof Error && error.name !== 'AbortError') { setApiMessage(error.message); setApiStatus('error'); } });
+    read<QuizData>('/api/v1/quizzes/quiz_surabaya').then(setQuizData).catch(()=>undefined);
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    if (active !== 'Latihan' || !quizData || quizAttemptId) return;
+    fetch(`/api/v1/quizzes/${quizData.id}/attempts`, { method:'POST' }).then(async response => {
+      const payload = await response.json() as ApiEnvelope<QuizAttempt>; if (!response.ok || payload.error) throw new Error(payload.error?.message ?? 'Latihan gagal dimulai.'); return payload.data as QuizAttempt;
+    }).then(attempt=>setQuizAttemptId(attempt.id)).catch(error=>setNotice(error instanceof Error ? error.message : 'Latihan gagal dimulai.'));
+  }, [active, quizData, quizAttemptId]);
 
   const toggleBook = async (id:number|string) => {
     if (typeof id === 'number') { const next=savedBooks.includes(id)?savedBooks.filter(x=>x!==id):[...savedBooks,id]; setSavedBooks(next); localStorage.setItem('rt-books',JSON.stringify(next)); return; }
@@ -143,6 +159,25 @@ export default function Home() {
     } catch (error) { setNotice(error instanceof Error ? error.message : 'Tugas gagal dikirim.'); }
     finally { setSavingAssignment(null); }
   };
+  const selectQuizOption = async (questionId:string, optionId:string) => {
+    if (!quizAttemptId) return; setQuizSelections(current=>({...current,[questionId]:optionId})); setQuizSaving(true);
+    try {
+      const response = await fetch(`/api/v1/quiz-attempts/${quizAttemptId}/answers/${questionId}`, { method:'PUT', headers:{'content-type':'application/json'}, body:JSON.stringify({selectedOptionId:optionId}) });
+      const payload = await response.json() as ApiEnvelope<unknown>; if (!response.ok || payload.error) throw new Error(payload.error?.message ?? 'Jawaban gagal disimpan.');
+    } catch (error) { setNotice(error instanceof Error ? error.message : 'Jawaban gagal disimpan.'); }
+    finally { setQuizSaving(false); }
+  };
+  const submitServerQuiz = async () => {
+    if (!quizAttemptId) return; setQuizSaving(true);
+    try {
+      const submittedResponse = await fetch(`/api/v1/quiz-attempts/${quizAttemptId}/submit`, {method:'POST'}); const submitted = await submittedResponse.json() as ApiEnvelope<QuizAttempt>;
+      if (!submittedResponse.ok || submitted.error) throw new Error(submitted.error?.message ?? 'Latihan gagal dikirim.');
+      const resultResponse = await fetch(`/api/v1/quiz-attempts/${quizAttemptId}/result`); const result = await resultResponse.json() as ApiEnvelope<QuizServerResult>;
+      if (!resultResponse.ok || result.error) throw new Error(result.error?.message ?? 'Hasil latihan gagal dimuat.'); setQuizServerResult(result.data as QuizServerResult);
+    } catch (error) { setNotice(error instanceof Error ? error.message : 'Latihan gagal dikirim.'); }
+    finally { setQuizSaving(false); }
+  };
+  const restartServerQuiz = () => { setQuizStep(0); setQuizSelections({}); setQuizServerResult(null); setQuizAttemptId(null); };
   const displayName = profileData?.displayName ?? 'Dudin Sahidin';
   const initials = displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase();
   const continueMaterial = dashboardData?.continueMaterial;
@@ -250,16 +285,10 @@ export default function Home() {
           </div>
         </section>}
 
-        {active === 'Latihan' && <section className="quiz-page">
-          <header className="inner-header"><div><p className="eyebrow">LATIHAN PEMAHAMAN</p><h1>Pertempuran Surabaya</h1><p>{quizResult ? 'Hasil latihan' : `Soal ${quizStep + 1} dari 5 · Pilih satu jawaban.`}</p></div><span className="quiz-count">{quizResult ? `${quizAnswers.filter((a,i)=>a===quiz[i][2]).length * 20}` : `${quizStep + 1} / 5`}</span></header>
-          <div className="quiz-card">
-            {quizResult ? <><h2>Nilai kamu: {quizAnswers.filter((a,i)=>a===quiz[i][2]).length * 20}</h2><p>Latihan tersimpan di sesi lokal ini. Ulangi untuk mencoba lagi.</p><div className="quiz-actions"><button className="secondary" onClick={()=>goTo('Materi')}>Buka materi</button><button className="primary" onClick={()=>{setQuizStep(0);setQuizAnswers([]);setQuizResult(false)}}>Ulangi latihan</button></div></> : <><div className="quiz-progress"><span style={{width:`${(quizStep+1)*20}%`}}/></div>
-            <fieldset><legend>{quiz[quizStep][0]}</legend>
-              {quiz[quizStep][1].map((label,index) => <label className={`option ${quizAnswers[quizStep]===index?'selected':''}`} key={label}><input type="radio" name="answer" checked={quizAnswers[quizStep]===index} onChange={() => setQuizAnswers([...quizAnswers.slice(0,quizStep),index])}/><span className="radio-letter">{String.fromCharCode(65+index)}</span><span>{label}</span></label>)}
-            </fieldset>
-            <div className="quiz-actions"><button className="secondary" onClick={() => goTo('Materi')}>← Buka materi</button><button className="primary" disabled={quizAnswers[quizStep] === undefined} onClick={() => quizStep < 4 ? setQuizStep(quizStep+1) : setQuizResult(true)}>{quizStep < 4 ? 'Soal berikutnya →' : 'Lihat hasil'}</button></div></>}
-          </div>
-        </section>}
+        {active === 'Latihan' && (quizData ? <section className="quiz-page">
+          <header className="inner-header"><div><p className="eyebrow">LATIHAN PEMAHAMAN · {quizData.subject.toUpperCase()}</p><h1>{quizData.title}</h1><p>{quizServerResult ? 'Hasil latihan tersimpan di server.' : `Soal ${quizStep + 1} dari ${quizData.questions.length} · Jawaban disimpan otomatis.`}</p></div><span className="quiz-count">{quizServerResult ? quizServerResult.attempt.score : `${quizStep + 1} / ${quizData.questions.length}`}</span></header>
+          <div className="quiz-card">{quizServerResult ? <><h2>Nilai kamu: {quizServerResult.attempt.score}</h2><p>{quizServerResult.passed ? 'Kamu mencapai nilai kelulusan.' : `Nilai kelulusan adalah ${quizServerResult.passingScore}. Coba pelajari kembali materinya.`}</p><div className="quiz-review">{quizServerResult.answers.map(answer=><div className={answer.is_correct ? 'feedback correct' : 'feedback wrong'} key={answer.question_id}><b>{answer.is_correct ? 'Jawaban benar' : `Jawaban benar: ${answer.correct_option_label}`}</b><p>{answer.explanation}</p></div>)}</div><div className="quiz-actions"><button className="secondary" onClick={()=>goTo('Materi')}>Buka materi</button><button className="primary" onClick={restartServerQuiz}>Ulangi latihan</button></div></> : quizAttemptId && quizData.questions[quizStep] ? <><div className="quiz-progress"><span style={{width:`${((quizStep+1)/quizData.questions.length)*100}%`}}/></div><fieldset><legend>{quizData.questions[quizStep].prompt}</legend>{quizData.questions[quizStep].options.map((option,index)=><label className={`option ${quizSelections[quizData.questions[quizStep].id]===option.id?'selected':''}`} key={option.id}><input type="radio" name="answer" checked={quizSelections[quizData.questions[quizStep].id]===option.id} onChange={()=>selectQuizOption(quizData.questions[quizStep].id,option.id)}/><span className="radio-letter">{String.fromCharCode(65+index)}</span><span>{option.label}</span></label>)}</fieldset><div className="quiz-actions"><button className="secondary" onClick={()=>quizStep ? setQuizStep(quizStep-1) : goTo('Materi')}>{quizStep ? '← Soal sebelumnya' : '← Buka materi'}</button><button className="primary" disabled={quizSaving || !quizSelections[quizData.questions[quizStep].id]} onClick={()=>quizStep < quizData.questions.length-1 ? setQuizStep(quizStep+1) : submitServerQuiz()}>{quizSaving ? 'Menyimpan…' : quizStep < quizData.questions.length-1 ? 'Soal berikutnya →' : 'Kirim & lihat hasil'}</button></div></> : <p>Menyiapkan latihan…</p>}</div>
+        </section> : <section className="quiz-page"><header className="inner-header"><div><p className="eyebrow">LATIHAN PEMAHAMAN</p><h1>Pertempuran Surabaya</h1><p>{quizResult ? 'Hasil latihan' : `Soal ${quizStep + 1} dari 5 · Pilih satu jawaban.`}</p></div><span className="quiz-count">{quizResult ? `${quizAnswers.filter((a,i)=>a===quiz[i][2]).length * 20}` : `${quizStep + 1} / 5`}</span></header><div className="quiz-card">{quizResult ? <><h2>Nilai kamu: {quizAnswers.filter((a,i)=>a===quiz[i][2]).length * 20}</h2><p>Backend latihan tidak tersedia; hasil hanya tersimpan di sesi ini.</p><div className="quiz-actions"><button className="secondary" onClick={()=>goTo('Materi')}>Buka materi</button><button className="primary" onClick={()=>{setQuizStep(0);setQuizAnswers([]);setQuizResult(false)}}>Ulangi latihan</button></div></> : <><div className="quiz-progress"><span style={{width:`${(quizStep+1)*20}%`}}/></div><fieldset><legend>{quiz[quizStep][0]}</legend>{quiz[quizStep][1].map((label,index)=><label className={`option ${quizAnswers[quizStep]===index?'selected':''}`} key={label}><input type="radio" name="answer" checked={quizAnswers[quizStep]===index} onChange={()=>setQuizAnswers([...quizAnswers.slice(0,quizStep),index])}/><span className="radio-letter">{String.fromCharCode(65+index)}</span><span>{label}</span></label>)}</fieldset><div className="quiz-actions"><button className="secondary" onClick={()=>goTo('Materi')}>← Buka materi</button><button className="primary" disabled={quizAnswers[quizStep]===undefined} onClick={()=>quizStep<4?setQuizStep(quizStep+1):setQuizResult(true)}>{quizStep<4?'Soal berikutnya →':'Lihat hasil'}</button></div></>}</div></section>)}
 
         {active === 'Tugas' && <section><header className="inner-header"><div><p className="eyebrow">RUANG TUGAS</p><h1>Tugas yang terarah</h1><p>{assignmentData.length ? 'Jawaban dan status pengumpulan tersimpan di server belajar.' : 'Status pengumpulan disimpan di perangkat ini.'}</p></div></header><div className="assignment-grid">{(assignmentData.length ? assignmentData : assignments).map(task=>{
           const serverTask = 'due_at' in task; const status = serverTask ? task.submission_status : (submitted.includes(task.id) ? 'submitted' : 'not_started');
