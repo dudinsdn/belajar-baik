@@ -27,6 +27,12 @@ const quiz = [
   ['Nilai utama dari Pertempuran Surabaya adalah…', ['Kepentingan pribadi','Keberanian, persatuan, dan rela berkorban','Menghindari perubahan','Menyerahkan keputusan'], 1],
 ] as const;
 
+type ProfileData = { id:string; email:string; displayName:string; role:string; enrollment?:{ class_name:string; program:string; grade_level:string; academic_year:string } | null };
+type DashboardData = { continueMaterial?:{ id:string; title:string; subject:string; percent:number; last_position:string | null } | null; assignments:Array<{ id:string; title:string; due_at:string; subject:string; submission_status:string }>; progress?:{ started:number; average_percent:number } | null };
+type MaterialData = { id:string; title:string; summary:string; order_index:number; subject_code:string; subject:string; percent:number; last_position:string | null; completed_at:string | null };
+type LibraryData = { id:string; title:string; author:string; description:string; page_count:number; subject_code:string | null; subject:string | null; percent:number; bookmarked:number; last_position:string | null };
+type ApiEnvelope<T> = { data:T; error?:never } | { data?:never; error:{ message:string } };
+
 export default function Home() {
   const [active, setActive] = useState('Beranda');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -42,6 +48,12 @@ export default function Home() {
   const [dailyGoal, setDailyGoal] = useState(() => { try { return typeof window === 'undefined' ? 30 : Number(localStorage.getItem('rt-daily-goal') || 30); } catch { return 30; } });
   const [reminders, setReminders] = useState(() => { try { return typeof window === 'undefined' ? true : localStorage.getItem('rt-reminders') !== 'false'; } catch { return true; } });
   const [readingMode, setReadingMode] = useState(() => { try { return typeof window === 'undefined' ? 'Nyaman' : localStorage.getItem('rt-reading-mode') || 'Nyaman'; } catch { return 'Nyaman'; } });
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [materialData, setMaterialData] = useState<MaterialData[]>([]);
+  const [libraryData, setLibraryData] = useState<LibraryData[]>([]);
+  const [apiStatus, setApiStatus] = useState<'loading'|'ready'|'error'>('loading');
+  const [apiMessage, setApiMessage] = useState('');
   const contentRef = useRef<HTMLElement>(null);
 
   const goTo = (destination: string) => {
@@ -58,8 +70,31 @@ export default function Home() {
     return () => window.removeEventListener('keydown', closeMenu);
   }, []);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    const read = async <T,>(url:string) => {
+      const response = await fetch(url, { signal:controller.signal });
+      const body = await response.json() as ApiEnvelope<T>;
+      if (!response.ok || body.error) throw new Error(body.error?.message ?? 'Data tidak dapat dimuat.');
+      return body.data as T;
+    };
+    Promise.all([
+      read<ProfileData>('/api/v1/me'), read<DashboardData>('/api/v1/dashboard'),
+      read<MaterialData[]>('/api/v1/materials'), read<LibraryData[]>('/api/v1/library'),
+    ]).then(([profile,dashboard,materials,books]) => {
+      setProfileData(profile); setDashboardData(dashboard); setMaterialData(materials); setLibraryData(books);
+      setSavedBooks(books.filter(book=>Boolean(book.bookmarked)).map((_,index)=>index+1)); setApiStatus('ready');
+    }).catch(error => { if (error instanceof Error && error.name !== 'AbortError') { setApiMessage(error.message); setApiStatus('error'); } });
+    return () => controller.abort();
+  }, []);
+
   const toggleBook = (id:number) => { const next=savedBooks.includes(id)?savedBooks.filter(x=>x!==id):[...savedBooks,id]; setSavedBooks(next); localStorage.setItem('rt-books',JSON.stringify(next)); };
   const submitTask = (id:number) => { const next=[...new Set([...submitted,id])]; setSubmitted(next); localStorage.setItem('rt-submitted',JSON.stringify(next)); setNotice('Tugas tersimpan sebagai terkirim di perangkat ini.'); };
+  const displayName = profileData?.displayName ?? 'Dudin Sahidin';
+  const initials = displayName.split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase();
+  const continueMaterial = dashboardData?.continueMaterial;
+  const shownLibrary = (libraryData.length ? libraryData.map((book,index)=>({id:index+1,code:book.subject_code??'BUK',title:book.title,author:book.author,progress:book.percent})) : library)
+    .filter(book=>`${book.title} ${book.author}`.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <div className="app-shell">
@@ -74,8 +109,8 @@ export default function Home() {
         </button>
         <div className="top-actions">
           <button className="icon-button" aria-label="Buka notifikasi, ada satu pemberitahuan" onClick={() => setNotice('Belum ada pengumuman baru hari ini.')}><span className="notification-dot"/>◎</button>
-          <button className="profile-button" aria-label="Buka profil Dudin Sahidin" onClick={() => goTo('Profil')}>
-            <span className="avatar">DS</span><span className="profile-copy"><b>Dudin Sahidin</b><small>Paket C · Kelas 10</small></span>
+          <button className="profile-button" aria-label={`Buka profil ${displayName}`} onClick={() => goTo('Profil')}>
+            <span className="avatar">{initials}</span><span className="profile-copy"><b>{displayName}</b><small>{profileData?.enrollment ? `${profileData.enrollment.program} · Kelas ${profileData.enrollment.grade_level}` : 'Profil siswa'}</small></span>
           </button>
         </div>
       </header>
@@ -101,11 +136,12 @@ export default function Home() {
 
       <p className="sr-only" role="status" aria-live="polite">{notice}</p>
       <main className="page" id="konten" tabIndex={-1} ref={contentRef}>
+        {apiStatus !== 'ready' && <p className={`api-banner ${apiStatus}`} role="status">{apiStatus === 'loading' ? 'Memuat data belajar…' : apiMessage}</p>}
         {active === 'Beranda' && <>
         <section className="welcome">
           <div>
             <p className="eyebrow">SABTU, 20 SEPTEMBER 2026</p>
-            <h1>Selamat pagi, Dudin!</h1>
+            <h1>Selamat pagi, {displayName.split(' ')[0]}!</h1>
             <p>Mulai dari yang kecil. Satu materi hari ini adalah satu langkah maju.</p>
           </div>
           <div className="streak" aria-label="Rangkaian belajar 4 hari">
@@ -117,9 +153,9 @@ export default function Home() {
           <div className="continue-art" aria-hidden="true"><span>45</span><small>menit</small></div>
           <div className="continue-copy">
             <p className="eyebrow">LANJUTKAN BELAJAR</p>
-            <h2 id="continue-title">Mempertahankan Kemerdekaan Indonesia</h2>
-            <p>Sejarah Indonesia · Bab 3</p>
-            <div className="progress-row"><div className="progress"><span style={{width:'68%'}}/></div><b>68%</b></div>
+            <h2 id="continue-title">{continueMaterial?.title ?? 'Mempertahankan Kemerdekaan Indonesia'}</h2>
+            <p>{continueMaterial ? `${continueMaterial.subject}${continueMaterial.last_position ? ` · ${continueMaterial.last_position}` : ''}` : 'Sejarah Indonesia · Bab 3'}</p>
+            <div className="progress-row"><div className="progress"><span style={{width:`${continueMaterial?.percent ?? 68}%`}}/></div><b>{continueMaterial?.percent ?? 68}%</b></div>
           </div>
           <button className="primary" onClick={() => goTo('Materi')}>Lanjutkan materi <span aria-hidden="true">→</span></button>
         </section>
@@ -127,8 +163,10 @@ export default function Home() {
         <section className="section-block" aria-labelledby="today-title">
           <div className="section-heading"><div><p className="eyebrow">RENCANA HARI INI</p><h2 id="today-title">Yang perlu diselesaikan</h2></div><button className="text-button" onClick={() => goTo('Tugas')}>Lihat semua</button></div>
           <div className="task-grid">
-            <article className="task-card"><span className="task-icon blue" aria-hidden="true">✓</span><div><span className="pill urgent">Hari ini · 20.00</span><h3>Latihan Persamaan Kuadrat</h3><p>Matematika · 10 soal</p></div><button aria-label="Buka latihan Persamaan Kuadrat" onClick={() => goTo('Latihan')}>Mulai</button></article>
-            <article className="task-card"><span className="task-icon coral" aria-hidden="true">□</span><div><span className="pill">Besok · 18.00</span><h3>Ringkasan Narrative Text</h3><p>Bahasa Inggris · Tugas</p></div><button aria-label="Buka tugas Ringkasan Narrative Text" onClick={() => goTo('Tugas')}>Buka</button></article>
+            {(dashboardData?.assignments.length ? dashboardData.assignments : [
+              {id:'fallback-1', title:'Latihan Persamaan Kuadrat', due_at:'2026-09-20T20:00:00+07:00', subject:'Matematika', submission_status:'not_started'},
+              {id:'fallback-2', title:'Ringkasan Narrative Text', due_at:'2026-09-21T18:00:00+07:00', subject:'Bahasa Inggris', submission_status:'not_started'},
+            ]).map((task, index) => <article className="task-card" key={task.id}><span className={`task-icon ${index % 2 ? 'coral' : 'blue'}`} aria-hidden="true">{index % 2 ? '□' : '✓'}</span><div><span className={`pill ${index === 0 ? 'urgent' : ''}`}>{new Intl.DateTimeFormat('id-ID',{dateStyle:'medium',timeStyle:'short'}).format(new Date(task.due_at))}</span><h3>{task.title}</h3><p>{task.subject} · {task.submission_status === 'submitted' ? 'Terkirim' : 'Tugas'}</p></div><button aria-label={`Buka tugas ${task.title}`} onClick={() => goTo('Tugas')}>Buka</button></article>)}
           </div>
         </section>
 
@@ -144,7 +182,7 @@ export default function Home() {
         </>}
 
         {active === 'Materi' && <section className="reader-page">
-          <header className="inner-header"><div><p className="eyebrow">SEJARAH INDONESIA · BAB 3</p><h1>Mempertahankan Kemerdekaan</h1><p>Terakhir dibaca: halaman 12 dari 28</p></div><button className={bookmarked ? 'bookmark saved' : 'bookmark'} onClick={() => setBookmarked(!bookmarked)} aria-pressed={bookmarked}><span aria-hidden="true">{bookmarked ? '★' : '☆'}</span>{bookmarked ? 'Tersimpan' : 'Simpan halaman'}</button></header>
+          <header className="inner-header"><div><p className="eyebrow">{materialData[0] ? `${materialData[0].subject.toUpperCase()} · MATERI ${materialData[0].order_index}` : 'SEJARAH INDONESIA · BAB 3'}</p><h1>{materialData[0]?.title ?? 'Mempertahankan Kemerdekaan'}</h1><p>{materialData[0]?.last_position ? `Terakhir dibaca: ${materialData[0].last_position}` : materialData[0]?.summary ?? 'Terakhir dibaca: halaman 12 dari 28'}</p></div><button className={bookmarked ? 'bookmark saved' : 'bookmark'} onClick={() => setBookmarked(!bookmarked)} aria-pressed={bookmarked}><span aria-hidden="true">{bookmarked ? '★' : '☆'}</span>{bookmarked ? 'Tersimpan' : 'Simpan halaman'}</button></header>
           <div className="reader-layout">
             <aside className="toc"><p className="eyebrow">DAFTAR ISI</p><button className="done">✓ Proklamasi</button><button className="done">✓ Kedatangan Sekutu</button><button className="current">3. Pertempuran Surabaya</button><button>4. Diplomasi Indonesia</button><button>5. Pengakuan Kedaulatan</button></aside>
             <article className="reader" style={{fontSize}}>
@@ -172,9 +210,9 @@ export default function Home() {
 
         {active === 'Tugas' && <section><header className="inner-header"><div><p className="eyebrow">RUANG TUGAS</p><h1>Tugas yang terarah</h1><p>Status pengumpulan disimpan di perangkat ini.</p></div></header><div className="assignment-grid">{assignments.map(task=><article className="assignment-card" key={task.id}><span>{task.subject}</span><h2>{task.title}</h2><p>{task.due}</p>{task.id===3?<div className="teacher-note"><b>Umpan balik guru</b><p>Sudut pandangmu bagus. Tambahkan contoh tindakan nyata.</p></div>:<><textarea aria-label={`Jawaban ${task.title}`} placeholder="Tuliskan jawaban atau catatan untuk guru…"/><button className="primary" onClick={()=>submitTask(task.id)}>{submitted.includes(task.id)?'Terkirim ✓':'Kirim tugas'}</button></>}</article>)}</div></section>}
 
-        {active === 'Perpustakaan' && <section><header className="inner-header"><div><p className="eyebrow">EPERPUSTAKAAN</p><h1>Temukan bahan belajar</h1><p>Cari, simpan, dan lanjutkan bacaanmu.</p></div></header><input className="library-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari judul atau penulis…" aria-label="Cari buku"/><div className="library-grid">{library.filter(book=>`${book.title} ${book.author}`.toLowerCase().includes(query.toLowerCase())).map(book=><article className="library-card" key={book.id}><div className="book-cover"><b>{book.code}</b><small>{book.progress?`${book.progress}% selesai`:'Belum dibaca'}</small></div><div><p>{book.author}</p><h2>{book.title}</h2><div className="progress"><span style={{width:`${book.progress}%`}}/></div><div className="book-actions"><button className="text-button" onClick={()=>goTo('Materi')}>{book.progress?'Lanjutkan':'Mulai baca'}</button><button className="save-book" onClick={()=>toggleBook(book.id)} aria-pressed={savedBooks.includes(book.id)}>{savedBooks.includes(book.id)?'★ Tersimpan':'☆ Simpan'}</button></div></div></article>)}</div></section>}
+        {active === 'Perpustakaan' && <section><header className="inner-header"><div><p className="eyebrow">EPERPUSTAKAAN</p><h1>Temukan bahan belajar</h1><p>Cari, simpan, dan lanjutkan bacaanmu.</p></div></header><input className="library-search" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari judul atau penulis…" aria-label="Cari buku"/><div className="library-grid">{shownLibrary.map(book=><article className="library-card" key={book.id}><div className="book-cover"><b>{book.code}</b><small>{book.progress?`${book.progress}% selesai`:'Belum dibaca'}</small></div><div><p>{book.author}</p><h2>{book.title}</h2><div className="progress"><span style={{width:`${book.progress}%`}}/></div><div className="book-actions"><button className="text-button" onClick={()=>goTo('Materi')}>{book.progress?'Lanjutkan':'Mulai baca'}</button><button className="save-book" onClick={()=>toggleBook(book.id)} aria-pressed={savedBooks.includes(book.id)}>{savedBooks.includes(book.id)?'★ Tersimpan':'☆ Simpan'}</button></div></div></article>)}</div>{shownLibrary.length === 0 && <div className="empty-state"><span aria-hidden="true">⌕</span><h1>Buku tidak ditemukan</h1><p>Coba gunakan kata kunci judul atau penulis yang berbeda.</p></div>}</section>}
 
-        {active === 'Profil' && <section><header className="inner-header"><div><p className="eyebrow">PROFIL & PENGATURAN</p><h1>Ruang belajar milikmu</h1><p>Preferensi ini disimpan hanya di perangkat yang sedang digunakan.</p></div></header><div className="profile-settings-grid"><article className="student-profile-card"><span className="profile-avatar-large">DS</span><div><h2>Dudin Sahidin</h2><p>Paket C · Kelas 10</p><small>Nomor siswa RT-2026-1042</small></div><dl><div><dt>Rangkaian</dt><dd>4 hari</dd></div><div><dt>Materi selesai</dt><dd>12</dd></div><div><dt>Nilai rata-rata</dt><dd>86</dd></div></dl></article><article className="preferences-card"><div><h2>Target belajar harian</h2><p>Pilih durasi yang realistis agar belajar tetap konsisten.</p><div className="setting-options">{[15,30,45,60].map(goal=><button key={goal} className={dailyGoal===goal?'active':''} onClick={()=>{setDailyGoal(goal);localStorage.setItem('rt-daily-goal',String(goal));setNotice(`Target belajar diubah menjadi ${goal} menit.`)}}>{goal} menit</button>)}</div></div><div className="setting-divider"/><label className="setting-toggle"><span><b>Pengingat belajar</b><small>Pengingat target harian dan tenggat tugas.</small></span><input type="checkbox" checked={reminders} onChange={e=>{setReminders(e.target.checked);localStorage.setItem('rt-reminders',String(e.target.checked))}}/></label><div className="setting-divider"/><div><h2>Ukuran tampilan</h2><p>Pilih kerapatan teks yang paling nyaman dibaca.</p><div className="setting-options">{['Ringkas','Nyaman','Besar'].map(mode=><button key={mode} className={readingMode===mode?'active':''} onClick={()=>{setReadingMode(mode);localStorage.setItem('rt-reading-mode',mode);setFontSize(mode==='Besar'?22:mode==='Ringkas'?16:18)}}>{mode}</button>)}</div></div><div className="setting-divider"/><button className="reset-button" onClick={()=>{localStorage.removeItem('rt-submitted');localStorage.removeItem('rt-books');localStorage.removeItem('rt-daily-goal');localStorage.removeItem('rt-reminders');localStorage.removeItem('rt-reading-mode');setSubmitted([]);setSavedBooks([]);setDailyGoal(30);setReminders(true);setReadingMode('Nyaman');setNotice('Progres dan preferensi lokal telah diatur ulang.')}}>Atur ulang progres lokal</button></article></div></section>}
+        {active === 'Profil' && <section><header className="inner-header"><div><p className="eyebrow">PROFIL & PENGATURAN</p><h1>Ruang belajar milikmu</h1><p>Identitas dan progres berasal dari akun belajar. Preferensi tetap disimpan di perangkat ini.</p></div></header><div className="profile-settings-grid"><article className="student-profile-card"><span className="profile-avatar-large">{initials}</span><div><h2>{displayName}</h2><p>{profileData?.enrollment ? `${profileData.enrollment.program} · Kelas ${profileData.enrollment.grade_level}` : profileData?.role ?? 'Siswa'}</p><small>{profileData?.email ?? 'Memuat identitas…'}</small></div><dl><div><dt>Rangkaian</dt><dd>4 hari</dd></div><div><dt>Materi dimulai</dt><dd>{dashboardData?.progress?.started ?? 0}</dd></div><div><dt>Nilai rata-rata</dt><dd>{Math.round(dashboardData?.progress?.average_percent ?? 0)}</dd></div></dl></article><article className="preferences-card"><div><h2>Target belajar harian</h2><p>Pilih durasi yang realistis agar belajar tetap konsisten.</p><div className="setting-options">{[15,30,45,60].map(goal=><button key={goal} className={dailyGoal===goal?'active':''} onClick={()=>{setDailyGoal(goal);localStorage.setItem('rt-daily-goal',String(goal));setNotice(`Target belajar diubah menjadi ${goal} menit.`)}}>{goal} menit</button>)}</div></div><div className="setting-divider"/><label className="setting-toggle"><span><b>Pengingat belajar</b><small>Pengingat target harian dan tenggat tugas.</small></span><input type="checkbox" checked={reminders} onChange={e=>{setReminders(e.target.checked);localStorage.setItem('rt-reminders',String(e.target.checked))}}/></label><div className="setting-divider"/><div><h2>Ukuran tampilan</h2><p>Pilih kerapatan teks yang paling nyaman dibaca.</p><div className="setting-options">{['Ringkas','Nyaman','Besar'].map(mode=><button key={mode} className={readingMode===mode?'active':''} onClick={()=>{setReadingMode(mode);localStorage.setItem('rt-reading-mode',mode);setFontSize(mode==='Besar'?22:mode==='Ringkas'?16:18)}}>{mode}</button>)}</div></div><div className="setting-divider"/><button className="reset-button" onClick={()=>{localStorage.removeItem('rt-submitted');localStorage.removeItem('rt-books');localStorage.removeItem('rt-daily-goal');localStorage.removeItem('rt-reminders');localStorage.removeItem('rt-reading-mode');setSubmitted([]);setSavedBooks([]);setDailyGoal(30);setReminders(true);setReadingMode('Nyaman');setNotice('Progres dan preferensi lokal telah diatur ulang.')}}>Atur ulang progres lokal</button></article></div></section>}
       </main>
 
       <nav className="bottom-nav" aria-label="Navigasi seluler">
