@@ -30,6 +30,18 @@ INSERT OR IGNORE INTO assignments (id, class_subject_id, title, instructions, su
 INSERT OR IGNORE INTO quizzes (id, class_subject_id, material_id, title, status, passing_score, author_id, created_at, updated_at) VALUES
   ('quiz_surabaya', 'cs_sej_10', 'mat_surabaya', 'Latihan Pertempuran Surabaya', 'published', 70, 'usr_teacher_adi', datetime('now'), datetime('now'));
 
+INSERT OR IGNORE INTO quiz_questions (id, quiz_id, prompt, order_index, explanation) VALUES
+  ('qq_surabaya_1', 'quiz_surabaya', 'Tanggal berapa Pertempuran Surabaya diperingati sebagai Hari Pahlawan?', 1, 'Pertempuran besar di Surabaya diperingati setiap 10 November sebagai Hari Pahlawan.'),
+  ('qq_surabaya_2', 'quiz_surabaya', 'Nilai utama yang ditunjukkan rakyat Surabaya adalah?', 2, 'Perjuangan rakyat menunjukkan keberanian, persatuan, dan kerelaan berkorban.');
+
+INSERT OR IGNORE INTO quiz_options (id, question_id, label, order_index, is_correct) VALUES
+  ('qo_sby_1a', 'qq_surabaya_1', '17 Agustus', 1, 0),
+  ('qo_sby_1b', 'qq_surabaya_1', '10 November', 2, 1),
+  ('qo_sby_1c', 'qq_surabaya_1', '28 Oktober', 3, 0),
+  ('qo_sby_2a', 'qq_surabaya_2', 'Keberanian dan persatuan', 1, 1),
+  ('qo_sby_2b', 'qq_surabaya_2', 'Kepentingan pribadi', 2, 0),
+  ('qo_sby_2c', 'qq_surabaya_2', 'Menghindari perubahan', 3, 0);
+
 INSERT OR IGNORE INTO library_items (id, subject_id, title, author, description, content, page_count, status, created_at, updated_at) VALUES
   ('lib_kemerdekaan', 'sub_sej', 'Indonesia Mempertahankan Kemerdekaan', 'Tim Sejarah Nasional', 'Bahan pendamping sejarah kelas 10.', 'Konten pengembangan lokal.', 128, 'published', datetime('now'), datetime('now'));
 
