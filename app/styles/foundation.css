@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #17243e;
+  --muted: #697386;
+  --cream: #f7f6f1;
+  --paper: #fff;
+  --navy: #15355c;
+  --blue: #315ec9;
+  --line: #e7e7df;
+  --coral: #e7654a;
+  --green: #1e765e;
+  --yellow: #f0b84b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -80px;
+  z-index: 100;
+  background: #fff;
+  color: #111;
+  padding: 12px 18px;
+  border-radius: 8px;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+.topbar {
+  height: 82px;
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+  padding: 0 30px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  color: var(--navy);
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.brand > span:last-child span {
+  color: var(--coral);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border-radius: 12px 12px 12px 4px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 24px;
+}
+
+.top-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-button {
+  position: relative;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 12px;
+  width: 43px;
+  height: 43px;
+  color: var(--navy);
+  font-size: 21px;
+}
+
+.notification-dot {
+  position: absolute;
+  right: 9px;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: #e7edfb;
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.profile-copy {
+  display: grid;
+  gap: 2px;
+}
+
+.profile-copy small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.menu-button {
+  display: none;
+  border: 0;
+  background: transparent;
+  width: 44px;
+  padding: 8px;
+}
+
+.menu-button span {
+  display: block;
+  height: 2px;
+  background: var(--navy);
+  margin: 5px;
+  border-radius: 9px;
+}
+
+.sidebar {
+  position: fixed;
+  z-index: 30;
+  left: 0;
+  top: 82px;
+  bottom: 0;
+  width: 242px;
+  background: var(--navy);
+  padding: 34px 20px;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,174 @@
+.continue-art {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 8px solid #5d7897;
+  border-top-color: var(--yellow);
+  font-family: Georgia, serif;
+}
+
+.continue-art span {
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.continue-art small {
+  font-family: Arial;
+  font-size: 10px;
+  color: #c9d4df;
+}
+
+.continue-copy .eyebrow {
+  color: #f7ca6d;
+}
+
+.continue-copy h2 {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  margin: 0 0 5px;
+}
+
+.continue-copy > p:not(.eyebrow) {
+  color: #cbd8e7;
+  margin: 0 0 15px;
+}
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 440px;
+}
+
+.progress {
+  height: 7px;
+  flex: 1;
+  background: #e5e8eb;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--yellow);
+}
+
+.primary {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  border-radius: 12px;
+  padding: 13px 18px;
+  background: var(--coral);
+  color: #fff;
+  font-weight: 800;
+}
+
+.primary:hover,
+.primary:focus-visible {
+  background: #c84d35;
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.section-block {
+  margin-top: 42px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 17px;
+}
+
+.section-heading h2 {
+  font-family: Georgia, serif;
+  color: var(--navy);
+  font-size: 25px;
+  margin: 0;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+  color: var(--blue);
+  font-weight: 800;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.task-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.task-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.task-icon {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 13px;
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.task-icon.blue {
+  background: #e5ecff;
+  color: var(--blue);
+}
+
+.task-icon.coral {
+  background: #ffebe6;
+  color: var(--coral);
+}
+
+.task-card h3 {
+  font-size: 16px;
+  margin: 7px 0 3px;
+}
+
+.task-card p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.pill {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.pill.urgent {
+  color: #b33a28;
+}
+
+.task-card > button {
+  border: 1px solid var(--navy);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--navy);
+  padding: 9px 14px;
+  font-weight: 800;
+}

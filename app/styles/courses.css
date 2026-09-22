@@ -1,0 +1,105 @@
+.task-card > button:hover,
+.task-card > button:focus-visible {
+  background: var(--navy);
+  color: #fff;
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
+}
+
+.course-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  overflow: hidden;
+}
+
+.course-cover {
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 18px;
+  color: #fff;
+  background: #315ec9;
+}
+
+.course-cover.coral {
+  background: #bd5948;
+}
+
+.course-cover.green {
+  background: #28735f;
+}
+
+.course-cover span {
+  font-family: Georgia, serif;
+  font-size: 27px;
+}
+
+.course-cover b {
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.22);
+  padding: 5px 8px;
+  border-radius: 20px;
+}
+
+.course-body {
+  padding: 18px;
+}
+
+.course-body p {
+  margin: 0 0 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.course-body h3 {
+  margin: 0 0 15px;
+  color: var(--navy);
+  font-family: Georgia, serif;
+  font-size: 19px;
+}
+
+.course-body .progress span {
+  background: var(--blue);
+}
+
+.course-body small {
+  display: block;
+  margin: 10px 0 15px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.course-body button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  padding: 13px 0 0;
+  color: var(--blue);
+  font-weight: 800;
+}
+
+.course-body button span {
+  float: right;
+}
+
+.bottom-nav {
+  display: none;
+}
+
+.backdrop {
+  display: none;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid #f2a900;
+  outline-offset: 3px;
+}

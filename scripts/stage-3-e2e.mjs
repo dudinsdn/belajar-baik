@@ -72,14 +72,14 @@ async function request(path, init, expectedStatus = 200) {
 }
 
 async function waitUntilReady() {
-  for (let attempt = 0; attempt < 80; attempt += 1) {
+  for (let attempt = 0; attempt < 240; attempt += 1) {
     try {
       const response = await fetch(`${baseUrl}/api/v1/me`);
       if (response.ok) return;
     } catch {}
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
-  throw new Error("Server lokal tidak siap dalam 20 detik.");
+  throw new Error("Server lokal tidak siap dalam 60 detik.");
 }
 
 async function startAs(role) {

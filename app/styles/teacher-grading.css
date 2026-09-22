@@ -1,0 +1,119 @@
+.queue-count {
+  border-radius: 999px;
+  background: #fff0ec;
+  color: #943623;
+  padding: 10px 15px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.grading-list {
+  display: grid;
+  gap: 18px;
+  max-width: 920px;
+}
+
+.grading-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: clamp(20px, 4vw, 30px);
+  box-shadow: 0 10px 26px rgba(31, 44, 62, 0.05);
+}
+
+.grading-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.grading-meta > span {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--coral);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.grading-meta > b {
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 11px;
+}
+
+.grading-meta .waiting {
+  background: #fff3cf;
+  color: #7f5a00;
+}
+
+.grading-meta .graded {
+  background: #e7f5ef;
+  color: #145c48;
+}
+
+.grading-card h2 {
+  font: 700 24px Georgia;
+  color: var(--navy);
+  margin: 15px 0 5px;
+}
+
+.student-name {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.grading-card blockquote {
+  margin: 22px 0;
+  border-left: 4px solid var(--yellow);
+  background: var(--cream);
+  padding: 16px 18px;
+  line-height: 1.65;
+}
+
+.grade-fields {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.grade-fields label {
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+.grade-fields input,
+.grade-fields textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  padding: 12px;
+  color: var(--ink);
+  font: inherit;
+}
+
+.grade-fields textarea {
+  min-height: 105px;
+  resize: vertical;
+}
+
+.grading-card > .primary {
+  margin-top: 18px;
+}
+
+@media (max-width: 680px) {
+  .grade-fields {
+    grid-template-columns: 1fr;
+  }
+  .queue-count {
+    display: inline-block;
+    margin-top: 18px;
+  }
+  .grading-meta {
+    align-items: flex-start;
+  }
+}
