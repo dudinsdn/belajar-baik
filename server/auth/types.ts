@@ -1,4 +1,4 @@
-export type UserRole = 'student' | 'teacher' | 'admin';
+export type UserRole = "student" | "teacher" | "admin";
 
 export type CurrentUser = {
   id: string;
@@ -6,10 +6,12 @@ export type CurrentUser = {
   email: string;
   displayName: string;
   role: UserRole;
-  source: 'platform' | 'development';
+  source: "platform" | "development";
 };
 
-export type StoredUser = Omit<CurrentUser, 'source'> & { status: 'active' | 'inactive' };
+export type StoredUser = Omit<CurrentUser, "source"> & {
+  status: "active" | "inactive";
+};
 
 export type AuthEnvironment = {
   RUNTIME_ENV?: string;
@@ -21,5 +23,7 @@ export type AuthEnvironment = {
   RT_DEV_USER_ROLE?: string;
 };
 
-export type UserLookup = (externalIdentityId: string) => Promise<StoredUser | null>;
+export type UserLookup = (
+  externalIdentityId: string,
+) => Promise<StoredUser | null>;
 export type UserLookupByEmail = (email: string) => Promise<StoredUser | null>;
