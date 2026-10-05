@@ -194,6 +194,12 @@ penyimpanan gagal, dan keyboard telah diverifikasi. Lihat
 
 ## Tahap 2 — Rencana Belajar Personal Warga Belajar
 
+**Status: Lulus lokal.** Rencana individu/kelas, pendampingan, tenggat
+personal, dasbor dari D1, batas akses, resume setelah restart, serta render
+desktop/seluler telah diverifikasi. Pencapaian SKK mengikuti Tahap 7 dan
+identitas/database hosted mengikuti Tahap 10.
+Lihat [rekaman validasi Tahap 2](validation/tahap-2.md).
+
 **Tujuan: warga belajar selalu mengetahui langkah berikutnya**
 
 ### Fitur warga belajar

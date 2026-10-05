@@ -132,7 +132,10 @@ Versi saat ini telah memiliki fondasi autentikasi per peran, data D1, progres
 materi dan perpustakaan, tugas, kuis dengan penilaian server, serta penilaian
 tugas oleh tutor.
 
-Model Kurikulum 2013, pemetaan KI/KD, paket kompetensi, buku besar SKK, modul
+Fondasi versi kurikulum, pemetaan KI/KD, paket kompetensi, dan alokasi SKK
+telah lulus lokal pada Tahap 1. Rencana personal, tenggat individual,
+pendampingan dasar, serta kartu langkah berikutnya tersedia pada Tahap 2;
+buktinya dicatat di `docs/validation/`. Buku besar SKK, modul
 dinamis penuh, portofolio, remedial terstruktur, pelaporan lengkap, dukungan
 offline, dan ruang administrator merupakan target pengembangan bertahap.
 Urutan pekerjaan dan kriteria penyelesaiannya ditetapkan dalam `docs/roadmap.md`.

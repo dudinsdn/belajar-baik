@@ -7,6 +7,7 @@ import * as curriculumAudit from "./schema/curriculum-audit";
 import * as curriculumLinks from "./schema/curriculum-links";
 import * as curriculumPlanning from "./schema/curriculum-planning";
 import * as identity from "./schema/identity";
+import * as learningPlans from "./schema/learning-plans";
 import * as library from "./schema/library";
 import * as quizzes from "./schema/quizzes";
 
@@ -19,6 +20,7 @@ const schema = {
   ...curriculumPlanning,
   ...identity,
   ...library,
+  ...learningPlans,
   ...quizzes,
 };
 

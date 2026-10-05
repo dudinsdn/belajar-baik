@@ -14,6 +14,7 @@ import { usePreferences } from "./learning/hooks/use-preferences";
 import { useQuiz } from "./learning/hooks/use-quiz";
 
 export default function Home() {
+  const [resourceId, setResourceId] = useState<string | null>(null);
   const [active, setActive] = useState("Beranda");
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
@@ -28,7 +29,9 @@ export default function Home() {
   const preferences = usePreferences(setNotice);
   const quiz = useQuiz(active, data.quiz, setNotice);
 
-  const goTo = useCallback((destination: string) => {
+  const goTo = useCallback((destination: string, id?: string) => {
+    setResourceId(id ?? null);
+    setBookmarked(false);
     setActive(destination);
     setMenuOpen(false);
     window.requestAnimationFrame(() => contentRef.current?.focus());
@@ -45,7 +48,9 @@ export default function Home() {
   const libraryActions = createLibraryActions({
     books: data.books,
     setBooks: data.setBooks,
-    materials: data.materials,
+    materials: resourceId
+      ? data.materials.filter((m) => m.id === resourceId)
+      : data.materials,
     setBookmarked,
     setSaving: setSavingProgress,
     setNotice,
@@ -82,8 +87,8 @@ export default function Home() {
     );
   const navigation =
     data.profile?.role === "teacher"
-      ? ["Kurikulum", "Penilaian", "Profil"]
-      : [...studentNav, "Kurikulum"];
+      ? ["Kurikulum", "Rencana", "Penilaian", "Profil"]
+      : [...studentNav, "Kurikulum", "Rencana"];
 
   if (data.status !== "ready")
     return <AccessState status={data.status} message={data.message} />;
@@ -98,8 +103,8 @@ export default function Home() {
       navigation={navigation}
       profile={data.profile}
       pendingTaskCount={
-        data.assignments.filter(
-          (task) => task.submission_status === "not_started",
+        data.assignments.filter((task) =>
+          ["not_started", "draft"].includes(task.submission_status),
         ).length
       }
       contentRef={contentRef}
@@ -108,6 +113,7 @@ export default function Home() {
       setNotice={setNotice}
     >
       <ActiveView
+        resourceId={resourceId}
         active={active}
         displayName={displayName}
         initials={initials}

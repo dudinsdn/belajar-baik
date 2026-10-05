@@ -11,7 +11,49 @@ export type ProfileData = {
   } | null;
 };
 
+export type LearningPlan = {
+  help_request: string | null;
+  id: string;
+  title: string;
+  mode: string;
+  due_at: string;
+  instructions: string;
+  subject: string;
+  learner_outcome: string;
+  material_id: string | null;
+  percent: number | null;
+  last_position: string | null;
+  student_name: string;
+};
+export type PlanningData = {
+  plans: LearningPlan[];
+  subjects: Array<{ id: string; name: string; class_name: string }>;
+  students: Array<{
+    id: string;
+    display_name: string;
+    class_subject_id: string;
+    reason: string | null;
+    last_activity: string | null;
+    inactive: boolean;
+    overdue: number;
+  }>;
+  competencies: Array<{
+    id: string;
+    learner_outcome: string;
+    code: string;
+    package_code: string;
+    version_code: string;
+    class_subject_id: string;
+  }>;
+  materials: Array<{ id: string; title: string; class_subject_id: string }>;
+  assignments: Array<{ id: string; title: string; class_subject_id: string }>;
+};
 export type DashboardData = {
+  nextPlan: LearningPlan | null;
+  plans: LearningPlan[];
+  skk: { planned: number };
+  feedback: Array<{ id: string; title: string; feedback: string }>;
+  assessment: { id: string; title: string } | null;
   continueMaterial?: {
     id: string;
     title: string;

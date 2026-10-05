@@ -1,0 +1,37 @@
+.planning-form {
+  display: grid;
+  gap: 16px;
+  max-width: 760px;
+  margin-block: 24px;
+}
+.planning-form label {
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+}
+.planning-form input,
+.planning-form select,
+.planning-form textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 12px;
+  border: 1px solid #687b78;
+  border-radius: 8px;
+  background: white;
+  color: #163c36;
+}
+.planning-form textarea {
+  min-height: 100px;
+}
+.planning-form option {
+  white-space: normal;
+}
+.task-card {
+  overflow-wrap: anywhere;
+}
+
+.personal-plan-section .text-button,
+.planning-form .text-button {
+  min-height: 44px;
+}

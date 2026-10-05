@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,css,mjs}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,css,mjs}\"",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress && npm run test:curriculum",
+    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress && npm run test:curriculum && npm run test:planning",
     "ci": "npm run format:check && npm run lint && npm test && npm run build",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
@@ -25,7 +25,9 @@
     "test:progress": "node --experimental-strip-types --test tests/progress-validation.test.ts",
     "test:curriculum": "node --experimental-strip-types --test tests/curriculum-validation.test.ts tests/curriculum-database.test.ts tests/curriculum-domain.test.mjs",
     "test:e2e": "node scripts/learning-flow-e2e.mjs",
-    "test:curriculum:api": "node scripts/curriculum-api-smoke.mjs"
+    "test:curriculum:api": "node scripts/curriculum-api-smoke.mjs",
+    "test:planning": "node --experimental-strip-types --test tests/learning-plans-domain.test.mjs",
+    "test:planning:api": "node scripts/planning-api-smoke.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

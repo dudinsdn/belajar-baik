@@ -9,6 +9,8 @@ import { LibraryView } from "../views/library-view";
 import { MaterialView } from "../views/material-view";
 import { ProfileView } from "../views/profile-view";
 import { QuizView } from "../views/quiz-view";
+import { PlanningView } from "../views/planning-view";
+import { StudentPlansView } from "../views/student-plans-view";
 import { CurriculumView } from "../views/curriculum-view";
 
 type Data = ReturnType<typeof useInitialData>;
@@ -27,6 +29,7 @@ type Actions = {
 };
 type Props = {
   active: string;
+  resourceId: string | null;
   displayName: string;
   initials: string;
   bookmarked: boolean;
@@ -50,10 +53,16 @@ type Props = {
   setQuery: (value: string) => void;
   setFontSize: Dispatch<SetStateAction<number>>;
   setNotice: Dispatch<SetStateAction<string>>;
-  goTo: (value: string) => void;
+  goTo: (value: string, resourceId?: string) => void;
 };
 
 export function ActiveView(p: Props) {
+  if (p.active === "Rencana")
+    return p.data.profile?.role === "teacher" ? (
+      <PlanningView />
+    ) : (
+      <StudentPlansView goTo={p.goTo} />
+    );
   if (p.active === "Kurikulum") return <CurriculumView />;
   const d = p.data;
   const pref = p.preferences;
@@ -69,7 +78,11 @@ export function ActiveView(p: Props) {
   if (p.active === "Materi")
     return (
       <MaterialView
-        material={d.materials[0]}
+        material={
+          p.resourceId
+            ? d.materials.find((m) => m.id === p.resourceId)
+            : d.materials[0]
+        }
         bookmarked={p.bookmarked}
         fontSize={p.fontSize}
         savingProgress={p.savingProgress}
@@ -101,7 +114,11 @@ export function ActiveView(p: Props) {
   if (p.active === "Tugas")
     return (
       <AssignmentsView
-        items={d.assignments}
+        items={
+          p.resourceId
+            ? d.assignments.filter((a) => a.id === p.resourceId)
+            : d.assignments
+        }
         answers={d.assignmentAnswers}
         saving={p.savingAssignment}
         setAnswers={d.setAssignmentAnswers}

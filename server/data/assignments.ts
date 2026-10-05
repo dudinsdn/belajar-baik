@@ -19,13 +19,14 @@ type AssignmentRow = {
   feedback: string | null;
 };
 
-const assignmentSql = `SELECT a.id, a.title, a.instructions, a.submission_type, a.due_at, a.allow_late,
+const assignmentSql = `SELECT a.id, a.title, a.instructions, a.submission_type, COALESCE(ad.due_at,a.due_at) AS due_at, a.allow_late,
   s.name AS subject, sub.id AS submission_id, sub.answer_text, COALESCE(sub.status, 'not_started') AS submission_status,
   sub.submitted_at, sub.score, sub.feedback
-  FROM class_memberships cm JOIN class_subjects cs ON cs.class_id = cm.class_id
+  FROM class_memberships cm JOIN class_subjects cs ON cs.class_id = cm.class_id JOIN classes c ON c.id=cs.class_id
   JOIN assignments a ON a.class_subject_id = cs.id JOIN subjects s ON s.id = cs.subject_id
   LEFT JOIN submissions sub ON sub.assignment_id = a.id AND sub.student_id = cm.student_id
-  WHERE cm.student_id = ? AND cm.status = 'active' AND a.status = 'published' AND ${competencyAccess("assignment", "a", "cm.student_id")}`;
+  LEFT JOIN assignment_deadlines ad ON ad.assignment_id=a.id AND ad.student_id=cm.student_id
+  WHERE cm.student_id = ? AND cm.status = 'active' AND c.status='active' AND a.status = 'published' AND ${competencyAccess("assignment", "a", "cm.student_id")}`;
 
 export async function listStudentAssignments(
   user: CurrentUser,
@@ -38,7 +39,7 @@ export async function listStudentAssignments(
     });
   const filter = status ? " AND COALESCE(sub.status, 'not_started') = ?" : "";
   const statement = env.DB.prepare(
-    `${assignmentSql}${filter} ORDER BY a.due_at ASC`,
+    `${assignmentSql}${filter} ORDER BY COALESCE(ad.due_at,a.due_at) ASC`,
   );
   const result = status
     ? await statement.bind(user.id, status).all<AssignmentRow>()

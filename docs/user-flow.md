@@ -158,7 +158,8 @@ Alur yang telah memiliki fondasi aplikasi adalah identitas berbasis peran,
 dashboard dasar, materi dan perpustakaan, progres, tugas teks, kuis pilihan
 tunggal dengan penilaian server, serta penilaian tugas oleh tutor.
 
-Alur rencana belajar personal, model KI/KD, paket kompetensi, asesmen
-diagnostik, modul dinamis penuh, proyek dan portofolio, remedial terstruktur,
+Fondasi versi kurikulum, KI/KD, paket kompetensi, rencana belajar personal,
+tenggat individual, dan permintaan bantuan pada rencana tersedia secara lokal.
+Rekaman validasinya berada di `docs/validation/`. Asesmen diagnostik, modul dinamis penuh, proyek dan portofolio, remedial terstruktur,
 validasi SKK, pelaporan lengkap, dukungan offline, dan ruang administrator
 merupakan target bertahap dalam `docs/roadmap.md`.
