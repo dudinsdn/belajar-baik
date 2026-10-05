@@ -1,0 +1,1 @@
+ALTER TABLE `material_module_settings` ADD `planned_skk` integer;

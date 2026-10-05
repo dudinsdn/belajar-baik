@@ -100,7 +100,7 @@ export async function getStudentDashboard(user: CurrentUser) {
 export async function listStudentMaterials(user: CurrentUser) {
   const result = await env.DB.prepare(
     `SELECT m.id, m.title, m.summary, m.order_index, s.code AS subject_code, s.name AS subject,
-            COALESCE(mp.percent, 0) AS percent, mp.last_position, mp.completed_at, mp.updated_at
+            COALESCE(mp.percent, 0) AS percent, COALESCE((SELECT ms.title FROM material_sections ms WHERE ms.id=mp.last_position AND ms.material_id=m.id),mp.last_position) AS last_position, mp.completed_at, mp.updated_at
      FROM class_memberships cm JOIN class_subjects cs ON cs.class_id = cm.class_id JOIN classes c ON c.id=cs.class_id
      JOIN materials m ON m.class_subject_id = cs.id JOIN subjects s ON s.id = cs.subject_id
      LEFT JOIN material_progress mp ON mp.material_id = m.id AND mp.student_id = cm.student_id

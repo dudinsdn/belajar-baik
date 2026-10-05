@@ -159,3 +159,69 @@ export type TeacherSubmission = {
 };
 export type ApiEnvelope<T> =
   { data: T; error?: never } | { data?: never; error: { message: string } };
+
+export type ModuleDetail = {
+  settings: {
+    estimated_minutes: number;
+    planned_skk: number | null;
+    prerequisite_id: string | null;
+  } | null;
+  stats: Array<{
+    id: string;
+    title: string;
+    completed_count: number;
+    started_count: number;
+    help_count: number;
+  }>;
+  allocations: Array<{
+    package_code: string;
+    planned_skk: number;
+    face_to_face_percent: number;
+    tutorial_percent: number;
+    independent_percent: number;
+  }>;
+  material: {
+    id: string;
+    title: string;
+    summary: string;
+    content: string;
+    subject: string;
+    status: string;
+    class_subject_id: string;
+    order_index: number;
+  };
+  sections: Array<{
+    id: string;
+    title: string;
+    body: string;
+    kind: string;
+    mode: string;
+    competency_id: string;
+    media_url: string | null;
+    media_type: string | null;
+    competency_code: string;
+    learner_outcome: string;
+    completed_at: string | null;
+    bookmarked: number;
+  }>;
+  progress: { percent: number; last_position: string | null } | null;
+  events: Array<{
+    id: string;
+    display_name: string;
+    title: string;
+    note: string;
+    created_at: string;
+  }>;
+};
+export type ModuleCatalog = {
+  subjects: Array<{ id: string; name: string; class_name: string }>;
+  materials: ModuleDetail["material"][];
+  competencies: Array<{
+    id: string;
+    code: string;
+    package_code: string;
+    version_code: string;
+    learner_outcome: string;
+    class_subject_id: string;
+  }>;
+};

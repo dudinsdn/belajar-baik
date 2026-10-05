@@ -1,3 +1,5 @@
+import { readApi } from "../request";
+import type { DashboardData } from "../types";
 import type { Dispatch, SetStateAction } from "react";
 import type { useInitialData } from "../hooks/use-initial-data";
 import type { usePreferences } from "../hooks/use-preferences";
@@ -6,7 +8,8 @@ import { AssignmentsView } from "../views/assignments-view";
 import { DashboardView } from "../views/dashboard-view";
 import { GradingView } from "../views/grading-view";
 import { LibraryView } from "../views/library-view";
-import { MaterialView } from "../views/material-view";
+import { ModuleReader } from "../views/module-reader";
+import { ModuleEditor } from "../views/module-editor";
 import { ProfileView } from "../views/profile-view";
 import { QuizView } from "../views/quiz-view";
 import { PlanningView } from "../views/planning-view";
@@ -76,19 +79,32 @@ export function ActiveView(p: Props) {
       />
     );
   if (p.active === "Materi")
-    return (
-      <MaterialView
-        material={
-          p.resourceId
-            ? d.materials.find((m) => m.id === p.resourceId)
-            : d.materials[0]
-        }
-        bookmarked={p.bookmarked}
-        fontSize={p.fontSize}
-        savingProgress={p.savingProgress}
-        setFontSize={p.setFontSize}
-        saveProgress={p.actions.library.saveMaterial}
-        goTo={p.goTo}
+    return p.data.profile?.role === "teacher" ? (
+      <ModuleEditor />
+    ) : (
+      <ModuleReader
+        key={p.resourceId ?? "all"}
+        materials={d.materials}
+        initialId={p.resourceId}
+        onSaved={async (module) => {
+          d.setMaterials((items) =>
+            items.map((m) =>
+              m.id === module.material.id
+                ? {
+                    ...m,
+                    percent: module.progress?.percent ?? 0,
+                    last_position:
+                      module.sections.find(
+                        (s) => s.id === module.progress?.last_position,
+                      )?.title ??
+                      module.progress?.last_position ??
+                      null,
+                  }
+                : m,
+            ),
+          );
+          d.setDashboard(await readApi<DashboardData>("/api/v1/dashboard"));
+        }}
       />
     );
   if (p.active === "Latihan")

@@ -17,6 +17,17 @@ export async function updateMaterialProgress(
     .first();
   if (!material)
     throw new ApiError("NOT_FOUND", 404, "Materi tidak ditemukan.");
+  const modular = await env.DB.prepare(
+    "SELECT id FROM material_sections WHERE material_id=? LIMIT 1",
+  )
+    .bind(materialId)
+    .first();
+  if (modular)
+    throw new ApiError(
+      "VALIDATION_ERROR",
+      422,
+      "Selesaikan bagian modul untuk menyimpan progres; persentase dihitung server.",
+    );
   const now = new Date().toISOString();
   const completedAt = progress.percent === 100 ? now : null;
   await env.DB.prepare(

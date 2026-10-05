@@ -92,7 +92,9 @@ export function useInitialData(setActive: (value: string) => void) {
   return {
     profile,
     dashboard,
+    setDashboard,
     materials,
+    setMaterials,
     books,
     setBooks,
     assignments,

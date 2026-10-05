@@ -160,6 +160,27 @@ tunggal dengan penilaian server, serta penilaian tugas oleh tutor.
 
 Fondasi versi kurikulum, KI/KD, paket kompetensi, rencana belajar personal,
 tenggat individual, dan permintaan bantuan pada rencana tersedia secara lokal.
-Rekaman validasinya berada di `docs/validation/`. Asesmen diagnostik, modul dinamis penuh, proyek dan portofolio, remedial terstruktur,
-validasi SKK, pelaporan lengkap, dukungan offline, dan ruang administrator
-merupakan target bertahap dalam `docs/roadmap.md`.
+Rekaman validasinya berada di `docs/validation/`. Reader per bagian dan editor
+modul tutor tersedia pada Tahap 3. Asesmen diagnostik, proyek dan portofolio,
+remedial terstruktur, validasi SKK, pelaporan lengkap, sinkronisasi offline,
+dan ruang administrator merupakan target bertahap dalam `docs/roadmap.md`.
+
+### Modul belajar yang tersedia secara lokal
+
+1. Tutor membuka Materi, memilih penugasan dan KD dari versi aktif, lalu
+   menyusun bagian, mode belajar, estimasi, bobot rencana opsional, serta
+   prasyarat. Draf dapat disimpan sebelum diterbitkan.
+2. Penerbitan memerlukan seluruh KD bagian. Isi/pemetaan terbit terkunci;
+   revisi memakai draf baru untuk menjaga histori.
+3. Warga belajar memilih modul terbit, membaca isi D1, mengubah ukuran teks
+   atau mode baca, dan memberi penanda pada bagian penting.
+4. Membuka bagian menyimpan posisi; menandai selesai membuat server
+   menghitung persentase dari jumlah bagian selesai. Progres ini bukan
+   ketuntasan KD atau SKK tercapai. Materi lama diberi label progres historis.
+5. Lanjutkan materi pada dasbor membuka modul dan bagian terakhir yang
+   tersimpan, termasuk setelah proses server diganti.
+6. Pertanyaan pada bagian dikirim ke D1 dan dapat dibaca tutor pada Materi.
+   Tidak ada pengiriman pesan eksternal atau notifikasi otomatis.
+7. Unduh teks modul menghasilkan berkas teks berotorisasi. Bacaan yang sudah
+   dimuat tetap dapat dibaca/disalin saat koneksi gagal; mutasi gagal tidak
+   dinyatakan tersimpan. Antrean offline dan sinkronisasi otomatis belum tersedia.

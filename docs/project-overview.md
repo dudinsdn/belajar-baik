@@ -135,7 +135,10 @@ tugas oleh tutor.
 Fondasi versi kurikulum, pemetaan KI/KD, paket kompetensi, dan alokasi SKK
 telah lulus lokal pada Tahap 1. Rencana personal, tenggat individual,
 pendampingan dasar, serta kartu langkah berikutnya tersedia pada Tahap 2;
-buktinya dicatat di `docs/validation/`. Buku besar SKK, modul
-dinamis penuh, portofolio, remedial terstruktur, pelaporan lengkap, dukungan
-offline, dan ruang administrator merupakan target pengembangan bertahap.
+buktinya dicatat di `docs/validation/`. Tahap 3 menyediakan penyusunan dan
+penerbitan modul per bagian, reader D1, progres server, resume, penanda,
+pertanyaan, prasyarat, dan ekspor teks. Status buktinya berada di
+`docs/validation/tahap-3.md`. Buku besar SKK, portofolio, remedial terstruktur,
+pelaporan lengkap, antrean/sinkronisasi offline, dan ruang administrator
+merupakan target pengembangan bertahap.
 Urutan pekerjaan dan kriteria penyelesaiannya ditetapkan dalam `docs/roadmap.md`.

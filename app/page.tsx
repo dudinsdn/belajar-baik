@@ -30,6 +30,8 @@ export default function Home() {
   const quiz = useQuiz(active, data.quiz, setNotice);
 
   const goTo = useCallback((destination: string, id?: string) => {
+    if (!window.dispatchEvent(new Event("rt:navigate", { cancelable: true })))
+      return;
     setResourceId(id ?? null);
     setBookmarked(false);
     setActive(destination);
@@ -87,7 +89,7 @@ export default function Home() {
     );
   const navigation =
     data.profile?.role === "teacher"
-      ? ["Kurikulum", "Rencana", "Penilaian", "Profil"]
+      ? ["Kurikulum", "Rencana", "Materi", "Penilaian", "Profil"]
       : [...studentNav, "Kurikulum", "Rencana"];
 
   if (data.status !== "ready")

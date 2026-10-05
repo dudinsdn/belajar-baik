@@ -231,6 +231,12 @@ Dashboard baru menampilkan:
 
 ## Tahap 3 — Modul Belajar K13 yang Kontekstual
 
+**Status: Lulus lokal.** Editor/penerbitan modul, isi D1, progres per bagian,
+resume setelah restart, prasyarat, penanda, pertanyaan, ekspor teks, serta render
+desktop/seluler dan koneksi terputus telah diverifikasi. Pencapaian SKK tetap
+Tahap 7; sampel audio/video eksternal telah lulus pada browser lokal. Identitas
+hosted dan perangkat/jaringan nyata belum menjadi bukti produksi. Lihat [rekaman validasi Tahap 3](validation/tahap-3.md).
+
 **Tujuan: membangun pengalaman belajar modular dan fleksibel**
 
 ### Struktur setiap modul

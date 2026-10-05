@@ -525,6 +525,20 @@ export async function mutateCurriculum(user: CurrentUser, input: unknown) {
           "KD harus dari versi aktif pada kelas dan mata pelajaran yang sama.",
         );
     }
+    if (b.kind === "material") {
+      const sections = await all(
+        "SELECT competency_id FROM material_sections WHERE material_id=?",
+        resourceId,
+      );
+      if (
+        sections.some((section) => !ids.includes(String(section.competency_id)))
+      )
+        throw new ApiError(
+          "VALIDATION_ERROR",
+          422,
+          "Semua KD bagian modul harus disertakan saat penerbitan.",
+        );
+    }
     add(`DELETE FROM ${links} WHERE ${fk}=?`, resourceId);
     for (const kd of ids)
       add(`INSERT INTO ${links} VALUES(?,?)`, resourceId, kd);

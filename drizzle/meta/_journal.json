@@ -64,6 +64,41 @@
       "when": 1791191921277,
       "tag": "0008_breezy_marten_broadcloak",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1791202212431,
+      "tag": "0009_glamorous_masque",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1791202604362,
+      "tag": "0010_living_freak",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1791202620586,
+      "tag": "0011_cuddly_old_lace",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1791202883288,
+      "tag": "0012_module_guards",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1791203941333,
+      "tag": "0013_vengeful_goblin_queen",
+      "breakpoints": true
     }
   ]
 }

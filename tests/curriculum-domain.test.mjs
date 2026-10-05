@@ -17,6 +17,11 @@ for (const file of [
   "drizzle/0005_curriculum_guards.sql",
   "drizzle/0006_long_silver_surfer.sql",
   "drizzle/0007_nifty_aqueduct.sql",
+  "drizzle/0009_glamorous_masque.sql",
+  "drizzle/0010_living_freak.sql",
+  "drizzle/0011_cuddly_old_lace.sql",
+  "drizzle/0012_module_guards.sql",
+  "drizzle/0013_vengeful_goblin_queen.sql",
 ])
   db.exec(readFileSync(file, "utf8"));
 function statement(sql, params = []) {
