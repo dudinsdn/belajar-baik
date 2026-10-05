@@ -4,7 +4,7 @@ import {
   text,
   uniqueIndex,
 } from "drizzle-orm/sqlite-core";
-import { subjects } from "./identity";
+import { classes, subjects, users } from "./identity";
 import { timestamps } from "./shared";
 
 export const curriculumVersions = sqliteTable(
@@ -12,6 +12,10 @@ export const curriculumVersions = sqliteTable(
   {
     id: text("id").primaryKey(),
     code: text("code").notNull(),
+    classId: text("class_id").references(() => classes.id),
+    createdBy: text("created_by").references(() => users.id),
+    academicYear: text("academic_year"),
+    program: text("program"),
     name: text("name").notNull(),
     framework: text("framework", {
       enum: ["k13", "merdeka", "local"],

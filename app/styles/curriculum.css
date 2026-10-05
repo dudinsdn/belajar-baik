@@ -1,0 +1,126 @@
+.curriculum-view {
+  max-width: 1080px;
+  margin: auto;
+}
+.curriculum-view h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+}
+.curriculum-card {
+  background: white;
+  border: 1px solid #dfe7e2;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.curriculum-card h2 {
+  margin: 0 0 12px;
+}
+.curriculum-card p {
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.curriculum-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.curriculum-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+  font-weight: 600;
+}
+.curriculum-card input,
+.curriculum-card select,
+.curriculum-card textarea {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #9aaea3;
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+  background: white;
+  color: #203d30;
+}
+.curriculum-card textarea {
+  min-height: 90px;
+}
+.curriculum-card fieldset {
+  min-width: 0;
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid #dfe7e2;
+  border-radius: 8px;
+}
+.curriculum-card legend {
+  font-weight: 700;
+  padding: 0 8px;
+}
+.curriculum-card button,
+.curriculum-message button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #577967;
+  cursor: pointer;
+}
+.curriculum-card button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.curriculum-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.curriculum-table {
+  overflow-x: auto;
+}
+.curriculum-table table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.curriculum-table th,
+.curriculum-table td {
+  padding: 12px;
+  border-bottom: 1px solid #dfe7e2;
+}
+.curriculum-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding: 10px 0;
+}
+.competency-row {
+  padding: 16px 0;
+  border-top: 1px solid #dfe7e2;
+}
+.curriculum-card .curriculum-check {
+  flex-direction: row;
+  align-items: flex-start;
+  font-weight: 400;
+}
+.curriculum-check input {
+  width: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
+}
+.curriculum-message {
+  background: #fff0e8;
+  padding: 16px;
+  border: 1px solid #a05230;
+  border-radius: 8px;
+}
+.curriculum-message button {
+  display: block;
+  margin-top: 12px;
+}
+@media (max-width: 600px) {
+  .curriculum-grid {
+    grid-template-columns: 1fr;
+  }
+  .curriculum-card {
+    padding: 16px;
+  }
+}

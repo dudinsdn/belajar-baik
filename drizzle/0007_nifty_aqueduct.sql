@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `curriculum_assignment_unique` ON `curriculum_assignments` (`student_id`,`competency_package_id`);

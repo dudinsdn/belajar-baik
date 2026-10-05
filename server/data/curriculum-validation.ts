@@ -1,7 +1,7 @@
 import { ApiError } from "../api/error.ts";
 
 export function requirePositiveSkk(value: unknown) {
-  if (!Number.isInteger(value) || (value as number) <= 0) {
+  if (!Number.isSafeInteger(value) || (value as number) <= 0) {
     throw new ApiError(
       "VALIDATION_ERROR",
       422,

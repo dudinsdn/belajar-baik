@@ -1,6 +1,7 @@
 import { env } from "cloudflare:workers";
 import { ApiError } from "../api/error.ts";
 import type { CurrentUser } from "../auth/types.ts";
+import { competencyAccess } from "./competency-access.ts";
 
 type AssignmentRow = {
   id: string;
@@ -24,7 +25,7 @@ const assignmentSql = `SELECT a.id, a.title, a.instructions, a.submission_type, 
   FROM class_memberships cm JOIN class_subjects cs ON cs.class_id = cm.class_id
   JOIN assignments a ON a.class_subject_id = cs.id JOIN subjects s ON s.id = cs.subject_id
   LEFT JOIN submissions sub ON sub.assignment_id = a.id AND sub.student_id = cm.student_id
-  WHERE cm.student_id = ? AND cm.status = 'active' AND a.status = 'published'`;
+  WHERE cm.student_id = ? AND cm.status = 'active' AND a.status = 'published' AND ${competencyAccess("assignment", "a", "cm.student_id")}`;
 
 export async function listStudentAssignments(
   user: CurrentUser,

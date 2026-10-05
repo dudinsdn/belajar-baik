@@ -34,7 +34,9 @@ export function LearningShell(props: Props) {
     setNotice,
   } = props;
   const icons =
-    profile?.role === "teacher" ? ["✓", "◎"] : ["⌂", "▤", "✓", "□", "▥"];
+    profile?.role === "teacher"
+      ? ["▤", "✓", "◎"]
+      : ["⌂", "▤", "✓", "□", "▥", "◎"];
   return (
     <div className="app-shell">
       <a className="skip-link" href="#konten">
@@ -54,7 +56,9 @@ export function LearningShell(props: Props) {
         </button>
         <button
           className="brand"
-          onClick={() => goTo("Beranda")}
+          onClick={() =>
+            goTo(profile?.role === "teacher" ? "Kurikulum" : "Beranda")
+          }
           aria-label="Ruang Tumbuh, kembali ke beranda"
         >
           <span className="brand-mark">R</span>
@@ -81,7 +85,9 @@ export function LearningShell(props: Props) {
               <small>
                 {profile?.enrollment
                   ? `${profile.enrollment.program} · Kelas ${profile.enrollment.grade_level}`
-                  : "Profil siswa"}
+                  : profile?.role === "teacher"
+                    ? "Tutor"
+                    : "Warga belajar"}
               </small>
             </span>
           </button>

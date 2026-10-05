@@ -153,6 +153,11 @@ Format minimum rekaman validasi:
 
 **Tujuan: menjadikan kurikulum sebagai inti model data**
 
+**Status: Lulus lokal.** Kriteria database/API, histori versi, rekonsiliasi SKK,
+render desktop/seluler, aktivasi, penetapan, penerbitan beberapa KD,
+penyimpanan gagal, dan keyboard telah diverifikasi. Lihat
+[rekaman validasi Tahap 1](validation/tahap-1.md).
+
 ### Fitur tutor
 
 - Membuat tahun ajaran dan program Paket C.

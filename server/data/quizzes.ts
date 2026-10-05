@@ -1,6 +1,7 @@
 import { env } from "cloudflare:workers";
 import { ApiError } from "../api/error.ts";
 import type { CurrentUser } from "../auth/types.ts";
+import { competencyAccess } from "./competency-access.ts";
 
 type QuizRow = {
   id: string;
@@ -24,7 +25,7 @@ async function accessibleQuiz(user: CurrentUser, quizId: string) {
     `SELECT q.id, q.title, q.passing_score, q.material_id, s.name AS subject
     FROM class_memberships cm JOIN class_subjects cs ON cs.class_id = cm.class_id
     JOIN quizzes q ON q.class_subject_id = cs.id JOIN subjects s ON s.id = cs.subject_id
-    WHERE cm.student_id = ? AND cm.status = 'active' AND q.id = ? AND q.status = 'published' LIMIT 1`,
+    WHERE cm.student_id = ? AND cm.status = 'active' AND q.id = ? AND q.status = 'published' AND ${competencyAccess("quiz", "q", "cm.student_id")} LIMIT 1`,
   )
     .bind(user.id, quizId)
     .first<QuizRow>();
@@ -64,6 +65,7 @@ export async function getFirstStudentQuiz(user: CurrentUser) {
     JOIN class_subjects cs ON cs.class_id = cm.class_id
     JOIN quizzes q ON q.class_subject_id = cs.id
     WHERE cm.student_id = ? AND cm.status = 'active' AND q.status = 'published'
+    AND ${competencyAccess("quiz", "q", "cm.student_id")}
     ORDER BY q.created_at, q.id LIMIT 1`,
   )
     .bind(user.id)

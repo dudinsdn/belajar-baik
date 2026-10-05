@@ -1,6 +1,7 @@
 import { env } from "cloudflare:workers";
 import { ApiError } from "../api/error.ts";
 import type { CurrentUser } from "../auth/types.ts";
+import { competencyAccess } from "./competency-access.ts";
 
 export async function updateMaterialProgress(
   user: CurrentUser,
@@ -10,7 +11,7 @@ export async function updateMaterialProgress(
   const material = await env.DB.prepare(
     `SELECT m.id FROM class_memberships cm
     JOIN class_subjects cs ON cs.class_id = cm.class_id JOIN materials m ON m.class_subject_id = cs.id
-    WHERE cm.student_id = ? AND cm.status = 'active' AND m.id = ? AND m.status = 'published' LIMIT 1`,
+    WHERE cm.student_id = ? AND cm.status = 'active' AND m.id = ? AND m.status = 'published' AND ${competencyAccess("material", "m", "cm.student_id")} LIMIT 1`,
   )
     .bind(user.id, materialId)
     .first();

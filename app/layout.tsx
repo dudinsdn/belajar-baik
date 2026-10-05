@@ -10,6 +10,7 @@ import "./styles/quiz.css";
 import "./styles/access-and-assignments.css";
 import "./styles/library-and-profile.css";
 import "./styles/teacher-grading.css";
+import "./styles/curriculum.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

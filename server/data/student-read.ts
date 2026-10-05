@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import type { CurrentUser } from "../auth/types.ts";
+import { competencyAccess } from "./competency-access.ts";
 
 export async function getStudentProfile(user: CurrentUser) {
   const enrollment = await env.DB.prepare(
@@ -24,7 +25,8 @@ export async function getStudentDashboard(user: CurrentUser) {
       `SELECT m.id, m.title, s.name AS subject, mp.percent, mp.last_position
        FROM material_progress mp JOIN materials m ON m.id = mp.material_id
        JOIN class_subjects cs ON cs.id = m.class_subject_id JOIN subjects s ON s.id = cs.subject_id
-       WHERE mp.student_id = ? AND m.status = 'published' ORDER BY mp.updated_at DESC LIMIT 1`,
+       JOIN class_memberships cm ON cm.class_id=cs.class_id AND cm.student_id=mp.student_id
+       WHERE mp.student_id = ? AND cm.status='active' AND m.status = 'published' AND ${competencyAccess("material", "m", "mp.student_id")} ORDER BY mp.updated_at DESC LIMIT 1`,
     )
       .bind(user.id)
       .first(),
@@ -34,6 +36,7 @@ export async function getStudentDashboard(user: CurrentUser) {
        JOIN assignments a ON a.class_subject_id = cs.id JOIN subjects s ON s.id = cs.subject_id
        LEFT JOIN submissions sub ON sub.assignment_id = a.id AND sub.student_id = cm.student_id
        WHERE cm.student_id = ? AND cm.status = 'active' AND a.status = 'published'
+       AND ${competencyAccess("assignment", "a", "cm.student_id")}
        ORDER BY a.due_at ASC LIMIT 5`,
     )
       .bind(user.id)
@@ -56,6 +59,7 @@ export async function listStudentMaterials(user: CurrentUser) {
      JOIN materials m ON m.class_subject_id = cs.id JOIN subjects s ON s.id = cs.subject_id
      LEFT JOIN material_progress mp ON mp.material_id = m.id AND mp.student_id = cm.student_id
      WHERE cm.student_id = ? AND cm.status = 'active' AND m.status = 'published'
+     AND ${competencyAccess("material", "m", "cm.student_id")}
      ORDER BY s.name, m.order_index`,
   )
     .bind(user.id)

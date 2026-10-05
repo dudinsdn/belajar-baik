@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/d1";
 import * as assignments from "./schema/assignments";
 import * as content from "./schema/content";
 import * as curriculumCore from "./schema/curriculum-core";
+import * as curriculumAudit from "./schema/curriculum-audit";
 import * as curriculumLinks from "./schema/curriculum-links";
 import * as curriculumPlanning from "./schema/curriculum-planning";
 import * as identity from "./schema/identity";
@@ -13,6 +14,7 @@ const schema = {
   ...assignments,
   ...content,
   ...curriculumCore,
+  ...curriculumAudit,
   ...curriculumLinks,
   ...curriculumPlanning,
   ...identity,

@@ -23,6 +23,9 @@ export const subjectSkkAllocations = sqliteTable(
       enum: ["general", "specialization", "empowerment", "skills", "local"],
     }).notNull(),
     plannedSkk: integer("planned_skk").notNull(),
+    faceToFacePercent: integer("face_to_face_percent").notNull().default(0),
+    tutorialPercent: integer("tutorial_percent").notNull().default(0),
+    independentPercent: integer("independent_percent").notNull().default(100),
     ...timestamps,
   },
   (t) => [
@@ -72,6 +75,7 @@ export const curriculumAssignments = sqliteTable(
       .notNull()
       .references(() => users.id),
     assignedAt: text("assigned_at").notNull(),
+    assignedBy: text("assigned_by").references(() => users.id),
     endedAt: text("ended_at"),
     status: text("status", { enum: ["active", "completed", "cancelled"] })
       .notNull()
@@ -84,5 +88,9 @@ export const curriculumAssignments = sqliteTable(
       t.status,
     ),
     index("curriculum_assignments_class_status_idx").on(t.classId, t.status),
+    uniqueIndex("curriculum_assignment_unique").on(
+      t.studentId,
+      t.competencyPackageId,
+    ),
   ],
 );

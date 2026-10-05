@@ -23,8 +23,9 @@
     "test:assignments": "node --experimental-strip-types --test tests/assignment-validation.test.ts",
     "test:grading": "node --experimental-strip-types --test tests/grading-validation.test.ts",
     "test:progress": "node --experimental-strip-types --test tests/progress-validation.test.ts",
-    "test:curriculum": "node --experimental-strip-types --test tests/curriculum-validation.test.ts",
-    "test:e2e": "node scripts/learning-flow-e2e.mjs"
+    "test:curriculum": "node --experimental-strip-types --test tests/curriculum-validation.test.ts tests/curriculum-database.test.ts tests/curriculum-domain.test.mjs",
+    "test:e2e": "node scripts/learning-flow-e2e.mjs",
+    "test:curriculum:api": "node scripts/curriculum-api-smoke.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

@@ -9,6 +9,7 @@ import { LibraryView } from "../views/library-view";
 import { MaterialView } from "../views/material-view";
 import { ProfileView } from "../views/profile-view";
 import { QuizView } from "../views/quiz-view";
+import { CurriculumView } from "../views/curriculum-view";
 
 type Data = ReturnType<typeof useInitialData>;
 type Preferences = ReturnType<typeof usePreferences>;
@@ -53,6 +54,7 @@ type Props = {
 };
 
 export function ActiveView(p: Props) {
+  if (p.active === "Kurikulum") return <CurriculumView />;
   const d = p.data;
   const pref = p.preferences;
   const q = p.quiz;

@@ -81,7 +81,9 @@ export default function Home() {
         .includes(query.toLowerCase()),
     );
   const navigation =
-    data.profile?.role === "teacher" ? ["Penilaian", "Profil"] : studentNav;
+    data.profile?.role === "teacher"
+      ? ["Kurikulum", "Penilaian", "Profil"]
+      : [...studentNav, "Kurikulum"];
 
   if (data.status !== "ready")
     return <AccessState status={data.status} message={data.message} />;
