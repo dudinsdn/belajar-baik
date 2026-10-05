@@ -112,10 +112,13 @@ export type QuizData = {
   id: string;
   title: string;
   passing_score: number;
+  purpose: string;
+  max_attempts: number;
   subject: string;
   questions: Array<{
     id: string;
     prompt: string;
+    kind: string;
     order_index: number;
     options: Array<{
       id: string;
@@ -129,17 +132,22 @@ export type QuizData = {
 export type QuizAttempt = {
   id: string;
   quiz_id: string;
+  answers?: Array<{ question_id: string; answer: string | string[] }>;
   status: "active" | "completed";
   score: number | null;
 };
 export type QuizServerResult = {
   attempt: QuizAttempt;
   passingScore: number;
-  passed: boolean;
+  passed: boolean | null;
+  materialId: string | null;
   answers: Array<{
     question_id: string;
     explanation: string;
-    is_correct: number;
+    is_correct: number | null;
+    prompt: string;
+    feedback: string | null;
+    review_section_id: string | null;
     correct_option_label: string;
   }>;
 };

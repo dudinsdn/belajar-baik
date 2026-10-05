@@ -8,6 +8,8 @@ import {
 } from "drizzle-orm/sqlite-core";
 import { materials } from "./content";
 import { classSubjects, users } from "./identity";
+import { basicCompetencies } from "./curriculum-core";
+import { materialSections } from "./material-sections";
 import { timestamps } from "./shared";
 
 export const quizzes = sqliteTable("quizzes", {
@@ -20,6 +22,10 @@ export const quizzes = sqliteTable("quizzes", {
   status: text("status", { enum: ["draft", "published", "archived"] })
     .notNull()
     .default("draft"),
+  purpose: text("purpose", { enum: ["diagnostic", "formative"] })
+    .notNull()
+    .default("formative"),
+  maxAttempts: integer("max_attempts").notNull().default(3),
   passingScore: integer("passing_score").notNull().default(70),
   authorId: text("author_id")
     .notNull()
@@ -34,6 +40,15 @@ export const quizQuestions = sqliteTable(
     quizId: text("quiz_id")
       .notNull()
       .references(() => quizzes.id),
+    kind: text("kind", { enum: ["single", "multiple", "short", "essay"] })
+      .notNull()
+      .default("single"),
+    competencyId: text("competency_id").references(() => basicCompetencies.id),
+    difficulty: text("difficulty").notNull().default("medium"),
+    acceptedAnswer: text("accepted_answer"),
+    reviewSectionId: text("review_section_id").references(
+      () => materialSections.id,
+    ),
     prompt: text("prompt").notNull(),
     orderIndex: integer("order_index").notNull(),
     explanation: text("explanation").notNull(),
@@ -106,3 +121,34 @@ export const quizAnswers = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.attemptId, t.questionId] })],
 );
+
+export const quizResponses = sqliteTable(
+  "quiz_responses",
+  {
+    attemptId: text("attempt_id")
+      .notNull()
+      .references(() => quizAttempts.id),
+    questionId: text("question_id")
+      .notNull()
+      .references(() => quizQuestions.id),
+    answerJson: text("answer_json").notNull(),
+    credit: integer("credit"),
+    feedback: text("feedback"),
+    gradedBy: text("graded_by").references(() => users.id),
+    gradedAt: text("graded_at"),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.attemptId, t.questionId] })],
+);
+export const quizEvents = sqliteTable("quiz_events", {
+  id: text("id").primaryKey(),
+  attemptId: text("attempt_id").references(() => quizAttempts.id),
+  quizId: text("quiz_id")
+    .notNull()
+    .references(() => quizzes.id),
+  actorId: text("actor_id")
+    .notNull()
+    .references(() => users.id),
+  action: text("action").notNull(),
+  createdAt: text("created_at").notNull(),
+});

@@ -7,10 +7,12 @@ import type { ModuleDetail, MaterialData } from "../types";
 export function ModuleReader({
   materials,
   initialId,
+  initialSection,
   onSaved,
 }: {
   materials: MaterialData[];
   initialId: string | null;
+  initialSection?: string;
   onSaved: (d: ModuleDetail) => Promise<void>;
 }) {
   const [id, setId] = useState(initialId ?? materials[0]?.id ?? "");
@@ -33,16 +35,18 @@ export function ModuleReader({
         if (controller.signal.aborted) return;
         setData(d);
         setSectionId(
-          d.sections.some((s) => s.id === d.progress?.last_position)
-            ? d.progress!.last_position!
-            : (d.sections[0]?.id ?? ""),
+          initialSection && d.sections.some((s) => s.id === initialSection)
+            ? initialSection
+            : d.sections.some((s) => s.id === d.progress?.last_position)
+              ? d.progress!.last_position!
+              : (d.sections[0]?.id ?? ""),
         );
       })
       .catch((e) => {
         if (!controller.signal.aborted) setError(e.message);
       });
     return () => controller.abort();
-  }, [id, reload]);
+  }, [id, reload, initialSection]);
   const section = data?.sections.find((s) => s.id === sectionId);
   async function update(action: string, target = sectionId) {
     setBusy(true);

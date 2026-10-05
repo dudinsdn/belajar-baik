@@ -177,3 +177,89 @@ body {
 .page:focus {
   outline: none;
 }
+
+.quiz-page > label,
+.quiz-editor label {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  min-width: 0;
+}
+.quiz-page select,
+.quiz-page textarea,
+.quiz-editor select,
+.quiz-editor textarea,
+.quiz-editor input:not([type="radio"]):not([type="checkbox"]) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  font: inherit;
+}
+.quiz-page textarea,
+.quiz-editor textarea {
+  min-height: 110px;
+}
+.quiz-editor {
+  max-width: 960px;
+}
+.quiz-editor article,
+.quiz-editor form {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: white;
+}
+.quiz-editor h2,
+.quiz-editor h3 {
+  font-family: Georgia, serif;
+  color: var(--navy);
+  margin: 24px 0 12px;
+  line-height: 1.3;
+}
+.quiz-editor h2 {
+  font-size: 24px;
+}
+.quiz-editor h3 {
+  font-size: 20px;
+}
+.quiz-editor p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+.quiz-editor fieldset fieldset {
+  padding: 16px;
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-width: 0;
+}
+.quiz-editor fieldset {
+  min-width: 0;
+}
+.quiz-page button,
+.quiz-editor button {
+  min-height: 44px;
+}
+.quiz-editor label:has(input[type="checkbox"]),
+.quiz-editor label:has(input[type="radio"]) {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+.quiz-editor input[type="checkbox"],
+.quiz-editor input[type="radio"] {
+  width: 22px;
+  height: 22px;
+}
+.quiz-editor input:focus-visible,
+.quiz-editor select:focus-visible,
+.quiz-editor textarea:focus-visible,
+.quiz-page textarea:focus-visible,
+.quiz-page select:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}

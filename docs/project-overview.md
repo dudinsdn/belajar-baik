@@ -138,7 +138,11 @@ pendampingan dasar, serta kartu langkah berikutnya tersedia pada Tahap 2;
 buktinya dicatat di `docs/validation/`. Tahap 3 menyediakan penyusunan dan
 penerbitan modul per bagian, reader D1, progres server, resume, penanda,
 pertanyaan, prasyarat, dan ekspor teks. Status buktinya berada di
-`docs/validation/tahap-3.md`. Buku besar SKK, portofolio, remedial terstruktur,
+`docs/validation/tahap-3.md`. Tahap 4 menambah penyusunan diagnostik/formatif,
+bank/kisi-kisi KD, empat jenis jawaban, resume, pembahasan, penilaian uraian,
+riwayat percobaan, serta indikator jawaban per KD. Bukti dan batasnya berada di
+`docs/validation/tahap-4.md`. Nilai asesmen tetap terpisah dari ketuntasan/SKK.
+Buku besar SKK, portofolio, remedial terstruktur,
 pelaporan lengkap, antrean/sinkronisasi offline, dan ruang administrator
 merupakan target pengembangan bertahap.
 Urutan pekerjaan dan kriteria penyelesaiannya ditetapkan dalam `docs/roadmap.md`.

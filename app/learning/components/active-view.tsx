@@ -11,6 +11,7 @@ import { LibraryView } from "../views/library-view";
 import { ModuleReader } from "../views/module-reader";
 import { ModuleEditor } from "../views/module-editor";
 import { ProfileView } from "../views/profile-view";
+import { QuizEditor } from "../views/quiz-editor";
 import { QuizView } from "../views/quiz-view";
 import { PlanningView } from "../views/planning-view";
 import { StudentPlansView } from "../views/student-plans-view";
@@ -85,7 +86,8 @@ export function ActiveView(p: Props) {
       <ModuleReader
         key={p.resourceId ?? "all"}
         materials={d.materials}
-        initialId={p.resourceId}
+        initialId={p.resourceId?.split("#")[0] ?? null}
+        initialSection={p.resourceId?.split("#")[1]}
         onSaved={async (module) => {
           d.setMaterials((items) =>
             items.map((m) =>
@@ -108,9 +110,18 @@ export function ActiveView(p: Props) {
       />
     );
   if (p.active === "Latihan")
-    return (
+    return d.profile?.role === "teacher" ? (
+      <QuizEditor />
+    ) : (
       <QuizView
-        data={d.quiz}
+        key={q.attemptId ?? "preparing"}
+        loading={q.loading}
+        viewResult={q.viewResult}
+        choose={q.choose}
+        catalog={q.catalog}
+        history={q.history}
+        error={q.error}
+        data={q.data}
         attemptId={q.attemptId}
         step={q.step}
         answers={q.answers}

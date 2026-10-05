@@ -89,7 +89,7 @@ export default function Home() {
     );
   const navigation =
     data.profile?.role === "teacher"
-      ? ["Kurikulum", "Rencana", "Materi", "Penilaian", "Profil"]
+      ? ["Kurikulum", "Rencana", "Materi", "Latihan", "Penilaian", "Profil"]
       : [...studentNav, "Kurikulum", "Rencana"];
 
   if (data.status !== "ready")

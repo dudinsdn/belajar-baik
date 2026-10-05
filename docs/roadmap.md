@@ -280,6 +280,10 @@ hosted dan perangkat/jaringan nyata belum menjadi bukti produksi. Lihat [rekaman
 
 ## Tahap 4 — Asesmen Diagnostik dan Formatif
 
+**Status: Lulus lokal.** Empat jenis soal, editor/bank tutor, resume, skor server,
+penilaian uraian, riwayat, batas percobaan, dan pembahasan terverifikasi lokal.
+Bukti dan batas pengukuran KD/SKK: [validasi Tahap 4](validation/tahap-4.md).
+
 **Tujuan: mengukur proses belajar sebelum menentukan hasil akhir**
 
 ### Fitur warga belajar

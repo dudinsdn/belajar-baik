@@ -156,12 +156,14 @@ non-otoritatif atau antrean offline yang dinyatakan secara eksplisit.
 
 Alur yang telah memiliki fondasi aplikasi adalah identitas berbasis peran,
 dashboard dasar, materi dan perpustakaan, progres, tugas teks, kuis pilihan
-tunggal dengan penilaian server, serta penilaian tugas oleh tutor.
+tunggal dengan penilaian server, serta penilaian tugas oleh tutor. Tahap 4
+memperluasnya menjadi asesmen diagnostik/formatif dengan empat jenis soal.
 
 Fondasi versi kurikulum, KI/KD, paket kompetensi, rencana belajar personal,
 tenggat individual, dan permintaan bantuan pada rencana tersedia secara lokal.
 Rekaman validasinya berada di `docs/validation/`. Reader per bagian dan editor
-modul tutor tersedia pada Tahap 3. Asesmen diagnostik, proyek dan portofolio,
+modul tutor tersedia pada Tahap 3. Asesmen diagnostik/formatif tersedia lokal
+pada Tahap 4. Proyek dan portofolio,
 remedial terstruktur, validasi SKK, pelaporan lengkap, sinkronisasi offline,
 dan ruang administrator merupakan target bertahap dalam `docs/roadmap.md`.
 
@@ -184,3 +186,31 @@ dan ruang administrator merupakan target bertahap dalam `docs/roadmap.md`.
 7. Unduh teks modul menghasilkan berkas teks berotorisasi. Bacaan yang sudah
    dimuat tetap dapat dibaca/disalin saat koneksi gagal; mutasi gagal tidak
    dinyatakan tersimpan. Antrean offline dan sinkronisasi otomatis belum tersedia.
+
+### Asesmen yang tersedia secara lokal
+
+1. Tutor membuka Latihan, memilih penugasan, jenis diagnostik/formatif, ambang
+   nilai, batas percobaan, serta modul opsional. Setiap soal mempunyai KD dari
+   versi aktif, kesulitan, jenis jawaban, dan pembahasan/pedoman.
+2. Tutor menyimpan draf lalu menerbitkan. Isi dan kunci terbit terkunci; revisi
+   memakai asesmen baru. Soal tersimpan dapat difilter dan disalin dari bank ke
+   formulir baru tanpa mengubah sumber.
+3. Warga belajar memilih asesmen lalu menekan Mulai asesmen jika belum ada
+   percobaan aktif. Membaca hasil lampau tidak membuat percobaan baru.
+   Percobaan aktif dan jawaban D1 dimuat kembali;
+   aplikasi membuka soal pertama yang belum dijawab. Soal tunggal memakai radio,
+   jamak checkbox, isian/uraian teks.
+4. Warga belajar memilih/menulis jawaban lalu menekan Simpan jawaban. Kegagalan
+   menampilkan pesan dan mempertahankan input. Navigasi dengan perubahan belum
+   tersimpan memerlukan konfirmasi; tidak ada autosave atau antrean offline.
+5. Setelah seluruh jawaban tersimpan, Kirim membuka pembahasan. Server menghitung
+   soal objektif; uraian menahan skor akhir sampai tutor memberi penilaian dan
+   feedback. Jawaban salah dapat merekomendasikan modul/bagian tertentu.
+6. Tutor membuka asesmen tersimpan, memeriksa pola benar/salah per soal, indikator
+   per KD, percobaan, dan uraian menunggu penilaian. Uraian dinilai 0/1 dengan
+   feedback wajib. Nilai tersimpan terkunci; pengubahan/override bukan fitur ini.
+7. Warga belajar melihat hasil dan pembahasan percobaan lampau. Percobaan baru
+   dibatasi konfigurasi tutor; jika habis, hasil lampau tetap dapat dibaca.
+8. Indikator KD/selisih diagnostik-formatif dan saran remedial/pengayaan berasal
+   dari jawaban nyata. Itu bukan keputusan ketuntasan atau SKK, dan tidak
+   menyatakan bahwa instrumen dengan kisi-kisi berbeda setara secara psikometrik.
