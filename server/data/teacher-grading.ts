@@ -19,11 +19,12 @@ type TeacherSubmission = {
 
 const teacherSubmissionSql = `SELECT sub.id, sub.assignment_id, a.title AS assignment_title, s.name AS subject,
   sub.student_id, student.display_name AS student_name, sub.answer_text, sub.status, sub.submitted_at,
-  sub.score, sub.feedback, sub.graded_at
+  sub.score, sub.feedback, sub.graded_at, EXISTS(SELECT 1 FROM assignment_work w WHERE w.assignment_id=a.id) AS managed_work
   FROM submissions sub JOIN assignments a ON a.id = sub.assignment_id
   JOIN class_subjects cs ON cs.id = a.class_subject_id JOIN subjects s ON s.id = cs.subject_id
   JOIN users student ON student.id = sub.student_id
-  WHERE cs.teacher_id = ? AND sub.status IN ('submitted', 'graded')`;
+  JOIN classes c ON c.id=cs.class_id JOIN class_memberships cm ON cm.class_id=c.id AND cm.student_id=sub.student_id AND cm.status='active'
+  WHERE c.status='active' AND cs.teacher_id = ? AND sub.status IN ('submitted', 'graded')`;
 
 export async function listTeacherSubmissions(
   user: CurrentUser,
@@ -60,6 +61,19 @@ export async function gradeSubmission(
     .first<TeacherSubmission>();
   if (!submission)
     throw new ApiError("NOT_FOUND", 404, "Pengumpulan tidak ditemukan.");
+
+  if (
+    await env.DB.prepare(
+      "SELECT assignment_id FROM assignment_work WHERE assignment_id=?",
+    )
+      .bind(submission.assignment_id)
+      .first()
+  )
+    throw new ApiError(
+      "CONFLICT",
+      409,
+      "Gunakan ruang karya dengan rubrik dan versi draf.",
+    );
   const now = new Date().toISOString();
   await env.DB.prepare(
     `UPDATE submissions SET status = 'graded', score = ?, feedback = ?, graded_by = ?, graded_at = ?, updated_at = ?

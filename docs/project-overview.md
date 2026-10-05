@@ -142,7 +142,10 @@ pertanyaan, prasyarat, dan ekspor teks. Status buktinya berada di
 bank/kisi-kisi KD, empat jenis jawaban, resume, pembahasan, penilaian uraian,
 riwayat percobaan, serta indikator jawaban per KD. Bukti dan batasnya berada di
 `docs/validation/tahap-4.md`. Nilai asesmen tetap terpisah dari ketuntasan/SKK.
-Buku besar SKK, portofolio, remedial terstruktur,
-pelaporan lengkap, antrean/sinkronisasi offline, dan ruang administrator
-merupakan target pengembangan bertahap.
+Tahap 5 menyediakan tugas/proyek/keterampilan dengan rubrik, bukti berkas dan
+tautan, draf otomatis dengan antrean lokal eksplisit, revisi berhistori, serta
+pilihan portofolio. Pengalaman terdahulu baru berstatus calon alih kredit.
+Bukti dan batasnya berada di `docs/validation/tahap-5.md`. Buku besar SKK,
+remedial terstruktur, pelaporan lengkap, offline seluruh aplikasi, dan ruang
+administrator merupakan target pengembangan bertahap.
 Urutan pekerjaan dan kriteria penyelesaiannya ditetapkan dalam `docs/roadmap.md`.

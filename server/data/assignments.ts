@@ -17,16 +17,17 @@ type AssignmentRow = {
   submitted_at: string | null;
   score: number | null;
   feedback: string | null;
+  managed_work: number;
 };
 
 const assignmentSql = `SELECT a.id, a.title, a.instructions, a.submission_type, COALESCE(ad.due_at,a.due_at) AS due_at, a.allow_late,
   s.name AS subject, sub.id AS submission_id, sub.answer_text, COALESCE(sub.status, 'not_started') AS submission_status,
-  sub.submitted_at, sub.score, sub.feedback
+  sub.submitted_at, sub.score, sub.feedback, EXISTS(SELECT 1 FROM assignment_work aw WHERE aw.assignment_id=a.id) AS managed_work
   FROM class_memberships cm JOIN class_subjects cs ON cs.class_id = cm.class_id JOIN classes c ON c.id=cs.class_id
   JOIN assignments a ON a.class_subject_id = cs.id JOIN subjects s ON s.id = cs.subject_id
   LEFT JOIN submissions sub ON sub.assignment_id = a.id AND sub.student_id = cm.student_id
   LEFT JOIN assignment_deadlines ad ON ad.assignment_id=a.id AND ad.student_id=cm.student_id
-  WHERE cm.student_id = ? AND cm.status = 'active' AND c.status='active' AND a.status = 'published' AND ${competencyAccess("assignment", "a", "cm.student_id")}`;
+  WHERE cm.student_id = ? AND cm.status = 'active' AND c.status='active' AND a.status = 'published' AND ${competencyAccess("assignment", "a", "cm.student_id", true)}`;
 
 export async function listStudentAssignments(
   user: CurrentUser,
@@ -64,6 +65,19 @@ export async function saveAssignmentDraft(
   answerText: string,
 ) {
   const assignment = await getStudentAssignment(user, assignmentId);
+  if (
+    await env.DB.prepare(
+      "SELECT assignment_id FROM assignment_work WHERE assignment_id=?",
+    )
+      .bind(assignmentId)
+      .first()
+  )
+    throw new ApiError(
+      "CONFLICT",
+      409,
+      "Gunakan ruang karya dengan rubrik dan versi draf.",
+    );
+
   if (assignment.submission_status === "graded")
     throw new ApiError(
       "CONFLICT",
@@ -94,6 +108,19 @@ export async function submitAssignment(
   assignmentId: string,
 ) {
   const assignment = await getStudentAssignment(user, assignmentId);
+  if (
+    await env.DB.prepare(
+      "SELECT assignment_id FROM assignment_work WHERE assignment_id=?",
+    )
+      .bind(assignmentId)
+      .first()
+  )
+    throw new ApiError(
+      "CONFLICT",
+      409,
+      "Gunakan ruang karya dengan rubrik dan versi draf.",
+    );
+
   if (
     assignment.submission_status === "submitted" ||
     assignment.submission_status === "graded"

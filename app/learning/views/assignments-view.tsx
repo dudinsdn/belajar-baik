@@ -22,7 +22,7 @@ export function AssignmentsView({
       <header className="inner-header">
         <div>
           <p className="eyebrow">RUANG TUGAS</p>
-          <h1>Tugas yang terarah</h1>
+          <h2>Tugas sebelumnya</h2>
           <p>Jawaban dan status pengumpulan tersimpan di server belajar.</p>
         </div>
       </header>

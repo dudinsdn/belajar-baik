@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
+import * as assignmentWork from "./schema/assignment-work";
 import * as assignments from "./schema/assignments";
 import * as content from "./schema/content";
 import * as curriculumCore from "./schema/curriculum-core";
@@ -13,6 +14,7 @@ import * as quizzes from "./schema/quizzes";
 
 const schema = {
   ...assignments,
+  ...assignmentWork,
   ...content,
   ...curriculumCore,
   ...curriculumAudit,

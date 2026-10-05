@@ -1,10 +1,10 @@
+import { AssignmentsWorkspace } from "../views/assignments-workspace";
 import { readApi } from "../request";
 import type { DashboardData } from "../types";
 import type { Dispatch, SetStateAction } from "react";
 import type { useInitialData } from "../hooks/use-initial-data";
 import type { usePreferences } from "../hooks/use-preferences";
 import type { useQuiz } from "../hooks/use-quiz";
-import { AssignmentsView } from "../views/assignments-view";
 import { DashboardView } from "../views/dashboard-view";
 import { GradingView } from "../views/grading-view";
 import { LibraryView } from "../views/library-view";
@@ -140,16 +140,12 @@ export function ActiveView(p: Props) {
     );
   if (p.active === "Tugas")
     return (
-      <AssignmentsView
-        items={
-          p.resourceId
-            ? d.assignments.filter((a) => a.id === p.resourceId)
-            : d.assignments
-        }
-        answers={d.assignmentAnswers}
+      <AssignmentsWorkspace
+        data={d}
+        resourceId={p.resourceId}
         saving={p.savingAssignment}
-        setAnswers={d.setAssignmentAnswers}
         submit={p.actions.assignment.submit}
+        setNotice={p.setNotice}
       />
     );
   if (p.active === "Penilaian")

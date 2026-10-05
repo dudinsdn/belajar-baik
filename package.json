@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,css,mjs}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,css,mjs}\"",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress && npm run test:curriculum && npm run test:planning && npm run test:modules && npm run test:quizzes",
+    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress && npm run test:curriculum && npm run test:planning && npm run test:modules && npm run test:quizzes && npm run test:work",
     "ci": "npm run format:check && npm run lint && npm test && npm run build",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
@@ -31,7 +31,9 @@
     "test:modules": "node --experimental-strip-types --test tests/modules-domain.test.mjs",
     "test:modules:api": "node scripts/modules-api-smoke.mjs",
     "test:quizzes": "node --experimental-strip-types tests/quizzes-domain.test.mjs",
-    "test:quizzes:api": "node scripts/quizzes-api-smoke.mjs"
+    "test:quizzes:api": "node scripts/quizzes-api-smoke.mjs",
+    "test:work": "node --experimental-strip-types tests/work-domain.test.mjs",
+    "test:work:api": "node scripts/work-api-smoke.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

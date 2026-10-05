@@ -23,6 +23,10 @@ for (const file of [
   "drizzle/0011_cuddly_old_lace.sql",
   "drizzle/0012_module_guards.sql",
   "drizzle/0013_vengeful_goblin_queen.sql",
+  "drizzle/0014_damp_veda.sql",
+  "drizzle/0015_quiz_guards.sql",
+  "drizzle/0016_luxuriant_marvel_apes.sql",
+  "drizzle/0017_work_guards.sql",
 ])
   db.exec(readFileSync(file, "utf8"));
 function statement(sql, params = []) {
@@ -269,7 +273,7 @@ test("personal plans, class atomicity, deadlines, feedback and resume respect ac
     "UJI Hubungi tutor",
   );
   db.exec(
-    "UPDATE submissions SET status='draft' WHERE student_id='usr_student_dudin'",
+    "UPDATE submissions SET status='draft',graded_by='usr_teacher_adi' WHERE student_id='usr_student_dudin'",
   );
   let dashboard = await getStudentDashboard(student);
   assert.equal(dashboard.skk.planned, 4);
@@ -344,6 +348,10 @@ test("stage 2 migration works on an empty database without rewriting earlier mig
     "drizzle/0011_cuddly_old_lace.sql",
     "drizzle/0012_module_guards.sql",
     "drizzle/0013_vengeful_goblin_queen.sql",
+    "drizzle/0014_damp_veda.sql",
+    "drizzle/0015_quiz_guards.sql",
+    "drizzle/0016_luxuriant_marvel_apes.sql",
+    "drizzle/0017_work_guards.sql",
   ])
     fresh.exec(readFileSync(file, "utf8"));
   assert.equal(

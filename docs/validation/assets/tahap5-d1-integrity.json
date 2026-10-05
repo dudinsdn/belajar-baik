@@ -1,0 +1,215 @@
+{
+  "tables": [
+    {
+      "table": "assignments",
+      "old_rows": 2,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "class_memberships",
+      "old_rows": 3,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "class_subjects",
+      "old_rows": 2,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "classes",
+      "old_rows": 2,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "library_items",
+      "old_rows": 1,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "library_progress",
+      "old_rows": 1,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "material_progress",
+      "old_rows": 4,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "materials",
+      "old_rows": 4,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quiz_answers",
+      "old_rows": 18,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quiz_attempts",
+      "old_rows": 14,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quiz_options",
+      "old_rows": 12,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quiz_questions",
+      "old_rows": 7,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quizzes",
+      "old_rows": 3,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "subjects",
+      "old_rows": 4,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "submissions",
+      "old_rows": 2,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "users",
+      "old_rows": 4,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "_cf_METADATA",
+      "old_rows": 1,
+      "changed_or_missing": 1
+    },
+    {
+      "table": "assignment_basic_competencies",
+      "old_rows": 3,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "basic_competencies",
+      "old_rows": 6,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "competency_levels",
+      "old_rows": 4,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "competency_packages",
+      "old_rows": 5,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "core_competencies",
+      "old_rows": 5,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "curriculum_assignments",
+      "old_rows": 3,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "curriculum_versions",
+      "old_rows": 4,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "learning_modes",
+      "old_rows": 12,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "material_basic_competencies",
+      "old_rows": 5,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quiz_basic_competencies",
+      "old_rows": 3,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "subject_skk_allocations",
+      "old_rows": 5,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "curriculum_events",
+      "old_rows": 22,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "assignment_deadline_events",
+      "old_rows": 1,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "assignment_deadlines",
+      "old_rows": 1,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "feedback_acknowledgments",
+      "old_rows": 1,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "learning_plan_events",
+      "old_rows": 5,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "learning_plans",
+      "old_rows": 3,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "learning_support",
+      "old_rows": 1,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "learning_support_events",
+      "old_rows": 1,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "material_section_events",
+      "old_rows": 2,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "material_sections",
+      "old_rows": 5,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "material_section_progress",
+      "old_rows": 5,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "material_module_settings",
+      "old_rows": 2,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quiz_events",
+      "old_rows": 29,
+      "changed_or_missing": 0
+    },
+    {
+      "table": "quiz_responses",
+      "old_rows": 15,
+      "changed_or_missing": 0
+    }
+  ],
+  "foreign_key_check": []
+}

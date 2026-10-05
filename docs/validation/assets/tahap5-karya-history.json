@@ -1,0 +1,164 @@
+[
+  {
+    "event": "created",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"\",\"status\":\"draft\",\"score\":null,\"feedback\":null}",
+    "created_at": "2026-10-05T23:25:32.880Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"\",\"status\":\"draft\",\"score\":null,\"feedback\":null,\"gradedBy\":null,\"submittedAt\":null}",
+    "created_at": "2026-10-05T23:25:32.880Z"
+  },
+  {
+    "event": "save",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"expectedVersion\":0,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"\",\"status\":\"draft\",\"submitted_at\":null,\"score\":null,\"feedback\":null,\"graded_by\":null,\"graded_at\":null,\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:25:32.880Z\",\"version\":0,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":0},\"request\":{\"action\":\"save\",\"version\":0,\"answerText\":\"UJI Tahap 5: Saya merencanakan proyek, mencatat proses, dan menyiapkan bukti karya.\",\"evidence\":[],\"priorLearning\":false}}",
+    "created_at": "2026-10-05T23:25:37.273Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5: Saya merencanakan proyek, mencatat proses, dan menyiapkan bukti karya.\",\"status\":\"draft\",\"score\":null,\"feedback\":null,\"gradedBy\":null,\"submittedAt\":null}",
+    "created_at": "2026-10-05T23:25:37.273Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5: Saya merencanakan proyek, mencatat proses, dan menyiapkan bukti karya.\",\"status\":\"draft\",\"score\":null,\"feedback\":null,\"gradedBy\":null,\"submittedAt\":null}",
+    "created_at": "2026-10-05T23:25:37.273Z"
+  },
+  {
+    "event": "upload",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"expectedVersion\":1,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI Tahap 5: Saya merencanakan proyek, mencatat proses, dan menyiapkan bukti karya.\",\"status\":\"draft\",\"submitted_at\":null,\"score\":null,\"feedback\":null,\"graded_by\":null,\"graded_at\":null,\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:25:37.273Z\",\"version\":1,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":0},\"request\":{\"fileId\":\"27de9a2b-24e2-4f16-9253-21135ddf10c2\",\"name\":\"uji-tahap5.png\",\"mime\":\"image/png\",\"size\":68}}",
+    "created_at": "2026-10-05T23:26:21.850Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"draft\",\"score\":null,\"feedback\":null,\"gradedBy\":null,\"submittedAt\":null}",
+    "created_at": "2026-10-05T23:30:57.965Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"draft\",\"score\":null,\"feedback\":null,\"gradedBy\":null,\"submittedAt\":null}",
+    "created_at": "2026-10-05T23:30:57.965Z"
+  },
+  {
+    "event": "save",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"expectedVersion\":2,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI Tahap 5: Saya merencanakan proyek, mencatat proses, dan menyiapkan bukti karya.\",\"status\":\"draft\",\"submitted_at\":null,\"score\":null,\"feedback\":null,\"graded_by\":null,\"graded_at\":null,\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:25:37.273Z\",\"version\":2,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":0},\"request\":{\"action\":\"save\",\"version\":2,\"answerText\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"evidence\":[],\"priorLearning\":false}}",
+    "created_at": "2026-10-05T23:30:57.966Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"submitted\",\"score\":null,\"feedback\":null,\"gradedBy\":null,\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:32:58.262Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"submitted\",\"score\":null,\"feedback\":null,\"gradedBy\":null,\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:32:58.262Z"
+  },
+  {
+    "event": "submit",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"expectedVersion\":3,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"draft\",\"submitted_at\":null,\"score\":null,\"feedback\":null,\"graded_by\":null,\"graded_at\":null,\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:30:57.965Z\",\"version\":3,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":0},\"request\":{\"action\":\"submit\",\"version\":3}}",
+    "created_at": "2026-10-05T23:32:58.478Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"graded\",\"score\":75,\"feedback\":\"UJI nilai awal: tambahkan rencana dan refleksi pada jawaban.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:38:00.078Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"graded\",\"score\":75,\"feedback\":\"UJI nilai awal: tambahkan rencana dan refleksi pada jawaban.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:38:00.078Z"
+  },
+  {
+    "event": "grade",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"expectedVersion\":4,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"submitted\",\"submitted_at\":\"2026-10-05T23:32:58.262Z\",\"score\":null,\"feedback\":null,\"graded_by\":null,\"graded_at\":null,\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:32:58.262Z\",\"version\":4,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":0},\"request\":{\"action\":\"grade\",\"version\":4,\"criteria\":[{\"score\":50,\"comment\":\"UJI: paragraf jawaban perlu merinci rencana.\"},{\"score\":100,\"comment\":\"UJI: catatan proses sudah disebutkan.\"},{\"score\":100,\"comment\":\"UJI: lampiran uji-tahap5.png tercatat.\"},{\"score\":50,\"comment\":\"UJI: tambahkan refleksi pada paragraf penutup.\"}],\"feedback\":\"UJI nilai awal: tambahkan rencana dan refleksi pada jawaban.\",\"reason\":\"\",\"evidenceDecision\":\"supported\",\"computedScore\":75}}",
+    "created_at": "2026-10-05T23:38:00.136Z"
+  },
+  {
+    "event": "revise",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"expectedVersion\":5,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"graded\",\"submitted_at\":\"2026-10-05T23:32:58.262Z\",\"score\":75,\"feedback\":\"UJI nilai awal: tambahkan rencana dan refleksi pada jawaban.\",\"graded_by\":\"usr_teacher_adi\",\"graded_at\":\"2026-10-05T23:38:00.078Z\",\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:38:00.078Z\",\"version\":5,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":0},\"request\":{\"action\":\"revise\",\"version\":5,\"criteria\":[{\"score\":50,\"comment\":\"UJI: paragraf jawaban perlu merinci rencana.\"},{\"score\":100,\"comment\":\"UJI: catatan proses sudah disebutkan.\"},{\"score\":100,\"comment\":\"UJI: lampiran uji-tahap5.png tercatat.\"},{\"score\":50,\"comment\":\"UJI: tambahkan refleksi pada paragraf penutup.\"}],\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"reason\":\"\",\"evidenceDecision\":\"supported\"}}",
+    "created_at": "2026-10-05T23:38:29.439Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"draft\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:38:29.439Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"answer\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"draft\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:38:29.439Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"draft\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:42:59.286Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"answer\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"draft\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:32:58.262Z\"}",
+    "created_at": "2026-10-05T23:42:59.286Z"
+  },
+  {
+    "event": "save",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"expectedVersion\":6,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI Tahap 5 OFFLINE: draf ini harus pulih setelah server hidup dan halaman dimuat ulang.\",\"status\":\"draft\",\"submitted_at\":\"2026-10-05T23:32:58.262Z\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"graded_by\":\"usr_teacher_adi\",\"graded_at\":\"2026-10-05T23:38:29.439Z\",\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:38:29.439Z\",\"version\":6,\"revision_requested\":1,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":0},\"request\":{\"action\":\"save\",\"version\":6,\"answerText\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"evidence\":[],\"priorLearning\":true}}",
+    "created_at": "2026-10-05T23:42:59.287Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"answer\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"submitted\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:43:09.889Z\"}",
+    "created_at": "2026-10-05T23:43:09.889Z"
+  },
+  {
+    "event": "previous_state",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"answer\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"submitted\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:43:09.889Z\"}",
+    "created_at": "2026-10-05T23:43:09.889Z"
+  },
+  {
+    "event": "submit",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"expectedVersion\":7,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"draft\",\"submitted_at\":\"2026-10-05T23:32:58.262Z\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"graded_by\":\"usr_teacher_adi\",\"graded_at\":\"2026-10-05T23:38:29.439Z\",\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:42:59.286Z\",\"version\":7,\"revision_requested\":1,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":1},\"request\":{\"action\":\"submit\",\"version\":7}}",
+    "created_at": "2026-10-05T23:43:10.413Z"
+  },
+  {
+    "event": "state",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"answer\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"graded\",\"score\":100,\"feedback\":\"UJI FINAL: perbaikan telah diperiksa; bukti mendukung nilai rubrik. Calon alih kredit belum diakui.\",\"gradedBy\":\"usr_teacher_adi\",\"submittedAt\":\"2026-10-05T23:43:09.889Z\"}",
+    "created_at": "2026-10-05T23:47:55.559Z"
+  },
+  {
+    "event": "grade",
+    "actor_id": "usr_teacher_adi",
+    "snapshot_json": "{\"expectedVersion\":8,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"submitted\",\"submitted_at\":\"2026-10-05T23:43:09.889Z\",\"score\":null,\"feedback\":\"UJI REVISI: lengkapi rencana dan refleksi tanpa menghapus bukti yang sudah dikirim.\",\"graded_by\":\"usr_teacher_adi\",\"graded_at\":\"2026-10-05T23:38:29.439Z\",\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:43:09.889Z\",\"version\":8,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":1},\"request\":{\"action\":\"grade\",\"version\":8,\"criteria\":[{\"score\":100,\"comment\":\"UJI: rencana dilengkapi pada jawaban revisi.\"},{\"score\":100,\"comment\":\"UJI: catatan proses sudah disebutkan.\"},{\"score\":100,\"comment\":\"UJI: lampiran uji-tahap5.png tercatat.\"},{\"score\":100,\"comment\":\"UJI: refleksi dilengkapi pada jawaban revisi.\"}],\"feedback\":\"UJI FINAL: perbaikan telah diperiksa; bukti mendukung nilai rubrik. Calon alih kredit belum diakui.\",\"reason\":\"\",\"evidenceDecision\":\"supported\",\"computedScore\":100}}",
+    "created_at": "2026-10-05T23:47:55.694Z"
+  },
+  {
+    "event": "portfolio",
+    "actor_id": "usr_student_dudin",
+    "snapshot_json": "{\"expectedVersion\":9,\"before\":{\"id\":\"eef6fa0f-563a-42e5-93bf-916099cb9131\",\"assignment_id\":\"b8355d27-7930-400b-9e1e-e57331619c41\",\"student_id\":\"usr_student_dudin\",\"answer_text\":\"UJI REVISI FINAL: rencana, proses, produk, dan refleksi telah dilengkapi. Bukti awal tetap tersimpan.\",\"status\":\"graded\",\"submitted_at\":\"2026-10-05T23:43:09.889Z\",\"score\":100,\"feedback\":\"UJI FINAL: perbaikan telah diperiksa; bukti mendukung nilai rubrik. Calon alih kredit belum diakui.\",\"graded_by\":\"usr_teacher_adi\",\"graded_at\":\"2026-10-05T23:47:55.559Z\",\"created_at\":\"2026-10-05T23:25:32.880Z\",\"updated_at\":\"2026-10-05T23:47:55.559Z\",\"version\":9,\"revision_requested\":0,\"evidence_json\":\"[]\",\"portfolio\":0,\"prior_learning\":1},\"request\":{\"action\":\"portfolio\",\"version\":9,\"selected\":true}}",
+    "created_at": "2026-10-05T23:50:46.544Z"
+  }
+]

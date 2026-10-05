@@ -1,0 +1,83 @@
+.work-card {
+  overflow-wrap: anywhere;
+}
+.work-card label {
+  display: block;
+  margin-block: 12px;
+}
+.work-card input:not([type="checkbox"]),
+.work-card select,
+.work-teacher select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid #9ca3af;
+  border-radius: 8px;
+  background: white;
+  color: #172c29;
+}
+.work-card textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 12px;
+}
+.work-card fieldset,
+.work-card {
+  min-width: 0;
+}
+.work-card button,
+.work-teacher button {
+  min-height: 44px;
+  margin: 8px 8px 8px 0;
+  padding: 10px 14px;
+}
+.work-card input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin: 10px;
+}
+.work-card details {
+  margin-block: 20px;
+}
+.work-card summary,
+.work-teacher summary {
+  min-height: 44px;
+  padding-block: 12px;
+  cursor: pointer;
+}
+.work-card blockquote,
+.work-text {
+  white-space: pre-wrap;
+}
+.work-teacher {
+  margin-bottom: 32px;
+}
+
+.work-teacher > h1 {
+  font:
+    700 2rem/1.25 Georgia,
+    serif;
+  margin-block: 0 16px;
+}
+.work-student > h1 {
+  font:
+    700 2rem/1.25 Georgia,
+    serif;
+  margin-block: 0 16px;
+}
+.work-student button {
+  min-height: 44px;
+  padding: 10px 14px;
+  margin-block: 8px;
+}
+.work-student > label {
+  display: block;
+}
+.work-student > label > select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px;
+  border: 1px solid #9ca3af;
+  border-radius: 8px;
+}

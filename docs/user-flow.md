@@ -163,9 +163,10 @@ Fondasi versi kurikulum, KI/KD, paket kompetensi, rencana belajar personal,
 tenggat individual, dan permintaan bantuan pada rencana tersedia secara lokal.
 Rekaman validasinya berada di `docs/validation/`. Reader per bagian dan editor
 modul tutor tersedia pada Tahap 3. Asesmen diagnostik/formatif tersedia lokal
-pada Tahap 4. Proyek dan portofolio,
-remedial terstruktur, validasi SKK, pelaporan lengkap, sinkronisasi offline,
-dan ruang administrator merupakan target bertahap dalam `docs/roadmap.md`.
+pada Tahap 4. Tahap 5 menyediakan tugas/proyek/keterampilan dengan rubrik,
+revisi berhistori, bukti berkas/tautan, dan portofolio pilihan warga belajar.
+Remedial terstruktur, pemberian SKK, pengakuan alih kredit, pelaporan lengkap,
+offline seluruh aplikasi, dan ruang administrator masih target bertahap.
 
 ### Modul belajar yang tersedia secara lokal
 
@@ -214,3 +215,30 @@ dan ruang administrator merupakan target bertahap dalam `docs/roadmap.md`.
 8. Indikator KD/selisih diagnostik-formatif dan saran remedial/pengayaan berasal
    dari jawaban nyata. Itu bukan keputusan ketuntasan atau SKK, dan tidak
    menyatakan bahwa instrumen dengan kisi-kisi berbeda setara secara psikometrik.
+
+### Tugas autentik yang tersedia secara lokal (Tahap 5)
+
+1. Tutor membuka Penilaian, memilih template, kelas/mata pelajaran, KD,
+   tenggat, bobot kegiatan, serta kriteria rubrik yang total bobotnya 100%.
+   Simpan draf lalu terbitkan setelah memeriksa isinya.
+2. Warga belajar membuka Tugas atau kartu dashboard, membaca rubrik dan
+   keterkaitan KD/paket/versi/alokasi SKK, lalu menulis jawaban dan bukti.
+   Draf otomatis disimpan ke D1. Saat jaringan gagal, antrean lokal dinyatakan
+   secara eksplisit; setelah halaman dibuka kembali pengguna memilih pulihkan
+   atau buang. Konflik versi memerlukan penggabungan manual.
+3. Bukti berupa foto PNG/JPEG, PDF, audio MP3/WAV/OGG, atau tautan HTTPS.
+   Berkas maksimal 1 MB, lima berkas, total 3 MB per karya. Berkas yang telah
+   diunggah dipertahankan sebagai bukti; belum ada penghapusan/penyuntingan berkas.
+4. Kirim karya, tutor membaca bukti dan memberi skor/komentar tiap kriteria,
+   umpan balik, serta keputusan apakah bukti mendukung penilaian. Skor berbobot
+   dihitung server. Perubahan nilai memerlukan alasan dan selalu berhistori.
+5. Tutor dapat meminta revisi. Jawaban/bukti/nilai sebelumnya tetap ada pada
+   histori, warga belajar memperbaiki draf dan mengirim ulang.
+6. Warga belajar memilih karya yang sudah dinilai sebagai karya terbaik, lalu
+   memuat portofolio dari server. Pilihan tersimpan setelah refresh/restart.
+7. Checkbox pengalaman terdahulu merupakan pengajuan calon alih kredit.
+   Nilai, validasi bukti, dan portofolio belum memberikan mastery/SKK atau
+   pengakuan alih kredit. Tahap 6 dan seterusnya belum dikerjakan.
+
+Validasi domain: `npm run test:work`. Smoke API server yang sedang aktif:
+`npm run test:work:api` (tanpa reseed, pergantian role, atau server tambahan).

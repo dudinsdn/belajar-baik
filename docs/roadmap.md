@@ -324,6 +324,9 @@ Bukti dan batas pengukuran KD/SKK: [validasi Tahap 4](validation/tahap-4.md).
 
 ## Tahap 5 — Tugas, Proyek, Keterampilan, dan Portofolio
 
+**Status: Lulus lokal (6 Oktober 2026).** Bukti, skenario, dan batas validasi:
+[`docs/validation/tahap-5.md`](validation/tahap-5.md). Belum lulus produksi.
+
 **Tujuan: mengukur kompetensi melalui pekerjaan autentik**
 
 ### Fitur warga belajar

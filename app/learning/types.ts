@@ -97,6 +97,7 @@ export type LibraryData = {
 };
 
 export type AssignmentData = {
+  managed_work?: number;
   id: string;
   title: string;
   instructions: string;
@@ -152,6 +153,7 @@ export type QuizServerResult = {
   }>;
 };
 export type TeacherSubmission = {
+  managed_work?: number;
   id: string;
   assignment_id: string;
   assignment_title: string;
