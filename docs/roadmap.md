@@ -1,0 +1,481 @@
+# Roadmap Pengembangan RuangTumbuh
+
+## 1. Visi Produk
+
+RuangTumbuh menjadi ruang belajar Paket C yang:
+
+1. Membantu warga belajar memahami apa yang harus dipelajari, mengapa materi tersebut penting, dan sejauh mana kemajuannya.
+2. Mengakomodasi pembelajaran tatap muka, tutorial, dan mandiri.
+3. Menghubungkan aktivitas belajar dengan kompetensi Kurikulum 2013 dan bobot SKK.
+4. Membantu tutor melakukan pendampingan berdasarkan bukti proses dan hasil belajar.
+5. Tetap mudah digunakan melalui telepon seluler, koneksi terbatas, dan tingkat literasi digital yang beragam.
+
+## 2. Prinsip Pengembangan
+
+### Prioritas warga belajar
+
+- Satu halaman selalu memiliki satu tujuan utama.
+- Bahasa sederhana dan instruksi konkret.
+- Materi dapat dipelajari bertahap dan dilanjutkan kembali.
+- Warga belajar mengetahui kompetensi, target, progres, dan tindak lanjut.
+- Kegagalan asesmen menghasilkan rekomendasi belajar, bukan hanya nilai rendah.
+- Sistem tidak boleh menampilkan data contoh sebagai data nyata.
+
+### Kemudahan tutor
+
+- Tutor tidak memasukkan data yang sama berulang kali.
+- Materi, kegiatan, asesmen, dan nilai ditautkan langsung ke kompetensi.
+- Dashboard menonjolkan warga belajar yang memerlukan bantuan.
+- Laporan proses dan hasil dihasilkan dari aktivitas pembelajaran yang sudah berlangsung.
+- Keputusan ketuntasan tetap berada pada tutor, dengan jejak audit yang jelas.
+
+### Prinsip Kurikulum 2013 dan SKK
+
+Setiap pembelajaran harus dapat ditelusuri melalui hubungan:
+
+**Mata pelajaran → Tingkatan/Paket Kompetensi → KI/KD → Modul → Kegiatan → Asesmen → Bukti belajar → Ketuntasan → SKK**
+
+SKK tidak cukup dihitung dari membuka halaman atau lama login. Pengakuan SKK harus didasarkan pada aktivitas yang relevan, bukti belajar, dan validasi tutor.
+
+---
+
+# Tahapan Pengembangan
+
+## Tahap 0 — Keamanan dan Kejujuran Data
+
+**Prioritas: wajib sebelum menambah fitur**
+
+### Pekerjaan
+
+- Upgrade Next.js dari versi rentan ke versi aman.
+- Hapus data contoh dari jalur aplikasi nyata.
+- Ganti data fallback dengan status kosong, gagal dimuat, atau belum tersedia.
+- Hilangkan tanggal, jumlah tugas, streak, notifikasi, dan progres yang hard-coded.
+- Tentukan bahwa peran awal hanya siswa dan tutor; admin tidak ditampilkan sebelum ruang admin tersedia.
+- Pertahankan autentikasi dan pembatasan akses yang sudah ada.
+
+### Kriteria selesai
+
+- Audit dependency produksi tidak menemukan kerentanan kritis.
+- Semua data yang terlihat dapat ditelusuri ke D1 atau diberi label jelas sebagai contoh.
+- CI, TypeScript, build, dan smoke test siswa/tutor lulus.
+
+---
+
+## Tahap 1 — Fondasi Kurikulum dan SKK
+
+**Tujuan: menjadikan kurikulum sebagai inti model data**
+
+### Fitur tutor
+
+- Membuat tahun ajaran dan program Paket C.
+- Menentukan tingkatan dan paket kompetensi, misalnya 5.1–5.4 dan 6.1–6.2 sesuai pemetaan satuan pendidikan.
+- Mengelola mata pelajaran umum, peminatan, pemberdayaan, dan keterampilan.
+- Memasukkan KI/KD hasil kontekstualisasi Kurikulum 2013.
+- Menentukan bobot SKK per mata pelajaran dan paket kompetensi.
+- Menetapkan kombinasi tatap muka, tutorial, dan mandiri.
+- Menghubungkan setiap modul dan asesmen dengan satu atau beberapa KD.
+
+### Fitur warga belajar
+
+- Melihat program, tingkatan, mata pelajaran, target kompetensi, dan SKK yang harus ditempuh.
+- Melihat bahasa sederhana dari setiap kompetensi: “Setelah belajar ini, saya mampu…”.
+
+### Data utama
+
+- `curriculum_versions`
+- `competency_levels`
+- `competency_packages`
+- `core_competencies`
+- `basic_competencies`
+- `subject_skk_allocations`
+- `learning_modes`
+- `curriculum_assignments`
+
+### Kriteria selesai
+
+- Jumlah SKK terencana dapat direkonsiliasi per paket kompetensi, mata pelajaran, dan warga belajar.
+- Tidak ada modul atau asesmen yang diterbitkan tanpa keterkaitan kompetensi.
+- Perubahan kurikulum memiliki versi dan tidak merusak histori angkatan lama.
+
+---
+
+## Tahap 2 — Rencana Belajar Personal Warga Belajar
+
+**Tujuan: warga belajar selalu mengetahui langkah berikutnya**
+
+### Fitur warga belajar
+
+Dashboard baru menampilkan:
+
+- Modul yang sedang dipelajari.
+- Target kompetensi terdekat.
+- Kegiatan tatap muka/tutorial berikutnya.
+- Tugas atau asesmen yang harus diselesaikan.
+- SKK terencana, sedang ditempuh, menunggu validasi, dan sudah tercapai.
+- Umpan balik tutor yang belum ditindaklanjuti.
+- Rekomendasi “lanjutkan”, “pelajari kembali”, atau “minta bantuan tutor”.
+
+### Fitur tutor
+
+- Menetapkan rencana belajar per kelas atau individu.
+- Memberikan penyesuaian tenggat.
+- Menandai warga belajar yang membutuhkan pendampingan.
+- Melihat warga belajar yang tidak aktif atau tertinggal.
+
+### Kriteria selesai
+
+- Dashboard hanya memakai data server.
+- Setiap kartu memiliki tindakan yang jelas.
+- Warga belajar dapat kembali ke posisi terakhir setelah perangkat atau sesi berganti.
+
+---
+
+## Tahap 3 — Modul Belajar K13 yang Kontekstual
+
+**Tujuan: membangun pengalaman belajar modular dan fleksibel**
+
+### Struktur setiap modul
+
+1. Identitas mata pelajaran dan paket kompetensi.
+2. KD dan tujuan belajar dalam bahasa sederhana.
+3. Apersepsi atau masalah kontekstual.
+4. Materi inti.
+5. Aktivitas tatap muka, tutorial, atau mandiri.
+6. Latihan formatif.
+7. Refleksi warga belajar.
+8. Rangkuman.
+9. Asesmen ketuntasan.
+10. Bukti belajar yang harus dikumpulkan.
+11. Estimasi dan bobot SKK.
+
+### Fitur warga belajar
+
+- Daftar isi dan progres nyata.
+- Resume dari posisi terakhir.
+- Penanda bagian penting.
+- Pengaturan ukuran teks dan mode baca.
+- Unduh atau cache modul untuk koneksi terbatas.
+- Lampiran audio atau video dengan transkrip.
+- Tombol meminta bantuan tutor pada bagian tertentu.
+
+### Fitur tutor
+
+- Menulis dan menerbitkan modul.
+- Mengatur prasyarat dan urutan modul.
+- Mengaitkan bagian materi dengan KD.
+- Melihat bagian yang paling sering tidak diselesaikan atau ditanyakan.
+
+### Kriteria selesai
+
+- Isi materi berasal dari database, bukan komponen statis.
+- Progres dihitung dari bagian atau aktivitas yang benar-benar selesai.
+- Modul tetap dapat dibaca pada layar kecil dan koneksi lambat.
+
+---
+
+## Tahap 4 — Asesmen Diagnostik dan Formatif
+
+**Tujuan: mengukur proses belajar sebelum menentukan hasil akhir**
+
+### Fitur warga belajar
+
+- Diagnostik awal untuk mengetahui kemampuan awal.
+- Latihan pilihan tunggal, pilihan jamak, isian, dan uraian.
+- Umpan balik langsung untuk latihan formatif.
+- Pembahasan setelah jawaban dikirim.
+- Rekomendasi bagian materi yang perlu dipelajari ulang.
+- Riwayat percobaan dan kemajuan.
+
+### Fitur tutor
+
+- Bank soal berdasarkan KD dan tingkat kesulitan.
+- Kisi-kisi asesmen.
+- Pengaturan jumlah percobaan dan ambang ketuntasan.
+- Analisis soal dan pola kesalahan.
+- Daftar warga belajar yang perlu remedial atau pengayaan.
+
+### Pengukuran
+
+- Penguasaan per KD.
+- Perubahan nilai dari diagnostik ke formatif.
+- Jumlah percobaan.
+- Waktu penyelesaian yang wajar.
+- Pola kesalahan.
+- Tindak lanjut remedial.
+
+### Kriteria selesai
+
+- Kuis tidak lagi hard-coded.
+- Percobaan aktif dapat dilanjutkan.
+- Jawaban sebelumnya dimuat kembali.
+- Nilai dihitung server-side.
+- Pertanyaan dan jawaban benar tidak bocor sebelum pengiriman.
+
+---
+
+## Tahap 5 — Tugas, Proyek, Keterampilan, dan Portofolio
+
+**Tujuan: mengukur kompetensi melalui pekerjaan autentik**
+
+### Fitur warga belajar
+
+- Menyimpan draf otomatis.
+- Mengirim teks, foto, dokumen, audio, atau tautan bukti.
+- Melihat rubrik sebelum mengerjakan.
+- Menanggapi umpan balik dan melakukan revisi.
+- Menyimpan hasil terbaik dalam portofolio.
+- Mengajukan pengalaman atau kompetensi terdahulu sebagai calon alih kredit.
+
+### Fitur tutor
+
+- Membuat tugas dan proyek dari template.
+- Menentukan KD, rubrik, bobot, serta SKK terkait.
+- Menilai sikap kerja, pengetahuan, keterampilan, dan produk sesuai kebutuhan aktivitas.
+- Meminta revisi tanpa menghapus histori.
+- Memvalidasi bukti keterampilan dan alih kredit.
+- Memberi komentar spesifik pada bagian bukti belajar.
+
+### Kriteria selesai
+
+- Seluruh perubahan status memiliki waktu dan pelaku.
+- Nilai tidak dapat berubah tanpa histori.
+- Bukti belajar tetap terhubung dengan KD, paket kompetensi, dan SKK.
+
+---
+
+## Tahap 6 — Dashboard Pendampingan Tutor
+
+**Tujuan: tutor dapat mengukur proses, bukan hanya nilai akhir**
+
+### Tampilan ringkas tutor
+
+Tutor melihat:
+
+- Belum mulai.
+- Sedang belajar.
+- Tidak aktif.
+- Terlambat.
+- Menunggu penilaian.
+- Belum tuntas.
+- Perlu remedial.
+- Sudah tuntas.
+- SKK menunggu validasi.
+
+### Detail warga belajar
+
+- Kehadiran tatap muka/tutorial.
+- Aktivitas mandiri.
+- Progres modul.
+- Tugas dan revisi.
+- Percobaan asesmen.
+- Nilai formatif dan sumatif.
+- Penguasaan KD.
+- Umpan balik yang sudah atau belum ditindaklanjuti.
+- SKK terencana, ditempuh, tervalidasi, dan kurang.
+
+### Intervensi tutor
+
+- Catatan pendampingan.
+- Rencana remedial.
+- Pengayaan.
+- Penyesuaian tenggat.
+- Pesan atau pengingat.
+- Penetapan ulang rencana belajar.
+
+### Kriteria selesai
+
+Tutor dapat menemukan warga belajar berisiko maksimal dalam tiga langkah tanpa membuka laporan satu per satu.
+
+---
+
+## Tahap 7 — Buku Besar SKK dan Ketuntasan Kompetensi
+
+**Tujuan: menghasilkan perhitungan SKK yang dapat diaudit**
+
+### Status SKK
+
+- Direncanakan.
+- Sedang ditempuh.
+- Bukti belum lengkap.
+- Menunggu validasi.
+- Tercapai.
+- Diakui melalui alih kredit.
+- Ditolak atau perlu perbaikan.
+
+### Sumber pencapaian
+
+- Tatap muka.
+- Tutorial sinkron.
+- Tutorial asinkron.
+- Kegiatan mandiri.
+- Tugas/proyek.
+- Asesmen.
+- Portofolio.
+- Pengakuan kompetensi terdahulu.
+
+### Aturan penting
+
+- Aktivitas mencatat durasi dan bukti, tetapi durasi bukan satu-satunya dasar ketuntasan.
+- SKK dikreditkan setelah persyaratan kompetensi terpenuhi.
+- Tutor memvalidasi keputusan.
+- Perubahan memiliki alasan, waktu, dan pelaku.
+- Formula SKK dapat dikonfigurasi berdasarkan kurikulum operasional PKBM.
+
+### Laporan
+
+- Rekap SKK per warga belajar.
+- Rekap per mata pelajaran.
+- Rekap per paket kompetensi.
+- Kekurangan SKK.
+- Ketuntasan KD.
+- Riwayat alih kredit.
+- Laporan proses dan hasil belajar.
+
+### Kriteria selesai
+
+Total pada dashboard, laporan tutor, dan buku besar SKK selalu sama serta dapat ditelusuri sampai ke bukti aktivitas.
+
+---
+
+## Tahap 8 — Pelaporan Hasil Belajar
+
+**Tujuan: menyajikan hasil yang dapat dipahami warga belajar, tutor, dan pengelola**
+
+### Laporan warga belajar
+
+- Kompetensi yang telah dikuasai.
+- Kompetensi yang perlu diperbaiki.
+- Nilai pengetahuan dan keterampilan.
+- Catatan perkembangan.
+- Portofolio.
+- SKK yang sudah dicapai.
+- Rekomendasi tahap berikutnya.
+
+### Laporan tutor/pengelola
+
+- Ketuntasan KD per kelas.
+- Distribusi nilai.
+- Partisipasi berdasarkan mode pembelajaran.
+- Efektivitas remedial.
+- Warga belajar berisiko putus belajar.
+- Ketercapaian SKK.
+- Kelengkapan penilaian dan bukti.
+
+### Kriteria selesai
+
+Laporan dapat ditelusuri ke sumber data, memiliki periode yang jelas, dan tidak mengubah histori ketika kurikulum baru diterapkan.
+
+---
+
+## Tahap 9 — Aksesibilitas dan Ketahanan Akses
+
+**Dikerjakan lintas tahap, lalu diaudit khusus**
+
+### Persyaratan
+
+- Mobile-first.
+- Target sentuh minimal 44 × 44 piksel.
+- Navigasi keyboard dan pembaca layar.
+- Kontras teks yang memadai.
+- Tidak mengandalkan warna saja.
+- Dukungan reduced motion.
+- Mode hemat data.
+- Penyimpanan draf saat koneksi terputus.
+- Sinkronisasi aman ketika kembali online.
+- PDF atau materi unduhan yang ramah akses.
+- Bahasa Indonesia sederhana dan konsisten.
+
+### Kriteria selesai
+
+Alur utama siswa dapat diselesaikan pada perangkat seluler dan koneksi terbatas tanpa kehilangan jawaban.
+
+---
+
+## Tahap 10 — Validasi Operasional dan Produksi
+
+### Validasi lokal
+
+- Unit test.
+- Data-layer integration test.
+- API negative-path dan ownership test.
+- Browser E2E siswa.
+- Browser E2E tutor.
+- Resume setelah restart.
+- Konflik sinkronisasi.
+- Rekonsiliasi SKK.
+- Audit aksesibilitas.
+
+### Validasi produksi
+
+- Migrasi D1 hosted.
+- Identitas Sites untuk minimal dua siswa dan dua tutor.
+- Isolasi antarsiswa dan antarkelas.
+- Uji akses tutor lintas kelas.
+- Backup dan pemulihan.
+- Audit log.
+- Monitoring error.
+- Uji perangkat dan jaringan nyata.
+
+Deployment dilakukan setelah setiap gerbang validasi selesai, bukan hanya karena build berhasil.
+
+---
+
+# Prioritas Implementasi
+
+## Prioritas 1 — Wajib
+
+1. Keamanan dependency.
+2. Hilangkan data palsu.
+3. Model kurikulum, KI/KD, paket kompetensi, dan SKK.
+4. Dashboard belajar personal.
+5. Materi dinamis dan progres nyata.
+6. Asesmen formatif dan ketuntasan KD.
+
+## Prioritas 2 — Dampak pembelajaran tinggi
+
+1. Tugas autentik dan rubrik.
+2. Remedial dan pengayaan.
+3. Dashboard pendampingan tutor.
+4. Portofolio.
+5. Buku besar SKK.
+
+## Prioritas 3 — Operasional lanjutan
+
+1. Pelaporan lengkap.
+2. Alih kredit.
+3. Ruang admin.
+4. Notifikasi nyata.
+5. Offline/low-bandwidth lebih lanjut.
+6. Integrasi sistem eksternal jika benar-benar dibutuhkan.
+
+# Indikator Keberhasilan Produk
+
+## Untuk warga belajar
+
+- Persentase modul yang diselesaikan.
+- Persentase KD yang tuntas.
+- Peningkatan dari diagnostik ke asesmen akhir.
+- Keberhasilan remedial.
+- Ketepatan pengumpulan tugas.
+- Keaktifan belajar per minggu.
+- SKK yang tercapai dibandingkan target.
+- Jumlah warga belajar yang kembali aktif setelah intervensi.
+
+## Untuk tutor
+
+- Waktu rata-rata menilai.
+- Persentase tugas yang mendapat umpan balik.
+- Warga belajar berisiko yang berhasil ditindaklanjuti.
+- Kelengkapan pemetaan KD dan SKK.
+- Konsistensi nilai dengan rubrik.
+- Persentase bukti belajar yang telah divalidasi.
+
+## Untuk pengelola
+
+- Ketuntasan per paket kompetensi.
+- Kekurangan SKK per warga belajar.
+- Retensi warga belajar.
+- Kelengkapan laporan.
+- Konsistensi data dashboard, nilai, dan buku besar SKK.
+- Jumlah perubahan data penting yang memiliki jejak audit.
