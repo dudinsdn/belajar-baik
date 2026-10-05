@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,css,mjs}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,css,mjs}\"",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress",
+    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress && npm run test:curriculum",
     "ci": "npm run format:check && npm run lint && npm test && npm run build",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
@@ -23,6 +23,7 @@
     "test:assignments": "node --experimental-strip-types --test tests/assignment-validation.test.ts",
     "test:grading": "node --experimental-strip-types --test tests/grading-validation.test.ts",
     "test:progress": "node --experimental-strip-types --test tests/progress-validation.test.ts",
+    "test:curriculum": "node --experimental-strip-types --test tests/curriculum-validation.test.ts",
     "test:e2e": "node scripts/learning-flow-e2e.mjs"
   },
   "dependencies": {
