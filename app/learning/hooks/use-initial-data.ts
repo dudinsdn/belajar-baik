@@ -66,7 +66,7 @@ export function useInitialData(setActive: (value: string) => void) {
           readApi<MaterialData[]>("/api/v1/materials", controller.signal),
           readApi<LibraryData[]>("/api/v1/library", controller.signal),
           readApi<AssignmentData[]>("/api/v1/assignments", controller.signal),
-          readApi<QuizData>("/api/v1/quizzes/quiz_surabaya", controller.signal),
+          readApi<QuizData | null>("/api/v1/quizzes", controller.signal),
         ]);
         setDashboard(dashboardData);
         setMaterials(materialData);

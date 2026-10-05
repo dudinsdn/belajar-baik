@@ -15,12 +15,12 @@ type Preferences = ReturnType<typeof usePreferences>;
 type Quiz = ReturnType<typeof useQuiz>;
 type Actions = {
   library: {
-    toggle: (id: number | string) => void;
+    toggle: (id: string) => void;
     advance: (id: string) => void;
     saveMaterial: () => void;
   };
   assignment: {
-    submit: (id: number | string) => void;
+    submit: (id: string) => void;
     saveGrade: (id: string) => void;
   };
 };
@@ -35,7 +35,7 @@ type Props = {
   savingAssignment: string | null;
   savingGrade: string | null;
   shownLibrary: Array<{
-    id: number | string;
+    id: string;
     code: string;
     title: string;
     author: string;
@@ -100,7 +100,6 @@ export function ActiveView(p: Props) {
     return (
       <AssignmentsView
         items={d.assignments}
-        submitted={pref.submitted}
         answers={d.assignmentAnswers}
         saving={p.savingAssignment}
         setAnswers={d.setAssignmentAnswers}
@@ -126,7 +125,6 @@ export function ActiveView(p: Props) {
         setQuery={p.setQuery}
         advance={p.actions.library.advance}
         toggle={p.actions.library.toggle}
-        goTo={p.goTo}
       />
     );
   if (p.active === "Profil")

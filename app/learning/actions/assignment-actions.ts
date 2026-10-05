@@ -4,23 +4,14 @@ import { writeApi } from "../request";
 
 export function createAssignmentActions(p: {
   answers: Record<string, string>;
-  submitted: number[];
   grades: Record<string, { score: string; feedback: string }>;
-  setSubmitted: Dispatch<SetStateAction<number[]>>;
   setAssignments: Dispatch<SetStateAction<AssignmentData[]>>;
   setSubmissions: Dispatch<SetStateAction<TeacherSubmission[]>>;
   setSavingAssignment: Dispatch<SetStateAction<string | null>>;
   setSavingGrade: Dispatch<SetStateAction<string | null>>;
   setNotice: Dispatch<SetStateAction<string>>;
 }) {
-  const submit = async (id: number | string) => {
-    if (typeof id === "number") {
-      const next = [...new Set([...p.submitted, id])];
-      p.setSubmitted(next);
-      localStorage.setItem("rt-submitted", JSON.stringify(next));
-      p.setNotice("Tugas tersimpan sebagai terkirim di perangkat ini.");
-      return;
-    }
+  const submit = async (id: string) => {
     p.setSavingAssignment(id);
     try {
       await writeApi<AssignmentData>(

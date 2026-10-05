@@ -9,6 +9,7 @@ type Props = {
   notice: string;
   navigation: string[];
   profile: ProfileData | null;
+  pendingTaskCount: number;
   contentRef: RefObject<HTMLElement | null>;
   children: ReactNode;
   goTo: (value: string) => void;
@@ -25,6 +26,7 @@ export function LearningShell(props: Props) {
     notice,
     navigation,
     profile,
+    pendingTaskCount,
     contentRef,
     children,
     goTo,
@@ -63,10 +65,10 @@ export function LearningShell(props: Props) {
         <div className="top-actions">
           <button
             className="icon-button"
-            aria-label="Buka notifikasi, ada satu pemberitahuan"
+            aria-label="Buka pemberitahuan"
             onClick={() => setNotice("Belum ada pengumuman baru hari ini.")}
           >
-            <span className="notification-dot" />◎
+            ◎
           </button>
           <button
             className="profile-button"
@@ -103,7 +105,9 @@ export function LearningShell(props: Props) {
                 {icons[index]}
               </span>
               {item}
-              {item === "Tugas" && <span className="badge">2</span>}
+              {item === "Tugas" && pendingTaskCount > 0 && (
+                <span className="badge">{pendingTaskCount}</span>
+              )}
             </button>
           ))}
         </nav>

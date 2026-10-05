@@ -6,23 +6,12 @@ type Params = {
   books: LibraryData[];
   setBooks: Dispatch<SetStateAction<LibraryData[]>>;
   materials: MaterialData[];
-  saved: number[];
-  setSaved: Dispatch<SetStateAction<number[]>>;
-  bookmarked: boolean;
   setBookmarked: Dispatch<SetStateAction<boolean>>;
   setSaving: Dispatch<SetStateAction<string | null>>;
   setNotice: Dispatch<SetStateAction<string>>;
 };
 export function createLibraryActions(p: Params) {
-  const toggle = async (id: number | string) => {
-    if (typeof id === "number") {
-      const next = p.saved.includes(id)
-        ? p.saved.filter((item) => item !== id)
-        : [...p.saved, id];
-      p.setSaved(next);
-      localStorage.setItem("rt-books", JSON.stringify(next));
-      return;
-    }
+  const toggle = async (id: string) => {
     const book = p.books.find((item) => item.id === id);
     if (!book) return;
     p.setSaving(id);
@@ -81,15 +70,12 @@ export function createLibraryActions(p: Params) {
   };
   const saveMaterial = async () => {
     const material = p.materials[0];
-    if (!material) {
-      p.setBookmarked(!p.bookmarked);
-      return;
-    }
+    if (!material) return;
     p.setSaving(material.id);
     try {
       await writeApi(`/api/v1/materials/${material.id}/progress`, "PUT", {
         percent: material.percent,
-        lastPosition: material.last_position ?? "halaman-12",
+        lastPosition: material.last_position,
       });
       p.setBookmarked(true);
       p.setNotice("Posisi dan progres materi disimpan ke akun belajar.");

@@ -8,7 +8,7 @@ import {
   AccessState,
   LearningShell,
 } from "./learning/components/learning-shell";
-import { library, studentNav } from "./learning/data";
+import { studentNav } from "./learning/data";
 import { useInitialData } from "./learning/hooks/use-initial-data";
 import { usePreferences } from "./learning/hooks/use-preferences";
 import { useQuiz } from "./learning/hooks/use-quiz";
@@ -46,48 +46,40 @@ export default function Home() {
     books: data.books,
     setBooks: data.setBooks,
     materials: data.materials,
-    saved: preferences.savedBooks,
-    setSaved: preferences.setSavedBooks,
-    bookmarked,
     setBookmarked,
     setSaving: setSavingProgress,
     setNotice,
   });
   const assignmentActions = createAssignmentActions({
     answers: data.assignmentAnswers,
-    submitted: preferences.submitted,
     grades: data.grades,
-    setSubmitted: preferences.setSubmitted,
     setAssignments: data.setAssignments,
     setSubmissions: data.setSubmissions,
     setSavingAssignment,
     setSavingGrade,
     setNotice,
   });
-  const displayName = data.profile?.displayName ?? "Dudin Sahidin";
+  const displayName = data.profile?.displayName ?? "Pengguna";
   const initials = displayName
     .split(/\s+/)
     .map((part) => part[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
-  const shownLibrary = (
-    data.books.length
-      ? data.books.map((book) => ({
-          id: book.id,
-          code: book.subject_code ?? "BUK",
-          title: book.title,
-          author: book.author,
-          progress: book.percent,
-          bookmarked: Boolean(book.bookmarked),
-        }))
-      : library.map((book) => ({
-          ...book,
-          bookmarked: preferences.savedBooks.includes(book.id),
-        }))
-  ).filter((book) =>
-    `${book.title} ${book.author}`.toLowerCase().includes(query.toLowerCase()),
-  );
+  const shownLibrary = data.books
+    .map((book) => ({
+      id: book.id,
+      code: book.subject_code ?? "BUK",
+      title: book.title,
+      author: book.author,
+      progress: book.percent,
+      bookmarked: Boolean(book.bookmarked),
+    }))
+    .filter((book) =>
+      `${book.title} ${book.author}`
+        .toLowerCase()
+        .includes(query.toLowerCase()),
+    );
   const navigation =
     data.profile?.role === "teacher" ? ["Penilaian", "Profil"] : studentNav;
 
@@ -103,6 +95,11 @@ export default function Home() {
       notice={notice}
       navigation={navigation}
       profile={data.profile}
+      pendingTaskCount={
+        data.assignments.filter(
+          (task) => task.submission_status === "not_started",
+        ).length
+      }
       contentRef={contentRef}
       goTo={goTo}
       setMenuOpen={setMenuOpen}

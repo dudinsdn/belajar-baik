@@ -1,6 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { QuizData, QuizServerResult } from "../types";
-import { FallbackQuiz } from "./quiz-fallback-view";
 
 export type QuizViewProps = {
   data: QuizData | null;
@@ -40,11 +39,14 @@ export function ResultActions({
 }
 
 export function QuizView(props: QuizViewProps) {
-  return props.data ? (
-    <ServerQuiz {...props} data={props.data} />
-  ) : (
-    <FallbackQuiz {...props} />
-  );
+  if (!props.data)
+    return (
+      <section className="empty-state">
+        <h1>Belum ada latihan</h1>
+        <p>Latihan yang diterbitkan tutor akan tampil di sini.</p>
+      </section>
+    );
+  return <ServerQuiz {...props} data={props.data} />;
 }
 
 function ServerQuiz({

@@ -58,6 +58,19 @@ export async function getStudentQuiz(user: CurrentUser, quizId: string) {
   };
 }
 
+export async function getFirstStudentQuiz(user: CurrentUser) {
+  const quiz = await env.DB.prepare(
+    `SELECT q.id FROM class_memberships cm
+    JOIN class_subjects cs ON cs.class_id = cm.class_id
+    JOIN quizzes q ON q.class_subject_id = cs.id
+    WHERE cm.student_id = ? AND cm.status = 'active' AND q.status = 'published'
+    ORDER BY q.created_at, q.id LIMIT 1`,
+  )
+    .bind(user.id)
+    .first<{ id: string }>();
+  return quiz ? getStudentQuiz(user, quiz.id) : null;
+}
+
 export async function startQuizAttempt(user: CurrentUser, quizId: string) {
   await accessibleQuiz(user, quizId);
   const existing = await env.DB.prepare(

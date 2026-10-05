@@ -1,5 +1,5 @@
 type Book = {
-  id: number | string;
+  id: string;
   code: string;
   title: string;
   author: string;
@@ -12,8 +12,7 @@ type Props = {
   saving: string | null;
   setQuery: (value: string) => void;
   advance: (id: string) => void;
-  toggle: (id: number | string) => void;
-  goTo: (destination: string) => void;
+  toggle: (id: string) => void;
 };
 
 export function LibraryView({
@@ -23,7 +22,6 @@ export function LibraryView({
   setQuery,
   advance,
   toggle,
-  goTo,
 }: Props) {
   return (
     <section>
@@ -60,17 +58,9 @@ export function LibraryView({
                 <button
                   className="text-button"
                   disabled={saving === String(book.id)}
-                  onClick={() =>
-                    typeof book.id === "string"
-                      ? advance(book.id)
-                      : goTo("Materi")
-                  }
+                  onClick={() => advance(book.id)}
                 >
-                  {typeof book.id === "string"
-                    ? "Catat +10%"
-                    : book.progress
-                      ? "Lanjutkan"
-                      : "Mulai baca"}
+                  Catat +10%
                 </button>
                 <button
                   className="save-book"
