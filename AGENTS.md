@@ -169,6 +169,28 @@ improve usability.
 Match validation to the risk of the change and report each evidence category
 separately.
 
+Every roadmap stage must have an explicit evidence record before it is marked
+as passed. The record belongs in `docs/` and must map every acceptance
+criterion to observable evidence. For each criterion, record the environment,
+the check or scenario used, its result, the relevant implementation artifact,
+and any limitation or check that was not run. A criterion may be marked not
+applicable only with a written reason.
+
+Use these stage statuses consistently:
+
+- `Belum dimulai`: no implementation claim has been made.
+- `Sedang dikerjakan`: implementation or validation is incomplete.
+- `Lulus lokal`: every criterion in the stage has current local evidence and
+  all applicable checks below pass.
+- `Lulus produksi`: the relevant hosted identity, database, integration,
+  operational, and device or network checks have also passed.
+
+Do not make an earlier stage depend on work assigned to a later stage merely
+to obtain `Lulus lokal`. Production-wide proof is consolidated in the roadmap's
+operational validation stage. Conversely, do not present local proof as hosted
+or production proof. If later integration exposes a defect in an earlier
+stage, reopen that stage and update its evidence record.
+
 Minimum checks for application changes normally include:
 
 1. Formatting check.
@@ -195,6 +217,21 @@ End-to-end scripts that rewrite fixtures, switch `.dev.vars`, reseed D1, or
 start additional servers must not be run while the user's visible development
 server is active unless the user approves the disruption and port behavior is
 controlled.
+
+Before declaring a stage passed, also confirm that:
+
+- the implemented changes stay within the approved stage boundary;
+- positive, negative, empty, loading, error, and persistence scenarios were
+  tested when relevant;
+- learner, tutor, administrator, ownership, and class-isolation boundaries were
+  tested when relevant;
+- visible behavior has rendered-browser evidence at relevant desktop and
+  mobile widths;
+- authoritative records and audit history survive refresh or restart when
+  persistence is part of the stage;
+- the evidence identifies the tested commit or worktree state; and
+- remaining risks, untested external systems, local-state effects, and server
+  role or port state are stated explicitly.
 
 ## Security and Privacy
 

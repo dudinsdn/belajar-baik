@@ -41,6 +41,93 @@ SKK tidak cukup dihitung dari membuka halaman atau lama login. Pengakuan SKK har
 
 # Tahapan Pengembangan
 
+## Kontrak Kelulusan untuk Semua Tahap
+
+Setiap tahap memakai status berikut:
+
+- **Belum dimulai**: belum ada klaim implementasi.
+- **Sedang dikerjakan**: implementasi atau validasinya belum lengkap.
+- **Lulus lokal**: seluruh kriteria penerimaan tahap tersebut telah memiliki
+  bukti lokal terkini dan semua pemeriksaan yang relevan telah lulus.
+- **Lulus produksi**: bukti lokal telah dilengkapi dengan validasi identitas,
+  basis data, integrasi, operasi, perangkat, dan jaringan pada lingkungan
+  hosted atau produksi yang relevan.
+
+`Lulus lokal` tidak boleh dipakai sebagai sinonim `Lulus produksi`. Tahap awal
+tidak harus menunggu pekerjaan tahap berikutnya untuk lulus secara lokal, tetapi
+validasi lintas-tahap dan produksi tetap dikonsolidasikan pada Tahap 10. Jika
+validasi tahap berikutnya menemukan regresi, status tahap terdampak harus dibuka
+kembali.
+
+Sebelum suatu tahap dinyatakan lulus, buat rekaman bukti di
+`docs/validation/tahap-<nomor>.md`. Rekaman tersebut harus mencantumkan:
+
+1. status, tanggal, commit atau keadaan worktree, lingkungan, port, dan peran
+   simulasi yang diuji;
+2. setiap kriteria penerimaan beserta artefak implementasi dan bukti yang dapat
+   diulang;
+3. hasil pemeriksaan statis, format, lint, tipe, tes terfokus, skema/migrasi,
+   build, API/runtime, browser, dan diff sesuai relevansinya;
+4. skenario positif, negatif, kosong, loading, error, refresh/restart, dan
+   persistensi yang relevan;
+5. batas peran, kepemilikan, kelas, serta pemisahan data yang relevan;
+6. tangkapan atau catatan browser pada lebar desktop dan seluler untuk perubahan
+   yang terlihat oleh pengguna;
+7. efek terhadap data atau state lokal, hasil rekonsiliasi bila ada, hal yang
+   tidak diuji, batas bukti, dan risiko tersisa; dan
+8. status server lokal, termasuk bahwa server yang terlihat tetap memakai port
+   `3000` dan tidak ada server duplikat tersembunyi.
+
+Suatu kategori boleh ditulis **Tidak berlaku** hanya jika alasannya dicatat.
+Keberadaan kode, migrasi, halaman, atau tes saja belum membuktikan suatu
+kriteria; hasilnya harus diamati pada lapisan yang diklaim.
+
+Matriks berikut adalah bukti minimum khusus tahap. Pemeriksaan umum di atas
+tetap berlaku.
+
+| Tahap | Bukti minimum khusus tahap                                                                                                                                                                  |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0     | Audit data palsu/fallback dan tombol semu; smoke test rute/API inti; render alur warga belajar dan tutor; audit keamanan serta dependensi; baseline performa dan aksesibilitas.             |
+| 1     | Migrasi dari basis data kosong dan data lama; validasi constraint serta rekonsiliasi SKK; histori versi kurikulum; API dan render tutor/warga belajar; uji larangan perubahan versi terbit. |
+| 2     | Dasbor dari sumber server; posisi terakhir tetap benar setelah refresh/restart; batas penugasan tutor dan kepemilikan warga belajar; render kartu aksi utama pada desktop dan seluler.      |
+| 3     | Materi berasal dari D1 tanpa fallback statis; progres per bagian dan resume setelah refresh/restart; alur penerbitan tutor; render kondisi kosong/error dan uji jaringan terbatas.          |
+| 4     | Kunci jawaban tidak bocor sebelum selesai; attempt aktif dapat dilanjutkan; skor dihitung server; validasi input dan batas kepemilikan; render seluruh state kuis.                          |
+| 5     | Autosave dan pemulihan setelah refresh/restart; validasi unggahan; histori revisi, penilaian, feedback, dan audit; batas akses warga belajar/tutor pada karya.                              |
+| 6     | Status risiko diturunkan dari data nyata; tutor mencapai tindakan prioritas dengan paling banyak tiga interaksi; isolasi kelas; intervensi menghasilkan perubahan yang dapat dilacak.       |
+| 7     | Rekonsiliasi ledger SKK dengan dasbor dan laporan; jejak kompetensi-bukti-mastery-SKK; persetujuan/override tutor menyimpan alasan dan histori.                                             |
+| 8     | Laporan dapat ditelusuri kembali ke bukti; periode dan snapshot historis tidak berubah akibat pemetaan baru; hasil lintas peran konsisten dan dapat diekspor.                               |
+| 9     | Audit keyboard, fokus, pembaca layar, reduced motion, target sentuh, dan viewport seluler; skenario jaringan lambat/putus; antrean/sinkronisasi tidak menyebabkan kehilangan data.          |
+| 10    | Seluruh suite lokal; migrasi data produksi tersalin; D1 hosted, identitas produksi, isolasi lintas peran/kelas, backup-restore, observabilitas, perangkat nyata, dan jaringan lambat.       |
+
+Format minimum rekaman validasi:
+
+```md
+# Validasi Tahap N
+
+- Status: Sedang dikerjakan | Lulus lokal | Lulus produksi
+- Tanggal:
+- Commit/worktree:
+- Lingkungan, port, dan peran:
+
+## Kriteria dan bukti
+
+- [ ] Kriteria: ...
+  - Artefak: ...
+  - Pemeriksaan/skenario: ...
+  - Hasil: ...
+  - Batas: ...
+
+## Pemeriksaan umum
+
+- Format/lint/typecheck/test/build: ...
+- Database/API/browser: ...
+- Diff dan worktree: ...
+
+## Belum diuji dan risiko tersisa
+
+- ...
+```
+
 ## Tahap 0 — Keamanan dan Kejujuran Data
 
 **Prioritas: wajib sebelum menambah fitur**
