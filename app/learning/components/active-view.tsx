@@ -1,3 +1,4 @@
+import { MentoringView } from "../views/mentoring-view";
 import { AssignmentsWorkspace } from "../views/assignments-workspace";
 import { readApi } from "../request";
 import type { DashboardData } from "../types";
@@ -61,9 +62,11 @@ type Props = {
 };
 
 export function ActiveView(p: Props) {
+  if (p.active === "Pendampingan" && p.data.profile?.role === "teacher")
+    return <MentoringView goTo={p.goTo} />;
   if (p.active === "Rencana")
     return p.data.profile?.role === "teacher" ? (
-      <PlanningView />
+      <PlanningView initialScope={p.resourceId} />
     ) : (
       <StudentPlansView goTo={p.goTo} />
     );
@@ -151,6 +154,8 @@ export function ActiveView(p: Props) {
   if (p.active === "Penilaian")
     return (
       <GradingView
+        key={p.resourceId ?? "all"}
+        initialId={p.resourceId}
         items={d.submissions}
         grades={d.grades}
         saving={p.savingGrade}

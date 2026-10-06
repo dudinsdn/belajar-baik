@@ -146,6 +146,10 @@ Tahap 5 menyediakan tugas/proyek/keterampilan dengan rubrik, bukti berkas dan
 tautan, draf otomatis dengan antrean lokal eksplisit, revisi berhistori, serta
 pilihan portofolio. Pengalaman terdahulu baru berstatus calon alih kredit.
 Bukti dan batasnya berada di `docs/validation/tahap-5.md`. Buku besar SKK,
-remedial terstruktur, pelaporan lengkap, offline seluruh aplikasi, dan ruang
-administrator merupakan target pengembangan bertahap.
+pelaporan lengkap, offline seluruh aplikasi, dan ruang administrator merupakan
+target pengembangan bertahap. Tahap 6 menyediakan dashboard prioritas tutor,
+detail proses, catatan/kehadiran, remedial/pengayaan/pengingat, serta penutupan
+tindak lanjut berhistori. Arahan terbuka tersedia pada beranda warga belajar;
+ketuntasan dan pemberian SKK tetap Tahap 7. Bukti dan batasnya berada di
+`docs/validation/tahap-6.md`.
 Urutan pekerjaan dan kriteria penyelesaiannya ditetapkan dalam `docs/roadmap.md`.

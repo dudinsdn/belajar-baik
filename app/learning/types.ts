@@ -12,6 +12,8 @@ export type ProfileData = {
 };
 
 export type LearningPlan = {
+  class_subject_id: string;
+  student_id: string;
   help_request: string | null;
   id: string;
   title: string;
@@ -49,6 +51,14 @@ export type PlanningData = {
   assignments: Array<{ id: string; title: string; class_subject_id: string }>;
 };
 export type DashboardData = {
+  interventions: Array<{
+    id: string;
+    kind: string;
+    detail: string;
+    due_at: string;
+    tutor: string;
+    subject: string;
+  }>;
   nextPlan: LearningPlan | null;
   plans: LearningPlan[];
   skk: { planned: number };

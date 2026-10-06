@@ -198,6 +198,45 @@ export async function mutateLearningPlans(user: CurrentUser, input: unknown) {
         now,
       ),
     ]);
+  } else if (b.action === "replan") {
+    const studentId = text(b.studentId, 100);
+    await member(cs.class_id, studentId);
+    const planId = text(b.planId, 100),
+      title = text(b.title, 200),
+      instructions = text(b.instructions),
+      due = date(b.dueAt);
+    const visible = await readLearningPlans(user);
+    if (
+      !visible.plans.some(
+        (p) =>
+          p.id === planId &&
+          p.student_id === studentId &&
+          p.class_subject_id === csId,
+      )
+    )
+      throw new ApiError("NOT_FOUND", 404, "Rencana belajar tidak ditemukan.");
+    // Capture the previous state inside the same transaction as the update.
+    // Curriculum, mode, material, and existing attendance keep their identity.
+    await env.DB.batch([
+      env.DB.prepare(
+        `INSERT INTO learning_plan_events(id,plan_id,actor_id,action,detail,created_at)
+        SELECT ?,id,?,'replan',json_object('previousTitle',title,'previousInstructions',instructions,'previousDueAt',due_at,'title',?,'instructions',?,'dueAt',?),?
+        FROM learning_plans WHERE id=? AND class_subject_id=? AND student_id=?`,
+      ).bind(
+        crypto.randomUUID(),
+        user.id,
+        title,
+        instructions,
+        due,
+        now,
+        planId,
+        csId,
+        studentId,
+      ),
+      env.DB.prepare(
+        `UPDATE learning_plans SET title=?,instructions=?,due_at=?,updated_at=? WHERE id=? AND class_subject_id=? AND student_id=?`,
+      ).bind(title, instructions, due, now, planId, csId, studentId),
+    ]);
   } else if (b.action === "create") {
     const title = text(b.title, 200),
       instructions = text(b.instructions),

@@ -5,6 +5,7 @@ import type { TeacherSubmission } from "../types";
 
 type Grades = Record<string, { score: string; feedback: string }>;
 type Props = {
+  initialId?: string | null;
   items: TeacherSubmission[];
   grades: Grades;
   saving: string | null;
@@ -12,10 +13,17 @@ type Props = {
   save: (id: string) => void;
 };
 
-export function GradingView({ items, grades, saving, setGrades, save }: Props) {
+export function GradingView({
+  items,
+  grades,
+  saving,
+  setGrades,
+  save,
+  initialId,
+}: Props) {
   return (
     <section>
-      <WorkTeacher />
+      <WorkTeacher initialId={initialId} />
       <header className="inner-header">
         <div>
           <p className="eyebrow">RUANG GURU</p>
@@ -36,7 +44,10 @@ export function GradingView({ items, grades, saving, setGrades, save }: Props) {
       {items.length ? (
         <div className="grading-list">
           {items
-            .filter((item) => !item.managed_work)
+            .filter(
+              (item) =>
+                !item.managed_work && (!initialId || item.id === initialId),
+            )
             .map((item) => {
               const grade = grades[item.id] ?? { score: "", feedback: "" };
               return (

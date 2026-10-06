@@ -1,3 +1,4 @@
+import * as mentoring from "./schema/mentoring";
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
 import * as assignmentWork from "./schema/assignment-work";
@@ -13,6 +14,7 @@ import * as library from "./schema/library";
 import * as quizzes from "./schema/quizzes";
 
 const schema = {
+  ...mentoring,
   ...assignments,
   ...assignmentWork,
   ...content,

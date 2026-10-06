@@ -1,3 +1,4 @@
+import { readStudentInterventions } from "./mentoring.ts";
 import { env } from "cloudflare:workers";
 import type { CurrentUser } from "../auth/types.ts";
 import { readLearningPlans } from "./learning-plans.ts";
@@ -22,7 +23,7 @@ export async function getStudentProfile(user: CurrentUser) {
 }
 
 export async function getStudentDashboard(user: CurrentUser) {
-  const [materials, tasks, planData, skk, feedback, assessment] =
+  const [materials, tasks, planData, skk, feedback, assessment, interventions] =
     await Promise.all([
       listStudentMaterials(user),
       listStudentAssignments(user),
@@ -55,6 +56,7 @@ export async function getStudentDashboard(user: CurrentUser) {
       )
         .bind(user.id)
         .first(),
+      readStudentInterventions(user),
     ]);
   const visible = materials as Array<{
     id: string;
@@ -94,6 +96,7 @@ export async function getStudentDashboard(user: CurrentUser) {
     skk,
     feedback: feedback.results,
     assessment,
+    interventions,
   };
 }
 

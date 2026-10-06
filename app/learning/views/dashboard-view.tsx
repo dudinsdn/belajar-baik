@@ -66,6 +66,34 @@ export function DashboardView({ displayName, goTo }: Props) {
           </p>
         </div>
       </section>
+      {data.interventions.length > 0 && (
+        <section className="section-block personal-plan-section">
+          <h2>Arahan tutor</h2>
+          {data.interventions.map((i) => (
+            <article className="personal-plan-section" key={i.id}>
+              <h3>
+                {
+                  (
+                    {
+                      remedial: "Rencana remedial",
+                      enrichment: "Pengayaan",
+                      reminder: "Pengingat",
+                    } as Record<string, string>
+                  )[i.kind]
+                }{" "}
+                · {i.subject}
+              </h3>
+              <p>{i.detail}</p>
+              <p>
+                {i.tutor} · Tenggat {shortDateTime.format(new Date(i.due_at))}
+              </p>
+              <button className="text-button" onClick={() => goTo("Rencana")}>
+                Lihat rencana belajar
+              </button>
+            </article>
+          ))}
+        </section>
+      )}
       {next ? (
         <section className="continue-card">
           <div className="continue-copy">

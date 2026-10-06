@@ -35,7 +35,7 @@ export function LearningShell(props: Props) {
   } = props;
   const icons =
     profile?.role === "teacher"
-      ? ["▤", "✓", "◎"]
+      ? ["⌂", "▥", "□", "▤", "✓", "✓", "◎"]
       : ["⌂", "▤", "✓", "□", "▥", "◎"];
   return (
     <div className="app-shell">
@@ -57,7 +57,7 @@ export function LearningShell(props: Props) {
         <button
           className="brand"
           onClick={() =>
-            goTo(profile?.role === "teacher" ? "Kurikulum" : "Beranda")
+            goTo(profile?.role === "teacher" ? "Pendampingan" : "Beranda")
           }
           aria-label="Ruang Tumbuh, kembali ke beranda"
         >

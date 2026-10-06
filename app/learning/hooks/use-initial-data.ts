@@ -51,7 +51,7 @@ export function useInitialData(setActive: (value: string) => void) {
               ]),
             ),
           );
-          setActive("Penilaian");
+          setActive("Pendampingan");
           setStatus("ready");
           return;
         }

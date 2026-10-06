@@ -5,10 +5,10 @@ import type { WorkRow } from "../work-types";
 import { WorkEditor } from "./work-editor";
 import { WorkReview } from "./work-review";
 type Catalog = ModuleCatalog & { assignments: WorkRow[] };
-export function WorkTeacher() {
+export function WorkTeacher({ initialId }: { initialId?: string | null }) {
   const [catalog, setCatalog] = useState<Catalog | null>(null),
     [items, setItems] = useState<TeacherSubmission[]>([]),
-    [selected, setSelected] = useState(""),
+    [selected, setSelected] = useState(initialId ?? ""),
     [notice, setNotice] = useState("Memuat tugas…"),
     [busy, setBusy] = useState(false);
   const reload = async () => {

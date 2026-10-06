@@ -1,0 +1,230 @@
+{
+  "beforeMigrationTables": [
+    {
+      "table": "assignments",
+      "before": 3,
+      "unchanged": true
+    },
+    {
+      "table": "class_memberships",
+      "before": 3,
+      "unchanged": true
+    },
+    {
+      "table": "class_subjects",
+      "before": 2,
+      "unchanged": true
+    },
+    {
+      "table": "classes",
+      "before": 2,
+      "unchanged": true
+    },
+    {
+      "table": "library_items",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "library_progress",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "material_progress",
+      "before": 4,
+      "unchanged": true
+    },
+    {
+      "table": "materials",
+      "before": 4,
+      "unchanged": true
+    },
+    {
+      "table": "quiz_answers",
+      "before": 18,
+      "unchanged": true
+    },
+    {
+      "table": "quiz_attempts",
+      "before": 14,
+      "unchanged": true
+    },
+    {
+      "table": "quiz_options",
+      "before": 12,
+      "unchanged": true
+    },
+    {
+      "table": "quiz_questions",
+      "before": 7,
+      "unchanged": true
+    },
+    {
+      "table": "quizzes",
+      "before": 3,
+      "unchanged": true
+    },
+    {
+      "table": "subjects",
+      "before": 4,
+      "unchanged": true
+    },
+    {
+      "table": "submissions",
+      "before": 3,
+      "unchanged": true
+    },
+    {
+      "table": "users",
+      "before": 4,
+      "unchanged": true
+    },
+    {
+      "table": "assignment_basic_competencies",
+      "before": 4,
+      "unchanged": true
+    },
+    {
+      "table": "basic_competencies",
+      "before": 6,
+      "unchanged": true
+    },
+    {
+      "table": "competency_levels",
+      "before": 4,
+      "unchanged": true
+    },
+    {
+      "table": "competency_packages",
+      "before": 5,
+      "unchanged": true
+    },
+    {
+      "table": "core_competencies",
+      "before": 5,
+      "unchanged": true
+    },
+    {
+      "table": "curriculum_assignments",
+      "before": 3,
+      "unchanged": true
+    },
+    {
+      "table": "curriculum_versions",
+      "before": 4,
+      "unchanged": true
+    },
+    {
+      "table": "learning_modes",
+      "before": 12,
+      "unchanged": true
+    },
+    {
+      "table": "material_basic_competencies",
+      "before": 5,
+      "unchanged": true
+    },
+    {
+      "table": "quiz_basic_competencies",
+      "before": 3,
+      "unchanged": true
+    },
+    {
+      "table": "subject_skk_allocations",
+      "before": 5,
+      "unchanged": true
+    },
+    {
+      "table": "curriculum_events",
+      "before": 24,
+      "unchanged": true
+    },
+    {
+      "table": "assignment_deadline_events",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "assignment_deadlines",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "feedback_acknowledgments",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "learning_plan_events",
+      "before": 5,
+      "unchanged": true
+    },
+    {
+      "table": "learning_plans",
+      "before": 3,
+      "unchanged": true
+    },
+    {
+      "table": "learning_support",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "learning_support_events",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "material_section_events",
+      "before": 2,
+      "unchanged": true
+    },
+    {
+      "table": "material_sections",
+      "before": 5,
+      "unchanged": true
+    },
+    {
+      "table": "material_section_progress",
+      "before": 5,
+      "unchanged": true
+    },
+    {
+      "table": "material_module_settings",
+      "before": 2,
+      "unchanged": true
+    },
+    {
+      "table": "quiz_events",
+      "before": 29,
+      "unchanged": true
+    },
+    {
+      "table": "quiz_responses",
+      "before": 15,
+      "unchanged": true
+    },
+    {
+      "table": "assignment_work",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "submission_history",
+      "before": 27,
+      "unchanged": true
+    },
+    {
+      "table": "submission_work",
+      "before": 1,
+      "unchanged": true
+    },
+    {
+      "table": "work_files",
+      "before": 1,
+      "unchanged": true
+    }
+  ],
+  "foreignKeyViolations": []
+}

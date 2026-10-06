@@ -357,6 +357,10 @@ Bukti dan batas pengukuran KD/SKK: [validasi Tahap 4](validation/tahap-4.md).
 
 ## Tahap 6 — Dashboard Pendampingan Tutor
 
+**Status: Lulus lokal (6 Oktober 2026).** Implementasi dan bukti lokal dicatat pada
+[validasi Tahap 6](validation/tahap-6.md). Status ketuntasan KD dan pemberian
+SKK mengikuti Tahap 7; nilai sumatif menunggu instrumen yang tersedia.
+
 **Tujuan: tutor dapat mengukur proses, bukan hanya nilai akhir**
 
 ### Tampilan ringkas tutor

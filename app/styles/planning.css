@@ -35,3 +35,36 @@
 .planning-form .text-button {
   min-height: 44px;
 }
+
+.mentoring-view button {
+  min-height: 44px;
+  padding: 10px 14px;
+  margin-block: 6px;
+}
+.mentoring-view h1,
+.mentoring-view h2,
+.mentoring-view p {
+  overflow-wrap: anywhere;
+}
+.mentoring-view .personal-plan-section {
+  margin-block: 16px;
+}
+.mentoring-view h1 {
+  scroll-margin-top: 100px;
+}
+.mentoring-view h1 {
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  line-height: 1.25;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.mentoring-view h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-block: 20px 12px;
+}
+.mentoring-view h3 {
+  font-size: 1.1rem;
+  font-weight: 650;
+  margin-block: 12px 8px;
+}

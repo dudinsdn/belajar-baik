@@ -3,13 +3,17 @@ import { readApi, writeApi } from "../request";
 import type { PlanningData } from "../types";
 import { shortDateTime } from "../data";
 
-export function PlanningView() {
+export function PlanningView({
+  initialScope,
+}: {
+  initialScope?: string | null;
+}) {
   const [data, setData] = useState<PlanningData | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [student, setStudent] = useState("");
+  const [subject, setSubject] = useState(initialScope?.split("/")[0] ?? "");
+  const [student, setStudent] = useState(initialScope?.split("/")[1] ?? "");
   const [action, setAction] = useState("create");
   const [mode, setMode] = useState("independent");
   const load = () => {
@@ -85,6 +89,7 @@ export function PlanningView() {
             onChange={(e) => setAction(e.target.value)}
           >
             <option value="create">Tetapkan rencana</option>
+            <option value="replan">Tetapkan ulang rencana tersimpan</option>
             <option value="deadline">Sesuaikan tenggat tugas</option>
             <option value="support">Catat kebutuhan pendampingan</option>
           </select>
@@ -130,6 +135,40 @@ export function PlanningView() {
               ))}
           </select>
         </label>
+        {action === "replan" && (
+          <>
+            <label>
+              Rencana tersimpan
+              <select required name="planId">
+                <option value="">Pilih rencana</option>
+                {data.plans
+                  .filter(
+                    (p) =>
+                      p.class_subject_id === subject &&
+                      p.student_id === student,
+                  )
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.title}
+                    </option>
+                  ))}
+              </select>
+            </label>
+            <label>
+              Judul baru
+              <input required name="title" maxLength={200} />
+            </label>
+            <label>
+              Instruksi baru dan alasan penetapan ulang
+              <textarea required name="instructions" maxLength={2000} />
+            </label>
+            <p>
+              Kompetensi, materi, mode, dan histori kehadiran tetap terhubung
+              dengan rencana ini. Judul, instruksi, dan tenggat sebelumnya
+              disimpan dalam histori.
+            </p>
+          </>
+        )}
         {action === "create" && (
           <>
             <label>
@@ -208,7 +247,7 @@ export function PlanningView() {
             <input required type="datetime-local" name="dueAt" />
           </label>
         )}
-        {action !== "create" && (
+        {action !== "create" && action !== "replan" && (
           <label>
             Alasan atau arahan pendampingan
             <textarea required name="reason" maxLength={2000} />

@@ -1,0 +1,46 @@
+{
+  "interventions": [
+    {
+      "id": "a60a771a-de84-467f-9b77-cb59e5984266",
+      "class_subject_id": "cs_sej_10",
+      "student_id": "usr_student_dudin",
+      "actor_id": "usr_teacher_adi",
+      "kind": "note",
+      "detail": "UJI Tahap 6: diskusikan bagian yang masih sulit. Catatan privat tutor.",
+      "due_at": null,
+      "parent_id": null,
+      "created_at": "2026-10-06T00:18:56.398Z"
+    },
+    {
+      "id": "de7909c0-8a2c-4e6f-a874-46a12d07385a",
+      "class_subject_id": "cs_sej_10",
+      "student_id": "usr_student_dudin",
+      "actor_id": "usr_teacher_adi",
+      "kind": "remedial",
+      "detail": "UJI Tahap 6 REMEDIAL: baca kembali sebab pertempuran, lalu diskusikan dua bukti dengan tutor.",
+      "due_at": "2026-10-10T02:00:00.000Z",
+      "parent_id": null,
+      "created_at": "2026-10-06T00:19:50.708Z"
+    }
+  ],
+  "attendance": [
+    {
+      "id": "a1d945b2-3c55-457f-9124-1dd182ffd51c",
+      "plan_id": "10e7c8ef-49d5-446c-929d-4238e0cfc568",
+      "actor_id": "usr_teacher_adi",
+      "status": "present",
+      "reason": "UJI Tahap 6 simulasi daftar hadir tutorial; belum keputusan kompetensi.",
+      "created_at": "2026-10-06T00:20:24.400Z"
+    }
+  ],
+  "replans": [
+    {
+      "id": "66892a42-c373-44b2-8abe-b5e4c1da548e",
+      "plan_id": "10e7c8ef-49d5-446c-929d-4238e0cfc568",
+      "actor_id": "usr_teacher_adi",
+      "action": "replan",
+      "detail": "{\"previousTitle\":\"UJI Tahap 2 \u2014 tutorial kelas\",\"previousInstructions\":\"UJI VALIDASI: tutorial bersama tutor; lokasi uji ruang belajar.\",\"previousDueAt\":\"2026-10-08T02:00:00.000Z\",\"title\":\"UJI Tahap 6 \u2014 tutorial pendampingan\",\"instructions\":\"UJI Tahap 6: diskusikan dua bukti; penetapan ulang karena hasil formatif memerlukan pendampingan. Jadwal tutorial tetap.\",\"dueAt\":\"2026-10-08T02:00:00.000Z\"}",
+      "created_at": "2026-10-06T00:32:34.485Z"
+    }
+  ]
+}

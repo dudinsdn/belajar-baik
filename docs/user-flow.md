@@ -165,7 +165,9 @@ Rekaman validasinya berada di `docs/validation/`. Reader per bagian dan editor
 modul tutor tersedia pada Tahap 3. Asesmen diagnostik/formatif tersedia lokal
 pada Tahap 4. Tahap 5 menyediakan tugas/proyek/keterampilan dengan rubrik,
 revisi berhistori, bukti berkas/tautan, dan portofolio pilihan warga belajar.
-Remedial terstruktur, pemberian SKK, pengakuan alih kredit, pelaporan lengkap,
+Dashboard pendampingan Tahap 6 menyediakan prioritas, detail proses, kehadiran,
+catatan, remedial/pengayaan/pengingat, dan penutupan tindak lanjut berhistori.
+Pemberian SKK, pengakuan alih kredit, pelaporan lengkap,
 offline seluruh aplikasi, dan ruang administrator masih target bertahap.
 
 ### Modul belajar yang tersedia secara lokal
@@ -238,7 +240,38 @@ offline seluruh aplikasi, dan ruang administrator masih target bertahap.
    memuat portofolio dari server. Pilihan tersimpan setelah refresh/restart.
 7. Checkbox pengalaman terdahulu merupakan pengajuan calon alih kredit.
    Nilai, validasi bukti, dan portofolio belum memberikan mastery/SKK atau
-   pengakuan alih kredit. Tahap 6 dan seterusnya belum dikerjakan.
+   pengakuan alih kredit. Pemberian SKK dan alih kredit mengikuti Tahap 7.
 
 Validasi domain: `npm run test:work`. Smoke API server yang sedang aktif:
 `npm run test:work:api` (tanpa reseed, pergantian role, atau server tambahan).
+
+### Pendampingan tutor yang tersedia secara lokal (Tahap 6)
+
+1. Halaman awal tutor adalah Pendampingan. Daftar diurutkan dari jumlah sinyal
+   yang memerlukan perhatian; filter kelas/mata pelajaran dan status proses
+   membantu mencari warga belajar. Semua anggota aktif tampil pada filter semua.
+2. Buka pendampingan menampilkan progres modul, rencana tatap muka/tutorial dan
+   mandiri, permintaan bantuan, tugas/revisi/feedback, percobaan diagnostik dan
+   formatif, serta SKK terencana pada penugasan tersebut.
+3. Aktivitas terakhir berasal dari tindakan belajar warga belajar, bukan catatan
+   atau penilaian tutor. Tidak aktif berarti lebih dari atau sama dengan tujuh
+   hari tanpa aktivitas tercatat; bukan bukti bahwa warga belajar tidak belajar
+   di luar aplikasi. Remedial memakai hasil formatif terakhir per asesmen.
+4. Catatan pendampingan dan hasil penutupan bersifat privat bagi tutor berwenang.
+   Remedial, pengayaan, dan pesan/pengingat memiliki arahan dan tenggat, muncul
+   pada beranda warga belajar selama terbuka. Tidak ada pengiriman eksternal.
+5. Tutor dapat mencatat atau mengoreksi kehadiran rencana tatap muka/tutorial;
+   setiap koreksi menambah event beserta alasan, waktu, dan pelaku.
+6. Penutupan tindak lanjut menambahkan hasil dan alasan, tidak menghapus arahan
+   awal. Menutup intervensi tidak menuntaskan KD atau memberikan SKK.
+7. Buka bukti dan penilaian mengarahkan ke karya yang dipilih. Penyesuaian
+   tenggat/penetapan ulang rencana membuka Rencana dengan penugasan dan penerima
+   terpilih. Penetapan ulang menyimpan judul/instruksi/tenggat sebelumnya di
+   histori dan mempertahankan kompetensi, mode, materi, serta kehadiran.
+8. Form yang gagal disimpan mempertahankan teks. Perubahan belum tersimpan
+   memberi konfirmasi sebelum navigasi; tidak ada autosave/offline queue untuk
+   catatan tutor. Data harus dimuat ulang agar prioritas memperlihatkan perubahan
+   terbaru. Ketuntasan KD, SKK tervalidasi/kurang, dan sumatif belum tersedia.
+
+Validasi domain: `npm run test:mentoring`. Smoke API pada port 3000:
+`npm run test:mentoring:api` (tanpa reseed atau pergantian peran otomatis).
