@@ -164,6 +164,37 @@ improve usability.
 - Keep development servers running only when the user needs them, and clearly
   report their status.
 
+## Browser Verification Workflow
+
+- Use at most one agent-created validation tab for this repository. Reuse its
+  browser and tab ID throughout a validation session, including role changes.
+- Before opening or navigating that tab, confirm the intended server owns port
+  `3000`, then run `npm run browser:ready -- --role=teacher` or `--role=student`
+  for the role being tested. This read-only preflight checks identity, a D1 API,
+  and the application HTML; it does not start a server or prove browser rendering.
+- If preflight fails, resolve or report the server/identity problem before
+  opening a browser. Never create additional tabs as readiness probes.
+- A navigation, locator, or snapshot timeout does not prove that a tab failed
+  to open. Inspect the existing tab's URL/state and the server log first. The
+  original navigation may still finish after the tool times out.
+- Reacquire the same tab ID when its handle is stale. Check the selected
+  browser's tab inventory when necessary; do not create another tab merely
+  because a handle assignment or observation failed.
+- After a server restart or simulated-role change, rerun preflight and reload
+  the same tab once. Verify the displayed role before continuing interaction.
+- If a tab shows a connection-error page, wait for preflight to pass, then
+  navigate that same tab to `http://localhost:3000/`. Do not reload an internal
+  browser error-page URL.
+- Replace the validation tab only when it is confirmed closed/missing or the
+  documented browser recovery cannot restore it. Close a failed agent-created
+  tab before replacing it when possible. Preserve all user-owned tabs.
+- Do not edit application source or run a resource-intensive build during the
+  final browser checks. Finish source checks first, then validate a stable
+  server state; restart the same port if hot reload has broken the runtime.
+- Restore temporary viewport overrides and close temporary agent-created tabs
+  after validation, unless the user asks to keep a preview open. Record readiness
+  and browser failures separately from application/API validation results.
+
 ## Verification Standard
 
 Match validation to the risk of the change and report each evidence category

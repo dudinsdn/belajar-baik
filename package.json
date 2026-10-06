@@ -37,7 +37,8 @@
     "test:mentoring": "node --experimental-strip-types --test tests/mentoring-domain.test.mjs",
     "test:mentoring:api": "node scripts/mentoring-api-smoke.mjs",
     "test:skk": "node --experimental-strip-types --test tests/skk-domain.test.mjs",
-    "test:skk:api": "node scripts/skk-api-smoke.mjs"
+    "test:skk:api": "node scripts/skk-api-smoke.mjs",
+    "browser:ready": "node scripts/browser-ready.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
