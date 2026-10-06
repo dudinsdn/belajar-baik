@@ -19,8 +19,8 @@ if (me.data.role === "teacher") {
     );
     assert.equal(detail.status, 200);
     assert.equal(detail.data.scope.student_id, s.student_id);
-    assert.equal(detail.data.skk.awarded, null);
-    assert.equal(detail.data.mastery, null);
+    assert.equal(typeof detail.data.skk.awarded, "number");
+    assert.ok(Array.isArray(detail.data.mastery));
   }
   assert.equal(
     (await request("/api/v1/teacher/mentoring?subject=missing&student=missing"))

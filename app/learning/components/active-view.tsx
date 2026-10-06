@@ -1,3 +1,4 @@
+import { SkkView } from "../views/skk-view";
 import { MentoringView } from "../views/mentoring-view";
 import { AssignmentsWorkspace } from "../views/assignments-workspace";
 import { readApi } from "../request";
@@ -70,6 +71,8 @@ export function ActiveView(p: Props) {
     ) : (
       <StudentPlansView goTo={p.goTo} />
     );
+  if (p.active === "SKK")
+    return <SkkView teacher={p.data.profile?.role === "teacher"} />;
   if (p.active === "Kurikulum") return <CurriculumView />;
   const d = p.data;
   const pref = p.preferences;

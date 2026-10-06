@@ -121,7 +121,7 @@ export function DashboardView({ displayName, goTo }: Props) {
         <section className="empty-state">
           <h2>Belum ada rencana berikutnya</h2>
           <p>Rencana yang ditetapkan tutor akan tampil di sini.</p>
-          <button className="primary" onClick={() => goTo("Kurikulum")}>
+          <button className="primary" onClick={() => goTo("SKK")}>
             Lihat target kompetensi
           </button>
         </section>
@@ -154,11 +154,11 @@ export function DashboardView({ displayName, goTo }: Props) {
           ditetapkan.
         </p>
         <p>
-          SKK sedang ditempuh, menunggu validasi, dan tercapai belum tersedia.
+          {data.skk.earned} SKK tercapai; {data.skk.remaining} belum tercapai.
           Progres materi tidak otomatis menjadi pencapaian SKK.
         </p>
-        <button className="text-button" onClick={() => goTo("Kurikulum")}>
-          Lihat kurikulum
+        <button className="text-button" onClick={() => goTo("SKK")}>
+          Lihat buku besar SKK
         </button>
       </section>
       <section className="section-block personal-plan-section">

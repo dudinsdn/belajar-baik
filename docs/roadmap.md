@@ -406,6 +406,11 @@ Tutor dapat menemukan warga belajar berisiko maksimal dalam tiga langkah tanpa m
 
 ## Tahap 7 — Buku Besar SKK dan Ketuntasan Kompetensi
 
+**Status: Lulus lokal (6 Oktober 2026).** Ledger, ketuntasan berbukti, keputusan
+tutor, histori, alih kredit, dan rekonsiliasi dasbor/laporan telah diuji lokal.
+Belum lulus produksi. Lihat
+[validasi Tahap 7](validation/tahap-7.md).
+
 **Tujuan: menghasilkan perhitungan SKK yang dapat diaudit**
 
 ### Status SKK

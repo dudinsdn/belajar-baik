@@ -415,11 +415,14 @@ export function MentoringView({
           {!detail.attempts.length && <p>Belum ada percobaan asesmen.</p>}
           <h2>Kompetensi dan SKK</h2>
           <p>
-            {detail.skk.planned} SKK terencana untuk mata pelajaran ini. Status
-            ditempuh, tervalidasi, kurang, penguasaan KD, dan nilai sumatif
-            belum tersedia. Nilai formatif, progres, dan kehadiran tidak menjadi
-            keputusan ketuntasan.
+            {detail.skk.planned} SKK terencana; {detail.skk.awarded} tercapai;
+            {detail.skk.remaining} belum tercapai. Nilai formatif, progres, dan
+            kehadiran tidak otomatis menjadi keputusan ketuntasan. Nilai sumatif
+            belum tersedia.
           </p>
+          <button onClick={() => goTo("SKK")}>
+            Tinjau buku besar dan bukti ketuntasan
+          </button>
           <h2>Histori pendampingan</h2>
           {detail.interventions.map((e) => (
             <article key={e.id} className="personal-plan-section">

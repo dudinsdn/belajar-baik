@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,css,mjs}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,css,mjs}\"",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress && npm run test:curriculum && npm run test:planning && npm run test:modules && npm run test:quizzes && npm run test:work && npm run test:mentoring",
+    "test": "npm run test:auth && npm run test:assignments && npm run test:grading && npm run test:progress && npm run test:curriculum && npm run test:planning && npm run test:modules && npm run test:quizzes && npm run test:work && npm run test:mentoring && npm run test:skk",
     "ci": "npm run format:check && npm run lint && npm test && npm run build",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
@@ -35,7 +35,9 @@
     "test:work": "node --experimental-strip-types tests/work-domain.test.mjs",
     "test:work:api": "node scripts/work-api-smoke.mjs",
     "test:mentoring": "node --experimental-strip-types --test tests/mentoring-domain.test.mjs",
-    "test:mentoring:api": "node scripts/mentoring-api-smoke.mjs"
+    "test:mentoring:api": "node scripts/mentoring-api-smoke.mjs",
+    "test:skk": "node --experimental-strip-types --test tests/skk-domain.test.mjs",
+    "test:skk:api": "node scripts/skk-api-smoke.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

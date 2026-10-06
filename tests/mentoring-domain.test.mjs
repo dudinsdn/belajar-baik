@@ -29,6 +29,8 @@ for (const file of [
   "drizzle/0017_work_guards.sql",
   "drizzle/0018_polite_luckman.sql",
   "drizzle/0019_mentoring_guards.sql",
+  "drizzle/0020_curious_shriek.sql",
+  "drizzle/0021_skk_guards.sql",
 ])
   db.exec(readFileSync(file, "utf8"));
 function statement(sql, params = []) {
@@ -189,8 +191,8 @@ test("priorities, append-only interventions, attendance and class isolation use 
   );
   const empty = await readMentoringDetail(teacher, "cs_sej_10", student.id);
   assert.equal(empty.interventions.length, 0);
-  assert.equal(empty.mastery, null);
-  assert.equal(empty.skk.awarded, null);
+  assert.equal(empty.mastery.length, 1);
+  assert.equal(empty.skk.awarded, 0);
   assert.equal(empty.skk.planned, 4);
   const initial = mentoringSignals(empty, Date.parse("2040-01-01T00:00:00Z"));
   assert.equal(initial.overdue, 0);

@@ -92,13 +92,14 @@ export default function Home() {
       ? [
           "Pendampingan",
           "Kurikulum",
+          "SKK",
           "Rencana",
           "Materi",
           "Latihan",
           "Penilaian",
           "Profil",
         ]
-      : [...studentNav, "Kurikulum", "Rencana"];
+      : [...studentNav, "Kurikulum", "SKK", "Rencana"];
 
   if (data.status !== "ready")
     return <AccessState status={data.status} message={data.message} />;

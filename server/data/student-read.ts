@@ -1,3 +1,4 @@
+import { readSkk } from "./skk.ts";
 import { readStudentInterventions } from "./mentoring.ts";
 import { env } from "cloudflare:workers";
 import type { CurrentUser } from "../auth/types.ts";
@@ -28,14 +29,7 @@ export async function getStudentDashboard(user: CurrentUser) {
       listStudentMaterials(user),
       listStudentAssignments(user),
       readLearningPlans(user),
-      env.DB.prepare(
-        `SELECT COALESCE(SUM(a.planned_skk),0) AS planned FROM curriculum_assignments ca
-      JOIN class_memberships cm ON cm.class_id=ca.class_id AND cm.student_id=ca.student_id
-      JOIN classes c ON c.id=ca.class_id JOIN subject_skk_allocations a ON a.competency_package_id=ca.competency_package_id
-      WHERE ca.student_id=? AND ca.status='active' AND cm.status='active' AND c.status='active'`,
-      )
-        .bind(user.id)
-        .first(),
+      readSkk(user).then((data) => data.totals),
       env.DB.prepare(
         `SELECT sub.id, a.title, sub.feedback FROM submissions sub JOIN assignments a ON a.id=sub.assignment_id
       JOIN class_subjects cs ON cs.id=a.class_subject_id JOIN classes c ON c.id=cs.class_id

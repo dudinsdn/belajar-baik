@@ -1,3 +1,4 @@
+import { readSkk } from "./skk.ts";
 import { env } from "cloudflare:workers";
 import { ApiError } from "../api/error.ts";
 import { requireRole } from "../auth/authorize.ts";
@@ -77,7 +78,7 @@ export async function readMentoringDetail(
     interventions,
     support,
     deadlines,
-    skk,
+    ledger,
   ] = await Promise.all([
     env.DB.prepare(
       `SELECT m.id,m.title,COALESCE(mp.percent,0) AS percent,mp.updated_at
@@ -157,11 +158,14 @@ export async function readMentoringDetail(
     )
       .bind(subjectId, studentId)
       .all(),
-    env.DB.prepare(
-      `SELECT COALESCE(SUM(sa.planned_skk),0) AS planned FROM curriculum_assignments ca JOIN subject_skk_allocations sa ON sa.competency_package_id=ca.competency_package_id WHERE ca.class_id=? AND ca.student_id=? AND ca.status='active' AND sa.subject_id=?`,
-    )
-      .bind(scope.class_id, studentId, scope.subject_id)
-      .first<{ planned: number }>(),
+    readSkk(user).then((data) =>
+      data.allocations.filter(
+        (a) =>
+          a.class_id === scope.class_id &&
+          a.student_id === studentId &&
+          a.subject_id === scope.subject_id,
+      ),
+    ),
   ]);
   const visiblePlans = plans.plans.filter(
     (p) => p.class_subject_id === subjectId && p.student_id === studentId,
@@ -210,8 +214,15 @@ export async function readMentoringDetail(
     interventions: interventions.results,
     support: support.results,
     deadlines: deadlines.results,
-    skk: { planned: skk?.planned ?? 0, awarded: null },
-    mastery: null,
+    skk: ledger.reduce(
+      (t, a) => ({
+        planned: t.planned + Number(a.planned_skk),
+        awarded: t.awarded + a.earned,
+        remaining: t.remaining + a.remaining,
+      }),
+      { planned: 0, awarded: 0, remaining: 0 },
+    ),
+    mastery: ledger.flatMap((a) => a.competencies),
   };
 }
 

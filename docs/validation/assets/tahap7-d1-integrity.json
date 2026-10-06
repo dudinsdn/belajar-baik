@@ -1,0 +1,299 @@
+{
+  "tables": [
+    {
+      "table": "assignments",
+      "before": 3,
+      "after": 3,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "class_memberships",
+      "before": 3,
+      "after": 3,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "class_subjects",
+      "before": 2,
+      "after": 2,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "classes",
+      "before": 2,
+      "after": 2,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "library_items",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "library_progress",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "material_progress",
+      "before": 4,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "materials",
+      "before": 4,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quiz_answers",
+      "before": 18,
+      "after": 18,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quiz_attempts",
+      "before": 14,
+      "after": 14,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quiz_options",
+      "before": 12,
+      "after": 12,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quiz_questions",
+      "before": 7,
+      "after": 7,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quizzes",
+      "before": 3,
+      "after": 3,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "subjects",
+      "before": 4,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "submissions",
+      "before": 3,
+      "after": 3,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "users",
+      "before": 4,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "_cf_METADATA",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": false
+    },
+    {
+      "table": "assignment_basic_competencies",
+      "before": 4,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "basic_competencies",
+      "before": 6,
+      "after": 6,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "competency_levels",
+      "before": 4,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "competency_packages",
+      "before": 5,
+      "after": 5,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "core_competencies",
+      "before": 5,
+      "after": 5,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "curriculum_assignments",
+      "before": 3,
+      "after": 3,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "curriculum_versions",
+      "before": 4,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "learning_modes",
+      "before": 12,
+      "after": 12,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "material_basic_competencies",
+      "before": 5,
+      "after": 5,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quiz_basic_competencies",
+      "before": 3,
+      "after": 3,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "subject_skk_allocations",
+      "before": 5,
+      "after": 5,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "curriculum_events",
+      "before": 24,
+      "after": 24,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "assignment_deadline_events",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "assignment_deadlines",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "feedback_acknowledgments",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "learning_plan_events",
+      "before": 6,
+      "after": 7,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "learning_plans",
+      "before": 3,
+      "after": 4,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "learning_support",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "learning_support_events",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "material_section_events",
+      "before": 2,
+      "after": 2,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "material_sections",
+      "before": 5,
+      "after": 5,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "material_section_progress",
+      "before": 5,
+      "after": 5,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "material_module_settings",
+      "before": 2,
+      "after": 2,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quiz_events",
+      "before": 29,
+      "after": 29,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "quiz_responses",
+      "before": 15,
+      "after": 15,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "assignment_work",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "submission_history",
+      "before": 27,
+      "after": 27,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "submission_work",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "work_files",
+      "before": 1,
+      "after": 1,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "attendance_events",
+      "before": 1,
+      "after": 2,
+      "oldRowsPreserved": true
+    },
+    {
+      "table": "mentoring_events",
+      "before": 2,
+      "after": 2,
+      "oldRowsPreserved": true
+    }
+  ],
+  "allOldDomainRowsPreserved": true,
+  "runtimeMetadataChanged": [
+    "_cf_METADATA"
+  ],
+  "foreignKeyViolations": 0,
+  "newMasteryDecisions": 3,
+  "newSkkDecisions": 2
+}

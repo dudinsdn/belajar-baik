@@ -1,0 +1,56 @@
+{
+  "positive": {
+    "body": {
+      "assignmentId": "6cad1c5c-2560-4908-91bf-f0be0d7b6e92",
+      "allocationId": "be1b7d12-3494-476a-8540-a5e98ce9ae23",
+      "reason": "UJI Tahap 7 — verifikasi ledger lokal, bukan pengesahan produksi"
+    },
+    "revision": 1,
+    "student": {
+      "id": "usr_student_dudin",
+      "label": "Dudin Sahidin",
+      "planned": 10,
+      "earned": 6,
+      "remaining": 4
+    },
+    "teacherTotals": {
+      "planned": 14,
+      "earned": 6,
+      "remaining": 8
+    },
+    "planId": "53fd67ca-fe0d-41e3-a959-eb0d2f9534fb"
+  },
+  "final": {
+    "totals": {
+      "planned": 14,
+      "earned": 0,
+      "remaining": 14
+    },
+    "learner": {
+      "id": "usr_student_dudin",
+      "label": "Dudin Sahidin",
+      "planned": 10,
+      "earned": 0,
+      "remaining": 10
+    },
+    "history": [
+      {
+        "status": "revoked",
+        "credits": 0,
+        "revision": 2,
+        "reason": "UJI Tahap 7 — kredit uji dicabut setelah rekonsiliasi dan persistensi lulus; histori dipertahankan.",
+        "actorId": "usr_teacher_adi",
+        "createdAt": "2026-10-06T01:05:50.067Z"
+      },
+      {
+        "status": "awarded",
+        "credits": 6,
+        "revision": 1,
+        "reason": "UJI Tahap 7 — verifikasi ledger lokal, bukan pengesahan produksi",
+        "actorId": "usr_teacher_adi",
+        "createdAt": "2026-10-06T01:01:29.076Z"
+      }
+    ],
+    "masteryCount": 2
+  }
+}

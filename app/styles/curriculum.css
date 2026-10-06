@@ -124,3 +124,38 @@
     padding: 16px;
   }
 }
+
+.skk-view button,
+.skk-view select,
+.skk-view summary {
+  min-height: 44px;
+}
+.skk-card {
+  padding: 1rem;
+  margin-block: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+}
+.skk-card form {
+  display: grid;
+  gap: 0.75rem;
+  margin-block: 1rem;
+}
+.skk-card label {
+  display: grid;
+  gap: 0.25rem;
+}
+.skk-card textarea,
+.skk-card select {
+  width: 100%;
+  padding: 0.75rem;
+  color: #172033;
+  background: white;
+  border: 1px solid #64748b;
+  border-radius: 6px;
+}
+.skk-card pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}

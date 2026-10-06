@@ -61,7 +61,7 @@ export type DashboardData = {
   }>;
   nextPlan: LearningPlan | null;
   plans: LearningPlan[];
-  skk: { planned: number };
+  skk: { planned: number; earned: number; remaining: number };
   feedback: Array<{ id: string; title: string; feedback: string }>;
   assessment: { id: string; title: string } | null;
   continueMaterial?: {

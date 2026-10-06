@@ -29,6 +29,8 @@ for (const file of [
   "drizzle/0017_work_guards.sql",
   "drizzle/0018_polite_luckman.sql",
   "drizzle/0019_mentoring_guards.sql",
+  "drizzle/0020_curious_shriek.sql",
+  "drizzle/0021_skk_guards.sql",
 ])
   db.exec(readFileSync(file, "utf8"));
 function statement(sql, params = []) {
@@ -356,6 +358,8 @@ test("stage 2 migration works on an empty database without rewriting earlier mig
     "drizzle/0017_work_guards.sql",
     "drizzle/0018_polite_luckman.sql",
     "drizzle/0019_mentoring_guards.sql",
+    "drizzle/0020_curious_shriek.sql",
+    "drizzle/0021_skk_guards.sql",
   ])
     fresh.exec(readFileSync(file, "utf8"));
   assert.equal(
